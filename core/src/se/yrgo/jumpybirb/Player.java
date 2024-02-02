@@ -41,21 +41,6 @@ public class Player {
             }
         }
     }
-    // public void update(float delta) {
-    // if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && !isJumping) {
-    // isJumping = true;
-    // position.y += jumpVelocity * delta;
-    // } // Adjust the initial jump position
-    // // Update player position based on input or game logic
-    // //position.x += speed * delta; // move to the right
-    // if (isJumping) {
-    // position.y -= jumpVelocity * delta;
-    // if (position.y <= 1) { // Adjust the ground level as needed
-    // position.y = 1;
-    // isJumping = false;
-    // }
-    // }
-    // }
 
     public void render(SpriteBatch batch) {
         batch.draw(playerTexture, position.x, position.y);

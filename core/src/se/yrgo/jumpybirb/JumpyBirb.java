@@ -15,7 +15,6 @@ public class JumpyBirb extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		player = new Player();
-		//img = new Texture("dragon.png");
 	}
 
 	@Override
