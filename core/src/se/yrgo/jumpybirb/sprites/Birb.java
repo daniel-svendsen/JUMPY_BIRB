@@ -11,16 +11,16 @@ public class Birb {
     public static int MOVEMENT = 100;
     private Vector3 position;
     private Vector3 velocity;
-    private Texture birb;
+    private Texture birb; // Birb Texture
     private Sound flap;
-    private Rectangle bounds;
+    private Rectangle bounds; // Required for collision
 
     public Birb(int x, int y) {
-        position = new Vector3(x, y, 0);
+        position = new Vector3(x, y, 0); // z axis is 0 because we are not using it
         velocity = new Vector3(0, 0, 0);
-        birb = new Texture("badlogic.jpg");
+        birb = new Texture("dragon.png");
         bounds = new Rectangle(x, y, birb.getWidth(), birb.getHeight());
-        flap = new Gdx.audio.newSound(Gdx.files.internal("wing.ogg"));
+//        flap = new Gdx.audio.newSound(Gdx.files.internal("wing.ogg"));
     }
 
     public void update(float dt) {
