@@ -10,22 +10,11 @@ import se.yrgo.jumpybirb.screens.*;
 
 public class ScreenSwitcher extends InputAdapter {
     private final Game game;
-    private final SplashScreen splashScreen;
-    private final MenuScreen menuScreen;
-    private final PlayScreen playScreen;
-    private final GameOverScreen gameOverScreen;
-    private final HighScoreScreen highScoreScreen;
-    private int currentScreen;
+    private Screens currentScreen;
     private boolean splashScreenFinished;
 
     public ScreenSwitcher(JumpyBirb game) {
         this.game = game;
-        splashScreen = new SplashScreen();
-        menuScreen = new MenuScreen();
-        playScreen = new PlayScreen();
-        gameOverScreen = new GameOverScreen();
-        highScoreScreen = new HighScoreScreen();
-        currentScreen = 1;
         this.splashScreenFinished = false;
 
         setTimerOnSplashScreen();
@@ -39,44 +28,27 @@ public class ScreenSwitcher extends InputAdapter {
             @Override
             public void run() {
                 splashScreenFinished = true;
-                switchToMenuScreen();
-            }
+                switchToScreen(Screens.MENU);            }
         }, 3); // seconds delay
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        if (currentScreen == 1 && !splashScreenFinished) {
+        if (currentScreen == Screens.SPLASH && !splashScreenFinished) {
             splashScreenFinished = true;
             Timer.instance().clear(); // Clear the timer
-            switchToMenuScreen();
-        } else if (currentScreen == 2 && keycode == Keys.ENTER) {
-            switchToPlayScreen();
-        } else if (currentScreen == 3 && keycode == Keys.ESCAPE) {
-            switchToMenuScreen();
+            switchToScreen(Screens.MENU);
+        } else if (currentScreen == Screens.MENU && keycode == Keys.ENTER) {
+            switchToScreen(Screens.PLAY);
+        } else if (currentScreen == Screens.PLAY && keycode == Keys.ESCAPE) {
+            switchToScreen(Screens.MENU);
         }
         return true;
     }
 
-    private void switchToMenuScreen() {
-        currentScreen = 2;
-        game.setScreen(menuScreen);
-    }
-
-    private void switchToPlayScreen() {
-        currentScreen = 3;
-        game.setScreen(playScreen);
-    }
-
-
-    private void switchToGameOverScreen() {
-        currentScreen = 3;
-        game.setScreen(gameOverScreen);
-    }
-
-    private void switchToHighScoreScreen() {
-        currentScreen = 3;
-        game.setScreen(highScoreScreen);
+    private void switchToScreen(Screens screen) {
+        currentScreen = screen;
+        game.setScreen(screen.getScreenInstance());
     }
 
 }
