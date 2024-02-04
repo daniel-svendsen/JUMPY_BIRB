@@ -1,9 +1,12 @@
 package se.yrgo.jumpybirb.screens;
 
+import com.badlogic.gdx.Screen;
+import se.yrgo.jumpybirb.JumpyBirb;
+
 /***
- * Base class for all screens (game states).
+ * The screen that runs the actual game, a round of the game.
  */
-public abstract class Screen implements com.badlogic.gdx.Screen {
+public class HighScoreScreen implements Screen {
 
     @Override
     public void show() {
