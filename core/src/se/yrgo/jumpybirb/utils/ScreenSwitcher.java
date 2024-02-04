@@ -2,26 +2,36 @@ package se.yrgo.jumpybirb.utils;
 
 import com.badlogic.gdx.utils.Timer;
 import se.yrgo.jumpybirb.JumpyBirb;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.Screen;
-import se.yrgo.jumpybirb.screens.*;
+import se.yrgo.jumpybirb.screens.PlayScreen;
+
+/***
+ * This class is used for switching between screens in the game.
+ * It has all the logic to determine which screen should be displayed by
+ * checking input from the player accordingly.
+ */
 
 public class ScreenSwitcher extends InputAdapter {
-    private final Game game;
+    private final JumpyBirb gameSession;
     private Screens currentScreen;
     private boolean splashScreenFinished;
 
-    public ScreenSwitcher(JumpyBirb game) {
-        this.game = game;
+    /***
+     * Constructor
+     * @param game the current game session
+     */
+    public ScreenSwitcher(JumpyBirb gameSession) {
+        this.gameSession = gameSession;
         this.splashScreenFinished = false;
-
+        this.currentScreen = Screens.SPLASH;
         setTimerOnSplashScreen();
     }
 
     /***
-     * Timer with an anonymous inner class
+     * This method uses an anonymous inner class, and it is used to
+     * ensure that the splashScreen only gets displayed for a certain
+     * amount of seconds (delay seconds).
      */
     private void setTimerOnSplashScreen() {
         Timer.schedule(new Timer.Task() {
@@ -32,6 +42,13 @@ public class ScreenSwitcher extends InputAdapter {
         }, 3); // seconds delay
     }
 
+    /***
+     * This method gets called when a key was released by the player.
+     * It iss used to check the current screen and switch screens
+     * based on the players input.
+     * @param keycode one of the constants in {@link com.badlogic.gdx.Input.Keys}
+     * @return whether the input was processed
+     */
     @Override
     public boolean keyUp(int keycode) {
         if (currentScreen == Screens.SPLASH && !splashScreenFinished) {
@@ -39,6 +56,7 @@ public class ScreenSwitcher extends InputAdapter {
             Timer.instance().clear(); // Clear the timer
             switchToScreen(Screens.MENU);
         } else if (currentScreen == Screens.MENU && keycode == Keys.ENTER) {
+            // Switch to PlayScreen and pass the existing ScoreManager
             switchToScreen(Screens.PLAY);
         } else if (currentScreen == Screens.PLAY && keycode == Keys.ESCAPE) {
             switchToScreen(Screens.MENU);
@@ -46,9 +64,13 @@ public class ScreenSwitcher extends InputAdapter {
         return true;
     }
 
+    /***
+     * This method is a helper method to the keyUp method.
+     * @param screen to switch to
+     */
     private void switchToScreen(Screens screen) {
         currentScreen = screen;
-        game.setScreen(screen.getScreenInstance());
+        gameSession.setScreen(screen.getScreenInstance(gameSession.getScoreManager()));
     }
 
 }

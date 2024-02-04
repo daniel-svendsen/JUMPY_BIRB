@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
+import se.yrgo.jumpybirb.utils.ScoreManager;
 
 /***
  * The screen that runs the actual game, a round of the game.
@@ -17,16 +18,31 @@ public class PlayScreen implements Screen {
     BitmapFont textFont;
     private SpriteBatch batch;
     private Texture playerTexture;
+    private ScoreManager scoreManager;
+
+    /***
+     * This is used to tell which state the playScreen is in.
+     * Not implemented yet...
+     */
+    public enum GameState {
+        MENU, READY, RUNNING, GAMEOVER
+    }
+
+    public PlayScreen(ScoreManager scoreManager) {
+        this.scoreManager = scoreManager;
+    }
 
     @Override
     public void show() {
         Gdx.app.log(TAG, "show() called");
         batch = new SpriteBatch();
-        playerTexture = new Texture("ugly-bird.png"); // change this texture here later :)
+        // Change the birb texture here later :)
+        playerTexture = new Texture("ugly-bird.png");
 
         textFont = new BitmapFont();
         textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         textFont.getData().setScale(TEXT_FONT_SCALE);
+
     }
 
     @Override
@@ -45,7 +61,18 @@ public class PlayScreen implements Screen {
 
         // Render bird image
         batch.begin();
-        batch.draw(playerTexture,  Gdx.graphics.getWidth() / 3f, 200, 250, 250);
+        batch.draw(playerTexture, Gdx.graphics.getWidth() / 3f, 200, 250, 250);
+        batch.end();
+
+        // Update score
+        scoreManager.update(delta);
+        int currentScore = scoreManager.getScore();
+        int highScore = scoreManager.getHighScore();
+
+        // Render the scores on the screen
+        batch.begin();
+        textFont.draw(batch, "Score: " + currentScore, 10, Gdx.graphics.getHeight() - 10f);
+        textFont.draw(batch, "High Score: " + highScore, 10, Gdx.graphics.getHeight() - 10f - textPadding);
         batch.end();
     }
 

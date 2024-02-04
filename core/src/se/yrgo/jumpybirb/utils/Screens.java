@@ -8,8 +8,6 @@ import se.yrgo.jumpybirb.screens.MenuScreen;
 import se.yrgo.jumpybirb.screens.PlayScreen;
 import se.yrgo.jumpybirb.screens.SplashScreen;
 
-import java.lang.reflect.InvocationTargetException;
-
 /***
  * An enum class that holds a fixed set of all available screens for the game.
  * Each enumeration constant is an object of its Screen class.
@@ -39,12 +37,12 @@ public enum Screens {
      * only returns null in situations where instantiation fails or
      * an exception occurs.
      */
-    public Screen getScreenInstance() {
+    public Screen getScreenInstance(ScoreManager scoreManager) {
         try {
             Screen instance = switch (this) {
                 case SPLASH -> new SplashScreen();
                 case MENU -> new MenuScreen();
-                case PLAY -> new PlayScreen();
+                case PLAY -> new PlayScreen(scoreManager); // Pass the existing ScoreManager to PlayScreen
                 case GAME_OVER -> new GameOverScreen();
                 case HIGH_SCORE -> new HighScoreScreen();
             };
