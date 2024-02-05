@@ -13,11 +13,12 @@ import se.yrgo.jumpybirb.utils.ScoreManager;
  * The screen that runs the actual game, a round of the game.
  */
 public class PlayScreen implements Screen {
-    public static final String TAG = SplashScreen.class.getName();
+    private static final String TAG = SplashScreen.class.getName();
     private static final Float TEXT_FONT_SCALE = 2.0f;
     BitmapFont textFont;
     private SpriteBatch batch;
     private Texture playerTexture;
+    private GameState state;
     private ScoreManager scoreManager;
 
     /***
@@ -28,16 +29,24 @@ public class PlayScreen implements Screen {
         MENU, READY, RUNNING, GAMEOVER
     }
 
-    public PlayScreen(ScoreManager scoreManager) {
-        this.scoreManager = scoreManager;
+    /**
+     * Constructor. Initialize ScoreManager.
+     */
+    public PlayScreen() {
+        this.scoreManager = ScoreManager.getInstance();
+        this.state = GameState.READY;
     }
 
+    /***
+     * This method is called when this screen becomes
+     * the current screen for the game.
+     */
     @Override
     public void show() {
         Gdx.app.log(TAG, "show() called");
         batch = new SpriteBatch();
-        // Change the birb texture here later :)
-        playerTexture = new Texture("ugly-bird.png");
+
+        playerTexture = new Texture("ugly-bird.png"); // Change the birb texture here later :)
 
         textFont = new BitmapFont();
         textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -45,10 +54,15 @@ public class PlayScreen implements Screen {
 
     }
 
+    /***
+     * This method is called when the Application should render itself.
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
-        // Set the background color to blue (0, 0, 1 is RGB for blue)
-        Gdx.gl.glClearColor(0, 0.35f, 0.4f, 1);
+        Gdx.gl.glClearColor(0, 0.35f, 0.4f, 1); // Set the background color
+
+        // Clear the frame before rendering anything else.
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Some placeholder text
@@ -59,7 +73,7 @@ public class PlayScreen implements Screen {
 
         batch.end();
 
-        // Render bird image
+        // Render bird
         batch.begin();
         batch.draw(playerTexture, Gdx.graphics.getWidth() / 3f, 200, 250, 250);
         batch.end();
@@ -76,28 +90,50 @@ public class PlayScreen implements Screen {
         batch.end();
     }
 
+    /***
+     * This method is called when the Application is resized,
+     * which can happen at any point during a non-paused state.
+     * @param width the new width in pixels
+     * @param height the new height in pixels
+     */
     @Override
     public void resize(int width, int height) {
-
+        // could do something here maybe
     }
 
+    /***
+     * This method is called when the Application is paused,
+     * usually when it's not active or visible on-screen.
+     */
     @Override
     public void pause() {
-
+        // could do something here maybe
     }
 
+    /***
+     * This method is called when the Application is resumed from
+     * a paused state, usually when it regains focus.
+     */
     @Override
     public void resume() {
-
+        // could do something here maybe
     }
 
+    /***
+     * This method is called when this screen is no longer
+     * the current screen for the game.
+     */
     @Override
     public void hide() {
-
+        // could do something here maybe
     }
 
+    /***
+     * This method is called when this screen should
+     * release all resources. Preceded by a call to pause().
+     */
     @Override
     public void dispose() {
-
+        // could do something here maybe
     }
 }

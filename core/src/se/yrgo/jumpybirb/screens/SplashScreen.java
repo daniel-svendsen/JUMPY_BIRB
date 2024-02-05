@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
 
+/***
+ * The screen that shows when you start up the application.
+ */
 public class SplashScreen implements Screen {
     public static final String TAG = SplashScreen.class.getName();
 

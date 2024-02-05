@@ -37,12 +37,12 @@ public enum Screens {
      * only returns null in situations where instantiation fails or
      * an exception occurs.
      */
-    public Screen getScreenInstance(ScoreManager scoreManager) {
+    public Screen getScreenInstance() {
         try {
             Screen instance = switch (this) {
                 case SPLASH -> new SplashScreen();
                 case MENU -> new MenuScreen();
-                case PLAY -> new PlayScreen(scoreManager); // Pass the existing ScoreManager to PlayScreen
+                case PLAY -> new PlayScreen();
                 case GAME_OVER -> new GameOverScreen();
                 case HIGH_SCORE -> new HighScoreScreen();
             };

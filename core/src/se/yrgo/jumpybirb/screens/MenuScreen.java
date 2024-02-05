@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
 
 /***
- * Menu screen that shows after the splash screen when you run the game.
+ * The menu screen that always shows after the splash screen when you run the game.
  * Choose to play again, show highscore from current game session, enable/disable music.
  * The game also returns to this screen after the game over screen gets displayed.
  */
@@ -24,7 +24,10 @@ public class MenuScreen implements Screen {
     SpriteBatch batch;
     private Texture backgroundTexture;
 
-
+    /***
+     * This method is called when this screen becomes
+     * the current screen for the game.
+     */
     @Override
     public void show() {
         Gdx.app.log(TAG, "show() called");
@@ -42,6 +45,10 @@ public class MenuScreen implements Screen {
         Gdx.app.log(TAG, "Image loaded successfully: " + backgroundTexture);
     }
 
+    /***
+     * This method is called when the Application should render itself.
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -60,26 +67,48 @@ public class MenuScreen implements Screen {
         batch.end();
     }
 
+    /***
+     * This method is called when the Application is resized,
+     * which can happen at any point during a non-paused state.
+     * @param width the new width in pixels
+     * @param height the new height in pixels
+     */
     @Override
     public void resize(int width, int height) {
         Gdx.app.log(TAG, "resize(" + width + ", " + height + ") called");
     }
 
+    /***
+     * This method is called when the Application is paused,
+     * usually when it's not active or visible on-screen.
+     */
     @Override
     public void pause() {
         Gdx.app.log(TAG, "pause() called");
     }
 
+    /***
+     * This method is called when the Application is resumed from
+     * a paused state, usually when it regains focus.
+     */
     @Override
     public void resume() {
         Gdx.app.log(TAG, "resume() called");
     }
 
+    /***
+     * This method is called when this screen is no longer
+     * the current screen for the game.
+     */
     @Override
     public void hide() {
         Gdx.app.log(TAG, "hide() called");
     }
 
+    /***
+     * This method is called when this screen should
+     * release all resources. Preceded by a call to pause().
+     */
     @Override
     public void dispose() {
         Gdx.app.log(TAG, "dispose() called");

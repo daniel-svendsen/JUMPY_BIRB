@@ -4,7 +4,6 @@ import com.badlogic.gdx.utils.Timer;
 import se.yrgo.jumpybirb.JumpyBirb;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
-import se.yrgo.jumpybirb.screens.PlayScreen;
 
 /***
  * This class is used for switching between screens in the game.
@@ -19,12 +18,13 @@ public class ScreenSwitcher extends InputAdapter {
 
     /***
      * Constructor
-     * @param game the current game session
+     * @param gameSession the current game session
      */
     public ScreenSwitcher(JumpyBirb gameSession) {
         this.gameSession = gameSession;
         this.splashScreenFinished = false;
         this.currentScreen = Screens.SPLASH;
+        switchToScreen(Screens.SPLASH);
         setTimerOnSplashScreen();
     }
 
@@ -38,14 +38,14 @@ public class ScreenSwitcher extends InputAdapter {
             @Override
             public void run() {
                 splashScreenFinished = true;
-                switchToScreen(Screens.MENU);            }
+                switchToScreen(Screens.MENU);
+            }
         }, 3); // seconds delay
     }
 
     /***
      * This method gets called when a key was released by the player.
-     * It iss used to check the current screen and switch screens
-     * based on the players input.
+     * It is used to check the current screen and switch screens based on the players input.
      * @param keycode one of the constants in {@link com.badlogic.gdx.Input.Keys}
      * @return whether the input was processed
      */
@@ -64,13 +64,13 @@ public class ScreenSwitcher extends InputAdapter {
         return true;
     }
 
-    /***
+    /***s
      * This method is a helper method to the keyUp method.
      * @param screen to switch to
      */
     private void switchToScreen(Screens screen) {
         currentScreen = screen;
-        gameSession.setScreen(screen.getScreenInstance(gameSession.getScoreManager()));
+        gameSession.setScreen(screen.getScreenInstance());
     }
 
 }
