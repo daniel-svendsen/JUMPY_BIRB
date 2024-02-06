@@ -9,7 +9,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setWindowedMode(600, 800);
-		config.setResizable(true);
+		config.setResizable(false);
 		config.setTitle("Jumpy Birb");
 		new Lwjgl3Application(new JumpyBirb(), config);
 	}
