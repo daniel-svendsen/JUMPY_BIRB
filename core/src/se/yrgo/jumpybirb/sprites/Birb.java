@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 public class Birb {
-    private static final int GRAVITY = -15;
-    public static int MOVEMENT = 100;
+    private static final int GRAVITY = -10;
+    public static int MOVEMENT = 0;
     private Vector3 position;
     private Vector3 velocity;
     private Texture birb; // Birb Texture
@@ -16,11 +16,12 @@ public class Birb {
     private Rectangle bounds; // Required for collision
 
     public Birb(int x, int y) {
-        position = new Vector3(x, y, 0); // z axis is 0 because we are not using it
+
+        position = new Vector3(50, 50, 0);
         velocity = new Vector3(0, 0, 0);
-        birb = new Texture("dragon.png");
+        birb = new Texture("ugly-bird.png");
         bounds = new Rectangle(x, y, birb.getWidth(), birb.getHeight());
-        flap = Gdx.audio.newSound(Gdx.files.internal("sfx_wing.ogg"));
+        flap = Gdx.audio.newSound(Gdx.files.internal("wing.ogg"));
     }
 
     public void update(float dt) {
@@ -33,6 +34,10 @@ public class Birb {
         if (position.y < 0)
             position.y = 0;
         velocity.scl(1 / dt);
+
+        // Check if the bird is going out of the screen from the top
+        if (position.y + birb.getHeight() > 800)
+            position.y = 800 - birb.getHeight();
 
         bounds.setPosition(position.x, position.y);
     }
