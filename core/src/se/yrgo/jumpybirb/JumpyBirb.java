@@ -1,37 +1,38 @@
 package se.yrgo.jumpybirb;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
+import se.yrgo.jumpybirb.utils.ScreenSwitcher;
 
-public class JumpyBirb extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	private Player player;
-	
+/***
+ * The main class of the application. Used as entry point for our game.
+ */
+public class JumpyBirb extends Game {
+
+	public static final String TAG = JumpyBirb.class.getName();
+
+	/**
+	 * This method gets called first (entry point)
+	 * once when the application is created.
+	 */
 	@Override
-	public void create () {
-		batch = new SpriteBatch();
-		player = new Player();
+	public void create() {
+		// Set log level. On desktop the messages are logged to the console.
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
+		Gdx.app.log(TAG, "create() called");
+
+		Gdx.input.setInputProcessor(new ScreenSwitcher(this));
 	}
 
+	/**
+	 * This method gets called when the Application is shutting down.
+	 */
 	@Override
-	public void render () {
-		float delta = Gdx.graphics.getDeltaTime();
-		// Update player logic
-		player.update(delta);
-		ScreenUtils.clear(1, 0, 0, 1);
-		// Render the player
-		batch.begin();
-		player.render(batch);
-		batch.end();
-	}
-	
-	@Override
-	public void dispose () {
-		batch.dispose();
-		img.dispose();
+	public void dispose() {
+		Gdx.app.log(TAG, "dispose() called");
+		super.dispose();
 	}
 }
+
