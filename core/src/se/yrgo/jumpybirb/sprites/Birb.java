@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 public class Birb {
-    private static final int GRAVITY = -15;
-    public static int MOVEMENT = 100;
+    private static final int GRAVITY = -10;
+    public static int MOVEMENT = 0;
     private Vector3 position;
     private Vector3 velocity;
     private Texture birb;
@@ -33,6 +33,10 @@ public class Birb {
         if (position.y < 0)
             position.y = 0;
         velocity.scl(1 / dt);
+
+        // Check if the bird is going out of the screen from the top
+        if (position.y + birb.getHeight() > 800)
+            position.y = 800 - birb.getHeight();
 
         bounds.setPosition(position.x, position.y);
     }
