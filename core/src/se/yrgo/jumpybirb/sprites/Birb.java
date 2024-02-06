@@ -16,7 +16,7 @@ public class Birb {
     private Rectangle bounds;
 
     public Birb(int x, int y) {
-        position = new Vector3(x, y, 0);
+        position = new Vector3(50, 50, 0);
         velocity = new Vector3(0, 0, 0);
         birb = new Texture("ugly-bird.png");
         bounds = new Rectangle(x, y, birb.getWidth(), birb.getHeight());
