@@ -15,7 +15,7 @@ public class Player {
     private float gravity = 300; // Adjust gravity as needed
 
     public Player() {
-        playerTexture = new Texture("dragon.png");
+        playerTexture = new Texture("ugly-bird.png");
         position = new Vector2(50, 50); // starting position
         speed = 50; // adjust the speed as needed
         isJumping = false;
