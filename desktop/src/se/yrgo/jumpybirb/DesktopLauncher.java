@@ -11,6 +11,7 @@ public class DesktopLauncher {
 		config.setWindowedMode(600, 800);
 		config.setResizable(true);
 		config.setTitle("Jumpy Birb");
+		config.setWindowIcon("ugly-bird.png");
 		new Lwjgl3Application(new JumpyBirb(), config);
 	}
 }
