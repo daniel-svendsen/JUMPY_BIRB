@@ -20,7 +20,7 @@ public class Birb {
         velocity = new Vector3(0, 0, 0);
         birb = new Texture("badlogic.jpg");
         bounds = new Rectangle(x, y, birb.getWidth(), birb.getHeight());
-        flap = new Gdx.audio.newSound(Gdx.files.internal("wing.ogg"));
+        flap = Gdx.audio.newSound(Gdx.files.internal("wing.ogg"));
     }
 
     public void update(float dt) {
