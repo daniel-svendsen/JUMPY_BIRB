@@ -7,7 +7,7 @@ import se.yrgo.jumpybirb.sprites.Birb;
 public class InputHandler extends InputAdapter {
     private Birb birb;
 
-    public MyInputProcessor(Birb birb) {
+    public InputHandler(Birb birb) {
         this.birb = birb;
     }
 

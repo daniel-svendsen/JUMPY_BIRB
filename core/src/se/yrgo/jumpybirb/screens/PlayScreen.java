@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
+import se.yrgo.jumpybirb.sprites.Birb;
+import se.yrgo.jumpybirb.utils.InputHandler;
 import se.yrgo.jumpybirb.utils.ScoreManager;
 
 /***
@@ -17,7 +19,7 @@ public class PlayScreen implements Screen {
     private static final Float TEXT_FONT_SCALE = 2.0f;
     BitmapFont textFont;
     private SpriteBatch batch;
-    private Texture playerTexture;
+    private Birb birb;
     private GameState state;
     private ScoreManager scoreManager;
 
@@ -46,7 +48,8 @@ public class PlayScreen implements Screen {
         Gdx.app.log(TAG, "show() called");
         batch = new SpriteBatch();
 
-        playerTexture = new Texture("ugly-bird.png"); // Change the birb texture here later :)
+        birb = new Birb(50, 50);
+        Gdx.input.setInputProcessor(new InputHandler(birb));
 
         textFont = new BitmapFont();
         textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -65,6 +68,9 @@ public class PlayScreen implements Screen {
         // Clear the frame before rendering anything else.
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Update birb
+        birb.update(delta);
+
         // Some placeholder text
         batch.begin();
         float textPadding = 50f; // Adjust the padding between text elements
@@ -75,8 +81,9 @@ public class PlayScreen implements Screen {
 
         // Render bird
         batch.begin();
-        batch.draw(playerTexture, Gdx.graphics.getWidth() / 3f, 200, 250, 250);
+        batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y); // Render the bird using Birb's position and texture
         batch.end();
+
 
         // Update score
         scoreManager.update(delta);
