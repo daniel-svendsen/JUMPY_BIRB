@@ -22,7 +22,7 @@ public class PlayScreen implements Screen {
     private Birb birb;
     private GameState state;
     private ScoreManager scoreManager;
-
+    private Texture backgroundTexture;
     /***
      * This is used to tell which state the playScreen is in.
      * Not implemented yet...
@@ -37,6 +37,7 @@ public class PlayScreen implements Screen {
     public PlayScreen() {
         this.scoreManager = ScoreManager.getInstance();
         this.state = GameState.READY;
+
     }
 
     /***
@@ -47,7 +48,7 @@ public class PlayScreen implements Screen {
     public void show() {
         Gdx.app.log(TAG, "show() called");
         batch = new SpriteBatch();
-
+        backgroundTexture = new Texture("Bakgrund1.jpg");
         birb = new Birb(50, 50);
         Gdx.input.setInputProcessor(new InputHandler(birb));
 
@@ -63,9 +64,8 @@ public class PlayScreen implements Screen {
      */
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0.35f, 0.4f, 1); // Set the background color
-
-        // Clear the frame before rendering anything else.
+        // Clear the screen
+        Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Update birb
@@ -76,7 +76,7 @@ public class PlayScreen implements Screen {
         float textPadding = 50f; // Adjust the padding between text elements
         textFont.draw(batch, "Press Esc to go to Menu", Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 3f - textPadding, 0, Align.left, false);
-
+        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
 
         // Render bird
