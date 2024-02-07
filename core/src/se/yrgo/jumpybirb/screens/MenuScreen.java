@@ -40,9 +40,7 @@ public class MenuScreen implements Screen {
         textFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
         textFont.getData().setScale(TEXT_FONT_SCALE);
 
-        // Load background image
-        backgroundTexture = new Texture(Gdx.files.internal("splash.png"));
-        Gdx.app.log(TAG, "Image loaded successfully: " + backgroundTexture);
+
     }
 
     /***
@@ -56,6 +54,7 @@ public class MenuScreen implements Screen {
 
         // Draw text "Menu"
         batch.begin();
+
         headerFont.draw(batch, "Menu",  Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 2f, 0, Align.left, false);
 
