@@ -63,7 +63,7 @@ public class MenuScreen implements Screen {
 
         // Additional text below "Menu"
         float textPadding = 50f; // Adjust the padding between text elements
-        textFont.draw(batch, "Press Enter to play game", Gdx.graphics.getWidth() / 4f,
+        textFont.draw(batch, "Press SPACE to play game", Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 2f - textPadding, 0, Align.left, false);
 
         batch.end();

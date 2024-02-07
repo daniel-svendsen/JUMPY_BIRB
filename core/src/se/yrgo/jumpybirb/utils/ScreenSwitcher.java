@@ -55,7 +55,7 @@ public class ScreenSwitcher extends InputAdapter {
             splashScreenFinished = true;
             Timer.instance().clear(); // Clear the timer
             switchToScreen(Screens.MENU);
-        } else if (currentScreen == Screens.MENU && keycode == Keys.ENTER) {
+        } else if (currentScreen == Screens.MENU && keycode == Keys.SPACE) {
             // Switch to PlayScreen and pass the existing ScoreManager
             switchToScreen(Screens.PLAY);
         } else if (currentScreen == Screens.PLAY && keycode == Keys.ESCAPE) {
