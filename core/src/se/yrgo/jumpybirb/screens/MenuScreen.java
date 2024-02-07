@@ -32,6 +32,7 @@ public class MenuScreen implements Screen {
     public void show() {
         Gdx.app.log(TAG, "show() called");
         batch = new SpriteBatch();
+        backgroundTexture = new Texture(Gdx.files.internal("Welcome1.jpg"));
         headerFont = new BitmapFont();
         headerFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
         headerFont.getData().setScale(HEADER_FONT_SCALE);
@@ -54,6 +55,8 @@ public class MenuScreen implements Screen {
 
         // Draw text "Menu"
         batch.begin();
+
+        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         headerFont.draw(batch, "Menu",  Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 2f, 0, Align.left, false);
