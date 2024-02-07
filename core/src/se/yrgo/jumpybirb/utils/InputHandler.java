@@ -3,7 +3,6 @@ package se.yrgo.jumpybirb.utils;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import se.yrgo.jumpybirb.sprites.Birb;
-
 public class InputHandler extends InputAdapter {
     private Birb birb;
 

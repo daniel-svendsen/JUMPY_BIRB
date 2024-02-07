@@ -64,7 +64,6 @@ public class PlayScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0.35f, 0.4f, 1); // Set the background color
-
         // Clear the frame before rendering anything else.
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
