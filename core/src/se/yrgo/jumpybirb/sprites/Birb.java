@@ -17,9 +17,9 @@ public class Birb {
 
     public Birb(int x, int y) {
 
-        position = new Vector3(50, 50, 0);
+        position = new Vector3(50, 500, 0);
         velocity = new Vector3(0, 0, 0);
-        birb = new Texture("ugly-bird.png");
+        birb = new Texture("Birb1.png");
         bounds = new Rectangle(x, y, birb.getWidth(), birb.getHeight());
         flap = Gdx.audio.newSound(Gdx.files.internal("wing.ogg"));
     }

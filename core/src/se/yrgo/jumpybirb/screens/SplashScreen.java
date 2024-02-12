@@ -20,7 +20,7 @@ public class SplashScreen implements Screen {
     BitmapFont font;
     SpriteBatch batch;
     private Texture backgroundTexture;
-    private Texture birdTexture;
+    //private Texture birdTexture;
 
 
     @Override
@@ -32,12 +32,12 @@ public class SplashScreen implements Screen {
         font.getData().setScale(FONT_SCALE);
 
         // Load background image
-        backgroundTexture = new Texture(Gdx.files.internal("splash.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("Welcome1.jpg"));
         Gdx.app.log(TAG, "Image loaded successfully: " + backgroundTexture);
 
         // Load bird image
-        birdTexture = new Texture(Gdx.files.internal("pigeon.png"));
-        Gdx.app.log(TAG, "Image loaded successfully: " + birdTexture);
+        //birdTexture = new Texture(Gdx.files.internal("pigeon.png"));
+        //Gdx.app.log(TAG, "Image loaded successfully: " + birdTexture);
     }
 
     @Override
@@ -52,16 +52,16 @@ public class SplashScreen implements Screen {
         batch.end();
 
         // Render bird image
-        batch.begin();
-        batch.draw(birdTexture,  Gdx.graphics.getWidth() / 3f, 200, 250, 250);
-        batch.end();
+        //batch.begin();
+        //batch.draw(birdTexture,  Gdx.graphics.getWidth() / 3f, 200, 250, 250);
+        //batch.end();
 
         // Render text
-        batch.begin();
-        font.setColor(Color.WHITE);
-        font.draw(batch, "Flappy Birb",  Gdx.graphics.getWidth() / 4f, Gdx.graphics.getHeight() * (2f / 3f),
-                0, Align.left, false);
-        batch.end();
+//        batch.begin();
+//        font.setColor(Color.WHITE);
+//        font.draw(batch, "Flappy Birb",  Gdx.graphics.getWidth() / 4f, Gdx.graphics.getHeight() * (2f / 3f),
+//                0, Align.left, false);
+//        batch.end();
     }
 
 

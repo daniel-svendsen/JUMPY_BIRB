@@ -32,6 +32,7 @@ public class MenuScreen implements Screen {
     public void show() {
         Gdx.app.log(TAG, "show() called");
         batch = new SpriteBatch();
+        backgroundTexture = new Texture(Gdx.files.internal("Welcome1.jpg"));
         headerFont = new BitmapFont();
         headerFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
         headerFont.getData().setScale(HEADER_FONT_SCALE);
@@ -40,9 +41,7 @@ public class MenuScreen implements Screen {
         textFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
         textFont.getData().setScale(TEXT_FONT_SCALE);
 
-        // Load background image
-        backgroundTexture = new Texture(Gdx.files.internal("splash.png"));
-        Gdx.app.log(TAG, "Image loaded successfully: " + backgroundTexture);
+
     }
 
     /***
@@ -56,12 +55,15 @@ public class MenuScreen implements Screen {
 
         // Draw text "Menu"
         batch.begin();
+
+        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
         headerFont.draw(batch, "Menu",  Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 2f, 0, Align.left, false);
 
         // Additional text below "Menu"
         float textPadding = 50f; // Adjust the padding between text elements
-        textFont.draw(batch, "Press Enter to play game", Gdx.graphics.getWidth() / 4f,
+        textFont.draw(batch, "Press SPACE to play game", Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 2f - textPadding, 0, Align.left, false);
 
         batch.end();
