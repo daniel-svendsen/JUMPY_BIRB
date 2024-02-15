@@ -28,6 +28,10 @@ public class PlayScreen implements Screen {
 
     public PlayScreen() {
         scoreManager = ScoreManager.getInstance();
+        obstacles = new Array<Obstacle>();
+        for (int i = 1; i <= OBSTACLE_COUNT; i++) { // for loop for adding tubes
+            obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
+        }
     }
 
     @Override
@@ -53,6 +57,17 @@ public class PlayScreen implements Screen {
         // Update birb
         birb.update(delta);
 
+
+
+        // Update camera position to follow the birb
+        camera.position.x = birb.getPosition().x;
+        camera.update();
+
+        // Set the SpriteBatch's projection matrix to the camera's combined matrix
+        batch.setProjectionMatrix(camera.combined);
+
+        // Begin batch
+        batch.begin();
         // Draws the obstacles
         for (Obstacle obstacle : obstacles) {
             if (obstacle.getPosTopObstacle().x > 320) {
@@ -67,17 +82,6 @@ public class PlayScreen implements Screen {
                 obstacle.reposition(obstacle.getPosTopObstacle().x + (Obstacle.OBSTACLE_WIDTH + OBSTACLE_SPACING) * OBSTACLE_COUNT);
             }
         }
-
-        // Update camera position to follow the birb
-        camera.position.x = birb.getPosition().x;
-        camera.update();
-
-        // Set the SpriteBatch's projection matrix to the camera's combined matrix
-        batch.setProjectionMatrix(camera.combined);
-
-        // Begin batch
-        batch.begin();
-
         // Draw background
         batch.draw(backgroundTexture, 0, 0, 600, 800); // Adjust this to match your world width and height
 
