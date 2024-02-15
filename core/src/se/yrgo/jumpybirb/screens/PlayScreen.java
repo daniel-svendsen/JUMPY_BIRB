@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import se.yrgo.jumpybirb.sprites.Birb;
 import se.yrgo.jumpybirb.sprites.Obstacle;
 import se.yrgo.jumpybirb.utils.InputHandler;
@@ -21,6 +22,9 @@ public class PlayScreen implements Screen {
     private BitmapFont textFont;
     private static final float TEXT_FONT_SCALE = 2.0f;
     private OrthographicCamera camera;
+    private static final int OBSTACLE_COUNT = 4;
+    private Array<Obstacle> obstacles;
+    private static final int OBSTACLE_SPACING = 125; // Spacing between tubes horizontally
 
     public PlayScreen() {
         scoreManager = ScoreManager.getInstance();
