@@ -68,6 +68,12 @@ public class PlayScreen implements Screen {
 
         // Begin batch
         batch.begin();
+
+        batch.draw(backgroundTexture, camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
+
+        // Draw text and scores, passing the background coordinates and dimensions
+        drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
+
         // Draws the obstacles
         for (Obstacle obstacle : obstacles) {
             if (obstacle.getPosTopObstacle().x > 320) {
@@ -82,28 +88,26 @@ public class PlayScreen implements Screen {
                 obstacle.reposition(obstacle.getPosTopObstacle().x + (Obstacle.OBSTACLE_WIDTH + OBSTACLE_SPACING) * OBSTACLE_COUNT);
             }
         }
-        // Draw background
-        batch.draw(backgroundTexture, 0, 0, 600, 800); // Adjust this to match your world width and height
 
         // Draw birb
         batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
 
-        // Draw text and scores
-        drawTextAndScores();
+
 
         // End batch
         batch.end();
     }
 
-    private void drawTextAndScores() {
+    private void drawTextAndScores(float backgroundX, float backgroundY, float backgroundWidth, float backgroundHeight) {
         float textPadding = 50f;
         int currentScore = scoreManager.getScore();
         int highScore = scoreManager.getHighScore();
 
-        textFont.draw(batch, "Press Esc to go to Menu", Gdx.graphics.getWidth() / 4f,
-                Gdx.graphics.getHeight() / 3f - textPadding, 0, Align.left, false);
-        textFont.draw(batch, "Score: " + currentScore, 10, Gdx.graphics.getHeight() - 10f);
-        textFont.draw(batch, "High Score: " + highScore, 10, Gdx.graphics.getHeight() - 10f - 50f);
+        // Draw text and scores with respect to the background position and dimensions
+        textFont.draw(batch, "Press Esc to go to Menu", backgroundX + backgroundWidth / 4f,
+                backgroundY + backgroundHeight / 3f - textPadding, 0, Align.left, false);
+        textFont.draw(batch, "Score: " + currentScore, backgroundX + 10, backgroundY + backgroundHeight - 10f);
+        textFont.draw(batch, "High Score: " + highScore, backgroundX + 10, backgroundY + backgroundHeight - 10f - 50f);
     }
 
     @Override
