@@ -3,6 +3,7 @@ package se.yrgo.jumpybirb.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,6 +19,7 @@ public class PlayScreen implements Screen {
     private Texture backgroundTexture;
     private BitmapFont textFont;
     private static final float TEXT_FONT_SCALE = 2.0f;
+    private OrthographicCamera camera;
 
     public PlayScreen() {
         scoreManager = ScoreManager.getInstance();
@@ -29,6 +31,8 @@ public class PlayScreen implements Screen {
         backgroundTexture = new Texture("Bakgrund1.jpg");
         birb = new Birb();
         Gdx.input.setInputProcessor(new InputHandler(birb));
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 600, 800); // Adjust this to match your world width and height
 
         textFont = new BitmapFont();
         textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -37,38 +41,51 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        // Clear the screen
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Update birb
         birb.update(delta);
+        // Update camera position to follow the birb
+        camera.position.x = birb.getPosition().x;
+        camera.update();
 
+        // Set the SpriteBatch's projection matrix to the camera's combined matrix
+        batch.setProjectionMatrix(camera.combined);
+
+        // Begin batch
         batch.begin();
-        drawText();
-        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        // Draw background
+        batch.draw(backgroundTexture, 0, 0, 600, 800); // Adjust this to match your world width and height
+
+        // Draw birb
         batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
+
+        // Draw text and scores
+        drawTextAndScores();
+
+        // End batch
         batch.end();
-
-        drawScores();
     }
 
-    private void drawText() {
+    private void drawTextAndScores() {
         float textPadding = 50f;
-        textFont.draw(batch, "Press Esc to go to Menu", Gdx.graphics.getWidth() / 4f,
-                Gdx.graphics.getHeight() / 3f - textPadding, 0, Align.left, false);
-    }
-
-    private void drawScores() {
         int currentScore = scoreManager.getScore();
         int highScore = scoreManager.getHighScore();
 
-        batch.begin();
+        textFont.draw(batch, "Press Esc to go to Menu", Gdx.graphics.getWidth() / 4f,
+                Gdx.graphics.getHeight() / 3f - textPadding, 0, Align.left, false);
         textFont.draw(batch, "Score: " + currentScore, 10, Gdx.graphics.getHeight() - 10f);
         textFont.draw(batch, "High Score: " + highScore, 10, Gdx.graphics.getHeight() - 10f - 50f);
-        batch.end();
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        // Update the camera's viewport to match the screen size
+        camera.setToOrtho(false, width, height);
+    }
 
     @Override
     public void pause() {}
@@ -80,5 +97,10 @@ public class PlayScreen implements Screen {
     public void hide() {}
 
     @Override
-    public void dispose() {}
+    public void dispose() {
+        // Dispose of resources
+        batch.dispose();
+        backgroundTexture.dispose();
+        textFont.dispose();
+    }
 }

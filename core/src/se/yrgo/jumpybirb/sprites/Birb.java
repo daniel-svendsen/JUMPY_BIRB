@@ -7,10 +7,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Birb {
-    private static final int GRAVITY = -10;
+    private static final int GRAVITY = -400;
     private static final int INITIAL_POSITION_X = 50;
     private static final int INITIAL_POSITION_Y = 500;
     private static final int JUMP_VELOCITY = 250;
+    private static final float MOVEMENT_SPEED = 80;
 
     private Vector2 position;
     private Vector2 velocity;
@@ -27,21 +28,25 @@ public class Birb {
     }
 
     public void update(float deltaTime) {
-        if (position.y > 0)
-            velocity.add(0, GRAVITY);
-        velocity.scl(deltaTime);
+        // Apply gravity to the birb
+        velocity.y += GRAVITY * deltaTime;
 
-        position.add(0, velocity.y);
+        // Update birb's position based on velocity
+        position.add(velocity.x * deltaTime, velocity.y * deltaTime);
 
+        // Adjust MOVEMENT_SPEED to control the birb's horizontal movement
+        position.x += MOVEMENT_SPEED * deltaTime;
+
+        // Ensure birb stays within the bounds of the screen
         if (position.y < 0)
             position.y = 0;
-
         if (position.y + texture.getHeight() > 800)
             position.y = 800 - texture.getHeight();
+        if (position.x < 0)
+            position.x = 0;  // Adjust this condition based on your game's requirements
+        // Optionally, handle collisions or other game mechanics here
 
         bounds.setPosition(position.x, position.y);
-
-        velocity.scl(1 / deltaTime);
     }
 
     public Vector2 getPosition() {
