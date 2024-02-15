@@ -4,63 +4,65 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Vector2;
 
 public class Birb {
     private static final int GRAVITY = -10;
-    public static int MOVEMENT = 0;
-    private Vector3 position;
-    private Vector3 velocity;
-    private Texture birb; // Birb Texture
-    private Sound flap;
-    private Rectangle bounds; // Required for collision
+    private static final int INITIAL_POSITION_X = 50;
+    private static final int INITIAL_POSITION_Y = 500;
+    private static final int JUMP_VELOCITY = 250;
 
-    public Birb(int x, int y) {
+    private Vector2 position;
+    private Vector2 velocity;
+    private Texture texture;
+    private Sound flapSound;
+    private Rectangle bounds;
 
-        position = new Vector3(50, 500, 0);
-        velocity = new Vector3(0, 0, 0);
-        birb = new Texture("Birb1.png");
-        bounds = new Rectangle(x, y, birb.getWidth(), birb.getHeight());
-        flap = Gdx.audio.newSound(Gdx.files.internal("wing.ogg"));
+    public Birb() {
+        position = new Vector2(INITIAL_POSITION_X, INITIAL_POSITION_Y);
+        velocity = new Vector2(0, 0);
+        texture = new Texture("Birb1.png");
+        bounds = new Rectangle(position.x, position.y, texture.getWidth(), texture.getHeight());
+        flapSound = Gdx.audio.newSound(Gdx.files.internal("wing.ogg"));
     }
 
-    public void update(float dt) {
+    public void update(float deltaTime) {
         if (position.y > 0)
-            velocity.add(0, GRAVITY, 0);
-        velocity.scl(dt);
+            velocity.add(0, GRAVITY);
+        velocity.scl(deltaTime);
 
-        position.add(MOVEMENT * dt, velocity.y, 0);
+        position.add(0, velocity.y);
 
         if (position.y < 0)
             position.y = 0;
-        velocity.scl(1 / dt);
 
-        // Check if the bird is going out of the screen from the top
-        if (position.y + birb.getHeight() > 800)
-            position.y = 800 - birb.getHeight();
+        if (position.y + texture.getHeight() > 800)
+            position.y = 800 - texture.getHeight();
 
         bounds.setPosition(position.x, position.y);
+
+        velocity.scl(1 / deltaTime);
     }
 
-    public Vector3 getPosition() {
+    public Vector2 getPosition() {
         return position;
     }
 
     public Texture getTexture() {
-        return birb;
+        return texture;
     }
 
     public void jump() {
-        velocity.y = 250;
-        flap.play(0.3f);
+        velocity.y = JUMP_VELOCITY;
+        flapSound.play(0.3f);
     }
 
     public Rectangle getBounds() {
-        return  bounds;
+        return bounds;
     }
 
     public void dispose() {
-        birb.dispose();
-        flap.dispose();
+        texture.dispose();
+        flapSound.dispose();
     }
 }
