@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
 import se.yrgo.jumpybirb.sprites.Birb;
+import se.yrgo.jumpybirb.sprites.Obstacle;
 import se.yrgo.jumpybirb.utils.InputHandler;
 import se.yrgo.jumpybirb.utils.ScoreManager;
 
