@@ -47,6 +47,8 @@ public class PlayScreen implements Screen {
 
         // Update birb
         birb.update(delta);
+
+
         // Update camera position to follow the birb
         camera.position.x = birb.getPosition().x;
         camera.update();
