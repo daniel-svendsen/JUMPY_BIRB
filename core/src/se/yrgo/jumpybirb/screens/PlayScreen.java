@@ -48,6 +48,20 @@ public class PlayScreen implements Screen {
         // Update birb
         birb.update(delta);
 
+        // Draws the obstacles
+        for (Obstacle obstacle : obstacles) {
+            if (obstacle.getPosTopObstacle().x > 320) {
+                batch.draw(obstacle.getTopObstacle(), obstacle.getPosTopObstacle().x, obstacle.getPosTopObstacle().y);
+                batch.draw(obstacle.getBottomObstacle(), obstacle.getPosBottomObstacle().x, obstacle.getPosBottomObstacle().y);
+            }
+        }
+
+        // Render a new obstacle when an obstacle leaves the screen
+        for (Obstacle obstacle : obstacles) {
+            if (cam.position.x - (cam.viewportWidth / 2) > obstacle.getPosTopObstacle().x + obstacle.getTopObstacle().getWidth()) {
+                obstacle.reposition(obstacle.getPosTopObstacle().x + (Obstacle.OBSTACLE_WIDTH + OBSTACLE_SPACING) * OBSTACLE_COUNT);
+            }
+        }
 
         // Update camera position to follow the birb
         camera.position.x = birb.getPosition().x;
