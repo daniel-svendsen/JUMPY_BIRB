@@ -59,7 +59,7 @@ public class PlayScreen implements Screen {
 
         // Render a new obstacle when an obstacle leaves the screen
         for (Obstacle obstacle : obstacles) {
-            if (cam.position.x - (cam.viewportWidth / 2) > obstacle.getPosTopObstacle().x + obstacle.getTopObstacle().getWidth()) {
+            if (camera.position.x - (camera.viewportWidth / 2) > obstacle.getPosTopObstacle().x + obstacle.getTopObstacle().getWidth()) {
                 obstacle.reposition(obstacle.getPosTopObstacle().x + (Obstacle.OBSTACLE_WIDTH + OBSTACLE_SPACING) * OBSTACLE_COUNT);
             }
         }
