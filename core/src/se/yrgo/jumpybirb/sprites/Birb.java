@@ -7,10 +7,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Birb {
-    private static final int GRAVITY = -400;
+    private static final int GRAVITY = -800;
     private static final int INITIAL_POSITION_X = 50;
     private static final int INITIAL_POSITION_Y = 500;
-    private static final int JUMP_VELOCITY = 250;
+    private static final int JUMP_VELOCITY = 400;
     private static final float MOVEMENT_SPEED = 80;
 
     private Vector2 position;
