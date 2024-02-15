@@ -24,7 +24,7 @@ public class PlayScreen implements Screen {
     private OrthographicCamera camera;
     private static final int OBSTACLE_COUNT = 4;
     private Array<Obstacle> obstacles;
-    private static final int OBSTACLE_SPACING = 125; // Spacing between tubes horizontally
+    private static final int OBSTACLE_SPACING = 180; // Spacing between tubes horizontally
 
     public PlayScreen() {
         scoreManager = ScoreManager.getInstance();
