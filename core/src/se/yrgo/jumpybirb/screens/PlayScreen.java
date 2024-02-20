@@ -105,8 +105,8 @@ public class PlayScreen implements Screen {
         // Draw text and scores with respect to the background position and dimensions
         textFont.draw(batch, "Press Esc to go to Menu", backgroundX + backgroundWidth / 4f,
                 backgroundY + backgroundHeight / 3f - textPadding, 0, Align.left, false);
-        textFont.draw(batch, "Score: " + currentScore, backgroundX + 10, backgroundY + backgroundHeight - 10f);
-        textFont.draw(batch, "High Score: " + highScore, backgroundX + 10, backgroundY + backgroundHeight - 10f - 50f);
+        textFont.draw(batch, "Score: " + currentScore, backgroundX + 370, backgroundY + backgroundHeight - 10f);
+        textFont.draw(batch, "High Score: " + highScore, backgroundX + 370, backgroundY + backgroundHeight - 10f - 50f);
     }
 
     @Override
