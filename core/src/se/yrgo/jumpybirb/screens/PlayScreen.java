@@ -44,7 +44,7 @@ public class PlayScreen implements Screen {
         camera.setToOrtho(false, 600, 800); // Adjust this to match your world width and height
 
         textFont = new BitmapFont();
-        textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         textFont.getData().setScale(TEXT_FONT_SCALE);
     }
 
