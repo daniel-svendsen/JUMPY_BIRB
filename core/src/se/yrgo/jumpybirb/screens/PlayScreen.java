@@ -15,16 +15,16 @@ import se.yrgo.jumpybirb.utils.InputHandler;
 import se.yrgo.jumpybirb.utils.ScoreManager;
 
 public class PlayScreen implements Screen {
+    private static final float TEXT_FONT_SCALE = 2.0f;
+    private static final int OBSTACLE_COUNT = 4;
+    private static final int OBSTACLE_SPACING = 180; // Spacing between tubes horizontally
     private SpriteBatch batch;
     private Birb birb;
     private ScoreManager scoreManager;
     private Texture backgroundTexture;
     private BitmapFont textFont;
-    private static final float TEXT_FONT_SCALE = 2.0f;
     private OrthographicCamera camera;
-    private static final int OBSTACLE_COUNT = 4;
     private Array<Obstacle> obstacles;
-    private static final int OBSTACLE_SPACING = 180; // Spacing between tubes horizontally
 
     public PlayScreen() {
         scoreManager = ScoreManager.getInstance();
@@ -58,7 +58,6 @@ public class PlayScreen implements Screen {
         birb.update(delta);
 
 
-
         // Update camera position to follow the birb
         camera.position.x = birb.getPosition().x;
         camera.update();
@@ -71,8 +70,6 @@ public class PlayScreen implements Screen {
 
         batch.draw(backgroundTexture, camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
-        // Draw text and scores, passing the background coordinates and dimensions
-        drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
         // Draws the obstacles
         for (Obstacle obstacle : obstacles) {
@@ -92,6 +89,8 @@ public class PlayScreen implements Screen {
         // Draw birb
         batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
 
+        // Draw text and scores, passing the background coordinates and dimensions
+        drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
 
         // End batch
@@ -117,13 +116,16 @@ public class PlayScreen implements Screen {
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 
     @Override
     public void dispose() {
