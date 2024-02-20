@@ -15,16 +15,16 @@ import se.yrgo.jumpybirb.utils.InputHandler;
 import se.yrgo.jumpybirb.utils.ScoreManager;
 
 public class PlayScreen implements Screen {
-    private static final float TEXT_FONT_SCALE = 2.0f;
-    private static final int OBSTACLE_COUNT = 4;
-    private static final int OBSTACLE_SPACING = 180; // Spacing between tubes horizontally
     private SpriteBatch batch;
     private Birb birb;
     private ScoreManager scoreManager;
     private Texture backgroundTexture;
     private BitmapFont textFont;
+    private static final float TEXT_FONT_SCALE = 2.0f;
     private OrthographicCamera camera;
+    private static final int OBSTACLE_COUNT = 4;
     private Array<Obstacle> obstacles;
+    private static final int OBSTACLE_SPACING = 180; // Spacing between tubes horizontally
 
     public PlayScreen() {
         scoreManager = ScoreManager.getInstance();
@@ -44,7 +44,7 @@ public class PlayScreen implements Screen {
         camera.setToOrtho(false, 600, 800); // Adjust this to match your world width and height
 
         textFont = new BitmapFont();
-        textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         textFont.getData().setScale(TEXT_FONT_SCALE);
     }
 
@@ -56,6 +56,7 @@ public class PlayScreen implements Screen {
 
         // Update birb
         birb.update(delta);
+
 
 
         // Update camera position to follow the birb
@@ -70,6 +71,8 @@ public class PlayScreen implements Screen {
 
         batch.draw(backgroundTexture, camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
+        // Draw text and scores, passing the background coordinates and dimensions
+        drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
         // Draws the obstacles
         for (Obstacle obstacle : obstacles) {
@@ -89,8 +92,7 @@ public class PlayScreen implements Screen {
         // Draw birb
         batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
 
-        // Draw text and scores, passing the background coordinates and dimensions
-        drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
+
 
         // End batch
         batch.end();
@@ -104,8 +106,8 @@ public class PlayScreen implements Screen {
         // Draw text and scores with respect to the background position and dimensions
         textFont.draw(batch, "Press Esc to go to Menu", backgroundX + backgroundWidth / 4f,
                 backgroundY + backgroundHeight / 3f - textPadding, 0, Align.left, false);
-        textFont.draw(batch, "Score: " + currentScore, backgroundX + 370, backgroundY + backgroundHeight - 10f);
-        textFont.draw(batch, "High Score: " + highScore, backgroundX + 370, backgroundY + backgroundHeight - 10f - 50f);
+        textFont.draw(batch, "Score: " + currentScore, backgroundX + 10, backgroundY + backgroundHeight - 10f);
+        textFont.draw(batch, "High Score: " + highScore, backgroundX + 10, backgroundY + backgroundHeight - 10f - 50f);
     }
 
     @Override
@@ -115,16 +117,13 @@ public class PlayScreen implements Screen {
     }
 
     @Override
-    public void pause() {
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-    }
+    public void hide() {}
 
     @Override
     public void dispose() {
