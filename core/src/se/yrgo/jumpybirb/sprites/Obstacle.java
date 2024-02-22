@@ -3,6 +3,7 @@ package se.yrgo.jumpybirb.sprites;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import se.yrgo.jumpybirb.utils.ScoreManager;
 
 import java.util.Random;
 
@@ -42,8 +43,7 @@ public class Obstacle {
         boolean collision = player.overlaps(boundsBot) || player.overlaps(boundsTop);
         if (collision && !isPassed) {
             isPassed = true;
-            // Increase the score here (you need a reference to your game class)
-            // For example: game.incrementScore();
+            ScoreManager.getInstance().updateScore(); // Update the score using ScoreManager
         }
         return collision;
     }
