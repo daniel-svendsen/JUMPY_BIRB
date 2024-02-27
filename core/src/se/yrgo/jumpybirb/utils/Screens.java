@@ -2,6 +2,7 @@ package se.yrgo.jumpybirb.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import se.yrgo.jumpybirb.JumpyBirb;
 import se.yrgo.jumpybirb.screens.GameOverScreen;
 import se.yrgo.jumpybirb.screens.HighScoreScreen;
 import se.yrgo.jumpybirb.screens.MenuScreen;
@@ -42,7 +43,7 @@ public enum Screens {
             Screen instance = switch (this) {
                 case SPLASH -> new SplashScreen();
                 case MENU -> new MenuScreen();
-                case PLAY -> new PlayScreen();
+                case PLAY -> new PlayScreen(JumpyBirb.getScreenSwitcher());
                 case GAME_OVER -> new GameOverScreen();
                 case HIGH_SCORE -> new HighScoreScreen();
             };

@@ -11,21 +11,25 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import se.yrgo.jumpybirb.sprites.Birb;
 import se.yrgo.jumpybirb.sprites.Obstacle;
-import se.yrgo.jumpybirb.utils.InputHandler;
 import se.yrgo.jumpybirb.utils.ScoreManager;
+import se.yrgo.jumpybirb.utils.ScreenSwitcher;
+import se.yrgo.jumpybirb.utils.Screens;
 
 /***
  * The screen that runs the actual game, a round of the game.
+ * Responsible for managing the game state and interactions between game objects.
  */
 public class PlayScreen implements Screen {
     public static final String TAG = PlayScreen.class.getSimpleName();
-
     private SpriteBatch batch;
     private Birb birb;
     private ScoreManager scoreManager;
+    private ScreenSwitcher screenSwitcher;
+    private GameState currentGameState;
     private Texture backgroundTexture;
     private BitmapFont textFont;
     private static final float TEXT_FONT_SCALE = 2.0f;
+    private Texture getReadyTexture;
     private OrthographicCamera camera;
     private static final int OBSTACLE_COUNT = 4;
     private Array<Obstacle> obstacles;
@@ -37,16 +41,18 @@ public class PlayScreen implements Screen {
      * Not implemented yet...
      */
     public enum GameState {
-        MENU, READY, RUNNING, GAMEOVER
+        MENU, READY, RUNNING, GAME_OVER
     }
 
     /**
      * Constructor. Initialize ScoreManager.
      * For-loop for adding obstacles.
      */
-    public PlayScreen() {
+    public PlayScreen(ScreenSwitcher screenSwitcher) {
         birb = new Birb(66, 64);
         scoreManager = ScoreManager.getInstance();
+        this.screenSwitcher = screenSwitcher;
+        currentGameState = GameState.READY;
         obstacles = new Array<>();
 
         for (int i = 1; i <= OBSTACLE_COUNT; i++) { // for loop for adding tubes
@@ -64,6 +70,8 @@ public class PlayScreen implements Screen {
         backgroundTexture = new Texture("Bakgrund1.jpg");
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 600, 800); // Adjust this to match your world width and height
+
+        getReadyTexture = new Texture("get-ready.png"); // placeholder get-ready image
 
         textFont = new BitmapFont();
         textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -84,9 +92,65 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        switch (currentGameState) {
+            case READY:
+                // Handle ready state
+                updateReadyState(delta);
+                break;
+            case RUNNING:
+                // Handle running state
+                updateRunningState(delta);
+                break;
+            case GAME_OVER:
+                // Handle game over state
+                updateGameOverState(delta);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public GameState getCurrentGameState() {
+        return currentGameState;
+    }
+
+    private void updateReadyState(float delta) {
+        currentGameState = GameState.READY;
+        Gdx.app.log(TAG, "GameState: READY");
+
+        // Render the assets without updating their positions
+        batch.begin();
+        batch.setProjectionMatrix(camera.combined);
+
+        // Draw background
+        batch.draw(backgroundTexture, 0, 0, camera.viewportWidth, camera.viewportHeight);
+
+        // Draw the "get-ready" image
+        float readyImagePositionX = (camera.viewportWidth - getReadyTexture.getWidth()) / 2f;
+        float readyImagePositionY = (camera.viewportHeight - getReadyTexture.getHeight()) / 2f;
+        batch.draw(getReadyTexture, readyImagePositionX, readyImagePositionY);
+
+        // Draw birb at its initial position
+        batch.draw(birb.getTexture(), birb.getInitialPosition()[0], birb.getInitialPosition()[1]);
+
+        // Draw obstacles at their initial positions
+        for (Obstacle obstacle : obstacles) {
+            batch.draw(obstacle.getTopObstacle(), obstacle.getPosTopObstacle().x, obstacle.getPosTopObstacle().y);
+            batch.draw(obstacle.getBottomObstacle(), obstacle.getPosBottomObstacle().x, obstacle.getPosBottomObstacle().y);
+        }
+
+        // End batch
+        batch.end();
+    }
+
+    private void updateRunningState(float delta) {
+        currentGameState = GameState.RUNNING;
+        Gdx.app.log(TAG, "GameState: RUNNING");
+
+        // Update game logic while in the running state (e.g., birb movement, obstacle movement)
+        // Check for collisions, update score, etc.
         // Update birb
         birb.update(delta);
-
         // Update camera position to follow the birb
         camera.position.x = birb.getPosition().x;
         camera.update();
@@ -106,33 +170,80 @@ public class PlayScreen implements Screen {
         // Draw text and scores, passing the background coordinates and dimensions
         drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
-        // Draws the obstacles
+        // Update obstacles and draw them
+        updateObstacles();
+        drawObstacles();
+
+        // Render a new obstacle when an obstacle leaves the screen
+        updateObstacles();
+
+        // End batch
+        batch.end();
+
+        // Check for game over after drawing obstacles
+        checkForGameOver(birb);
+        Gdx.app.log(TAG, "Camera position: " + camera.position.x + ", " + camera.position.y);
+    }
+
+    private void updateGameOverState(float delta) {
+        // Implement logic for game over state (e.g., show game over screen, handle input for restart)
+        // Transition to appropriate state based on user input
+        if (checkForGameOver(birb)) {
+            resetGame();
+            currentGameState = GameState.GAME_OVER;
+            Gdx.app.log(TAG, "GameState: GAME_OVER");
+            screenSwitcher.switchToScreen(Screens.GAME_OVER);
+        }
+    }
+
+    private void updateObstacles() {
+        for (Obstacle obstacle : obstacles) {
+            if (camera.position.x - (camera.viewportWidth / 2) > obstacle.getPosTopObstacle().x + obstacle.getTopObstacle().getWidth()) {
+                obstacle.reposition(obstacle.getPosTopObstacle().x + (Obstacle.OBSTACLE_WIDTH + OBSTACLE_SPACING) * OBSTACLE_COUNT);
+            }
+        }
+    }
+
+    private void drawObstacles() {
         for (Obstacle obstacle : obstacles) {
             if (obstacle.getPosTopObstacle().x > 320) {
                 batch.draw(obstacle.getTopObstacle(), obstacle.getPosTopObstacle().x, obstacle.getPosTopObstacle().y);
                 batch.draw(obstacle.getBottomObstacle(), obstacle.getPosBottomObstacle().x, obstacle.getPosBottomObstacle().y);
             }
         }
-
-        // Render a new obstacle when an obstacle leaves the screen
-        for (Obstacle obstacle : obstacles) {
-            if (camera.position.x - (camera.viewportWidth / 2) > obstacle.getPosTopObstacle().x + obstacle.getTopObstacle().getWidth()) {
-                obstacle.reposition(obstacle.getPosTopObstacle().x + (Obstacle.OBSTACLE_WIDTH + OBSTACLE_SPACING) * OBSTACLE_COUNT);
-            }
-        }
-        // End batch
-        batch.end();
-
-        Gdx.app.log(TAG, "Camera position: " + camera.position.x + ", " + camera.position.y); // Add this line for debugging
     }
 
     /**
-     * TODO write Javadoc here
+     * Helper method to updateGameOverState
      *
-     * @param backgroundX
-     * @param backgroundY
-     * @param backgroundWidth
-     * @param backgroundHeight
+     * @param player the Birb
+     * @return true if player collided with an obstacle, false otherwise
+     */
+    public boolean checkForGameOver(Birb player) {
+        // Iterate through obstacles to check for collision with the player
+        for (Obstacle obstacle : obstacles) {
+            if (obstacle.collidesWith(player.getBounds())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void resetGame() {
+        // Reset necessary game elements (e.g., birb position, obstacles, score)
+        birb.reset();
+        scoreManager.reset();
+
+        // Clear existing array of obstacles and create new ones
+        obstacles.clear();
+        for (int i = 1; i <= OBSTACLE_COUNT; i++) { // for loop for adding tubes
+            obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
+        }
+    }
+
+
+    /**
+     * TODO write Javadoc here
      */
     private void drawTextAndScores(float backgroundX, float backgroundY, float backgroundWidth, float backgroundHeight) {
         float textPadding = 50f;
@@ -196,5 +307,6 @@ public class PlayScreen implements Screen {
         batch.dispose();
         backgroundTexture.dispose();
         textFont.dispose();
+        getReadyTexture.dispose();
     }
 }

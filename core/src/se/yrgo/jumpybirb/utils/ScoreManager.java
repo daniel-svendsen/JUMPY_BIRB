@@ -48,12 +48,6 @@ public class ScoreManager {
         return highScore;
     }
 
-    public void resetScore() {
-        score = 0;
-        elapsedTime = 0;
-        saveHighScore();
-    }
-
     private void loadHighScore() {
         highScore = preferences.getInteger(HIGH_SCORE_KEY, 0);
         Gdx.app.log("ScoreManager", "Loaded high score: " + highScore);
@@ -63,5 +57,11 @@ public class ScoreManager {
         preferences.putInteger(HIGH_SCORE_KEY, highScore);
         preferences.flush();
         Gdx.app.log("ScoreManager", "High score saved: " + highScore);
+    }
+
+    public void reset() {
+        score = 0;
+        elapsedTime = 0;
+        saveHighScore(); // Resetting also implies resetting the high score
     }
 }

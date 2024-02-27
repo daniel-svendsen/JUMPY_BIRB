@@ -15,7 +15,7 @@ import se.yrgo.jumpybirb.utils.ScreenSwitcher;
 public class JumpyBirb extends Game {
 
 	public static final String TAG = JumpyBirb.class.getName();
-	private ScreenSwitcher screenSwitcher;
+	private static ScreenSwitcher screenSwitcher;
 
 	/**
 	 * This method gets called first (entry point)
@@ -42,6 +42,10 @@ public class JumpyBirb extends Game {
 	public void dispose() {
 		Gdx.app.log(TAG, "dispose() called");
 		super.dispose();
+	}
+
+	public static ScreenSwitcher getScreenSwitcher() {
+		return screenSwitcher;
 	}
 }
 

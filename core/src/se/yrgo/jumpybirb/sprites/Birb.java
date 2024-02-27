@@ -10,8 +10,9 @@ import se.yrgo.jumpybirb.utils.InputHandler;
 public class Birb {
     public static final String TAG = Birb.class.getSimpleName();
     private static final int GRAVITY = -800;
-    private static final int INITIAL_POSITION_X = 50;
-    private static final int INITIAL_POSITION_Y = 500;
+    private static final float INITIAL_POSITION_X = 50;
+    private static final float INITIAL_POSITION_Y = 500;
+    private static final float[] INITIAL_POSITION = {INITIAL_POSITION_X, INITIAL_POSITION_X};
     private static final float JUMP_VELOCITY = 300f;
     private static final float MOVEMENT_SPEED = 80f;
     private int width;
@@ -42,16 +43,23 @@ public class Birb {
         // Adjust MOVEMENT_SPEED to control the birb's horizontal movement
         position.x += MOVEMENT_SPEED * deltaTime;
 
+        ensureInBounds();
+
+        bounds.setPosition(position.x, position.y);
+    }
+
+    private void ensureInBounds() {
         // Ensure birb stays within the bounds of the screen
         if (position.y < 0)
             position.y = 0;
         if (position.y + texture.getHeight() > 800)
             position.y = 800 - (float) texture.getHeight();
         if (position.x < 0)
-            position.x = 0;  // Adjust this condition based on your game's requirements
-        // Optionally, handle collisions or other game mechanics here
+            position.x = 0;
+    }
 
-        bounds.setPosition(position.x, position.y);
+    public float[] getInitialPosition() {
+        return INITIAL_POSITION;
     }
 
     public Vector2 getPosition() {
@@ -75,6 +83,15 @@ public class Birb {
 
     public Rectangle getBounds() {
         return bounds;
+    }
+
+    public void reset() {
+        // Reset position and velocity
+        position.set(INITIAL_POSITION_X, INITIAL_POSITION_Y);
+        velocity.set(0, 0);
+
+        // Reset bounds using updated position
+        bounds.setPosition(position.x, position.y);
     }
 
     public void dispose() {

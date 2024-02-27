@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Timer;
+import se.yrgo.jumpybirb.JumpyBirb;
+import se.yrgo.jumpybirb.utils.Screens;
 
 /***
  * The screen that shows when you start up the application.
@@ -34,7 +37,11 @@ public class SplashScreen implements Screen {
         // Load background image
         backgroundTexture = new Texture(Gdx.files.internal("Welcome1.jpg"));
         Gdx.app.log(TAG, "Image loaded successfully: " + backgroundTexture);
+
+        // Set a timer to switch to the menu screen after 3 seconds
+        setTimer();
     }
+
 
     /***
      * This method is called when the Application should render itself.
@@ -51,9 +58,19 @@ public class SplashScreen implements Screen {
         batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // Render placeholder font
-        font.draw(batch, "Splash!!!",  Gdx.graphics.getWidth() / 4f,
+        font.draw(batch, "Splash!!!", Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 2f, 0, Align.left, false);
         batch.end();
+    }
+
+    private static void setTimer() {
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                // Switch to the menu screen
+                JumpyBirb.getScreenSwitcher().switchToScreen(Screens.MENU);
+            }
+        }, 3); // 3 seconds
     }
 
     /***

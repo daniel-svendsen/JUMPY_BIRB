@@ -29,7 +29,7 @@ public final class ScreenSwitcher {
         this.debuggingName = debuggingName;
         this.splashScreenFinished = false;
         this.currentScreen = Screens.SPLASH;
-        playScreen = new PlayScreen();
+        playScreen = new PlayScreen(JumpyBirb.getScreenSwitcher());
         switchToScreen(Screens.SPLASH);
     }
 
