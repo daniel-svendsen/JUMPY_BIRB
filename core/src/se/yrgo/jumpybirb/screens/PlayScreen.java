@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import se.yrgo.jumpybirb.sprites.Birb;
@@ -28,7 +29,9 @@ public class PlayScreen implements Screen {
     private static final int OBSTACLE_COUNT = 4;
     private Array<Obstacle> obstacles;
     private static final int OBSTACLE_SPACING = 180; // Spacing between tubes horizontally
-
+    private Texture groundTexture;
+    private Vector2 groundPosition;
+    private float obstacleSpeed;
 
     /***
      * This is used to tell which state the playScreen is in.
@@ -63,7 +66,9 @@ public class PlayScreen implements Screen {
         Gdx.input.setInputProcessor(new InputHandler(birb));
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 600, 800); // Adjust this to match your world width and height
-
+        groundTexture = new Texture("Ground2.png");
+        groundPosition = new Vector2(-300, 0);
+        //obstacleSpeed = obstacles.get(0).getSpeed(); // Adjust this based on your game
         textFont = new BitmapFont();
         textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         textFont.getData().setScale(TEXT_FONT_SCALE);
@@ -83,7 +88,6 @@ public class PlayScreen implements Screen {
         // Update birb
         birb.update(delta);
 
-
         // Update camera position to follow the birb
         camera.position.x = birb.getPosition().x;
         camera.update();
@@ -91,10 +95,24 @@ public class PlayScreen implements Screen {
         // Set the SpriteBatch's projection matrix to the camera's combined matrix
         batch.setProjectionMatrix(camera.combined);
 
+        // Move ground with obstacles
+        groundPosition.x -= obstacleSpeed * delta;
+
+        // Reset ground position when it goes off-screen
+        if (groundPosition.x < -groundTexture.getWidth()) {
+            groundPosition.x += groundTexture.getWidth();
+        }
+
         // Begin batch
         batch.begin();
 
         batch.draw(backgroundTexture, camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
+
+        float currentX = groundPosition.x;
+        while (currentX < camera.position.x + camera.viewportWidth / 2f) {
+            batch.draw(groundTexture, currentX, 0, groundTexture.getWidth(), groundTexture.getHeight());
+            currentX += groundTexture.getWidth();
+        }
 
         // Draw text and scores, passing the background coordinates and dimensions
         drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
@@ -118,13 +136,13 @@ public class PlayScreen implements Screen {
         batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
 
 
-
         // End batch
         batch.end();
     }
 
     /**
      * TODO write Javadoc here
+     *
      * @param backgroundX
      * @param backgroundY
      * @param backgroundWidth
