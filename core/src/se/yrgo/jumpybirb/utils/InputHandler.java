@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import se.yrgo.jumpybirb.JumpyBirb;
+import se.yrgo.jumpybirb.screens.PlayScreen;
 import se.yrgo.jumpybirb.sprites.Birb;
 
 public class InputHandler extends InputAdapter {
@@ -44,7 +45,8 @@ public class InputHandler extends InputAdapter {
     }
 
     private void birbJump() {
-        screenSwitcher.getPlayScreen().getBirb().jump();
+        PlayScreen playScreen = (PlayScreen) gameSession.getScreen();
+        playScreen.getBirb().jump();
         Gdx.app.log(TAG, "birbJump called");
     }
 }

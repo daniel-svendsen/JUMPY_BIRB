@@ -100,7 +100,7 @@ public class PlayScreen implements Screen {
         // Draw background
         batch.draw(backgroundTexture, camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
-        // Draw birb
+        // Draw birb and update the position of the birb's sprite
         batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
 
         // Draw text and scores, passing the background coordinates and dimensions
