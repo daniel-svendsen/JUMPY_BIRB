@@ -3,6 +3,7 @@ package se.yrgo.jumpybirb.sprites;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import se.yrgo.jumpybirb.utils.ScoreManager;
 
 import java.util.Random;
 
@@ -20,6 +21,7 @@ public class Obstacle {
     private Random rand; // to get random top and bottom positions on Y axis
     public Rectangle boundsTop, boundsBot;
     private Rectangle boundSpace;
+    private boolean isPassed; // Variable to track whether the obstacle is passed
 
     public Obstacle(float x) {
         topObstacle = new Texture("UpperObstacle1.png");
@@ -30,11 +32,21 @@ public class Obstacle {
         boundsTop = new Rectangle(posTopObstacle.x, posTopObstacle.y, topObstacle.getWidth() - 5, topObstacle.getHeight() + 5); //Set position of invisible rectangle for top tube
         boundsBot = new Rectangle(posBottomObstacle.x, posTopObstacle.y, bottomObstacle.getWidth() - 5, bottomObstacle.getHeight() - 5); //Set position of invisible rectangle for bottom tube
         boundSpace = new Rectangle(posTopObstacle.x, posTopObstacle.y - OBSTACLE_GAP, topObstacle.getWidth(), topObstacle.getHeight());
+        isPassed = false;
+    }
 
+    // Method to check if the bird has passed the obstacle
+    public boolean isPassed() {
+        return isPassed;
     }
 
     public boolean collides (Rectangle player) {
-        return player.overlaps(boundsBot) || player.overlaps(boundsTop);
+        boolean collision = player.overlaps(boundsBot) || player.overlaps(boundsTop);
+        if (collision && !isPassed) {
+            isPassed = true;
+            ScoreManager.getInstance().updateScore(); // Update the score using ScoreManager
+        }
+        return collision;
     }
 
     public void dispose() {
@@ -48,7 +60,9 @@ public class Obstacle {
         boundsTop.setPosition(posTopObstacle.x, posTopObstacle.y);
         boundsBot.setPosition(posBottomObstacle.x, posBottomObstacle.y);
         boundSpace.setPosition(posTopObstacle.x, posTopObstacle.y - OBSTACLE_GAP);
+        isPassed = false;
     }
+
 
     public Texture getTopObstacle() {
         return topObstacle;

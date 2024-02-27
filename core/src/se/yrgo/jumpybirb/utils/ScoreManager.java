@@ -28,15 +28,11 @@ public class ScoreManager {
         return instance;
     }
 
-    public void update(float delta) {
-        elapsedTime += delta;
-        if (elapsedTime >= 3) {
-            score += 10;
-            if (score > highScore) {
-                highScore = score;
-                saveHighScore();
-            }
-            elapsedTime = 0;
+    public void updateScore() {
+        score += 1;
+        if (score > highScore) {
+            highScore = score;
+            saveHighScore();
         }
     }
 
