@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import se.yrgo.jumpybirb.JumpyBirb;
 import se.yrgo.jumpybirb.screens.PlayScreen;
-import se.yrgo.jumpybirb.screens.SplashScreen;
 
 public class InputHandler extends InputAdapter {
     public static final String TAG = InputHandler.class.getSimpleName();
@@ -59,14 +58,6 @@ public class InputHandler extends InputAdapter {
         return super.touchDown(screenX, screenY, pointer, button);
     }
 
-  /*  @Override
-    public boolean touchDown(float x, float y, int pointer, int button) {
-        if (button == Input.Buttons.LEFT || button == Input.Buttons.RIGHT) {
-            Gdx.app.log(TAG, "keyDown called: switch to PlayScreen");
-        }
-        return false;
-    }
-*/
     private void handleMenuScreen(int keycode) {
         if (keycode == Input.Keys.SPACE) {
             screenSwitcher.switchToScreen(Screens.PLAY);
@@ -79,6 +70,9 @@ public class InputHandler extends InputAdapter {
         PlayScreen.GameState currentGameState = playScreen.getCurrentGameState();
 
         switch (currentGameState) {
+            case MENU:
+                //TODO implement menu logic
+                break;
             case READY:
                 handleReadyState(keycode, playScreen);
                 break;
@@ -98,7 +92,8 @@ public class InputHandler extends InputAdapter {
 
     private void handleReadyState(int keycode, PlayScreen playScreen) {
         if (keycode == Input.Keys.SPACE) {
-            screenSwitcher.switchToScreen(Screens.PLAY);
+            // transition to RUNNING state using setter method
+            playScreen.setCurrentGameState(PlayScreen.GameState.RUNNING);
             Gdx.app.log(TAG, "handleReadyState() called: switch to GameState.PLAY");
         }
     }

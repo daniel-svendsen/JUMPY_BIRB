@@ -1,7 +1,5 @@
 package se.yrgo.jumpybirb.utils;
 
-
-
 import com.badlogic.gdx.Gdx;
 import se.yrgo.jumpybirb.JumpyBirb;
 import se.yrgo.jumpybirb.screens.PlayScreen;
@@ -14,7 +12,6 @@ import se.yrgo.jumpybirb.screens.PlayScreen;
 
 public final class ScreenSwitcher {
     public static final String TAG = ScreenSwitcher.class.getSimpleName();
-    public final String debuggingName;
     private final JumpyBirb gameSession;
     private Screens currentScreen;
     private PlayScreen playScreen;
@@ -24,13 +21,11 @@ public final class ScreenSwitcher {
      * Constructor
      * @param gameSession the current game session
      */
-    public ScreenSwitcher(JumpyBirb gameSession, String debuggingName) {
+    public ScreenSwitcher(JumpyBirb gameSession) {
         this.gameSession = gameSession;
-        this.debuggingName = debuggingName;
         this.splashScreenFinished = false;
         this.currentScreen = Screens.SPLASH;
         playScreen = new PlayScreen(JumpyBirb.getScreenSwitcher());
-        switchToScreen(Screens.SPLASH);
     }
 
     public void setSplashScreenFinished(boolean trueOrFalse) {
@@ -49,17 +44,15 @@ public final class ScreenSwitcher {
         return playScreen;
     }
 
-    public String getDebuggingName() {
-        return debuggingName;
-    }
-
     /***s
      * This method is a helper method to the keyUp method.
      * @param screen to switch to
      */
     public void switchToScreen(Screens screen) {
-        currentScreen = screen;
-        gameSession.setScreen(screen.getScreenInstance());
-        Gdx.app.log(TAG, debuggingName + " switched to " + screen);
+        if (currentScreen != screen) {
+            currentScreen = screen;
+            gameSession.setScreen(screen.getScreenInstance());
+            Gdx.app.log(TAG,  " switched to " + screen);
+        }
     }
 }

@@ -54,10 +54,15 @@ public class PlayScreen implements Screen {
         this.screenSwitcher = screenSwitcher;
         currentGameState = GameState.READY;
         obstacles = new Array<>();
+    }
 
-        for (int i = 1; i <= OBSTACLE_COUNT; i++) { // for loop for adding tubes
-            obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
-        }
+    /**
+     * This method is used in the InputHandler class
+     * @see se.yrgo.jumpybirb.utils.InputHandler
+     * @param currentGameState the GameState to update to
+     */
+    public void setCurrentGameState(GameState currentGameState) {
+        this.currentGameState = currentGameState;
     }
 
     /***
@@ -66,6 +71,12 @@ public class PlayScreen implements Screen {
      */
     @Override
     public void show() {
+
+        // initialize obstacles
+        for (int i = 1; i <= OBSTACLE_COUNT; i++) { // for loop for adding tubes
+            obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
+        }
+
         batch = new SpriteBatch();
         backgroundTexture = new Texture("Bakgrund1.jpg");
         camera = new OrthographicCamera();
