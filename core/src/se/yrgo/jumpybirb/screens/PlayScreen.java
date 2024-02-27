@@ -14,6 +14,9 @@ import se.yrgo.jumpybirb.sprites.Obstacle;
 import se.yrgo.jumpybirb.utils.InputHandler;
 import se.yrgo.jumpybirb.utils.ScoreManager;
 
+/***
+ * The screen that runs the actual game, a round of the game.
+ */
 public class PlayScreen implements Screen {
     private SpriteBatch batch;
     private Birb birb;
@@ -24,16 +27,34 @@ public class PlayScreen implements Screen {
     private OrthographicCamera camera;
     private static final int OBSTACLE_COUNT = 4;
     private Array<Obstacle> obstacles;
-    private static final int OBSTACLE_SPACING = 125; // Spacing between tubes horizontally
+    private static final int OBSTACLE_SPACING = 180; // Spacing between tubes horizontally
 
+
+    /***
+     * This is used to tell which state the playScreen is in.
+     * Not implemented yet...
+     */
+    public enum GameState {
+        MENU, READY, RUNNING, GAMEOVER
+    }
+
+    /**
+     * Constructor. Initialize ScoreManager.
+     * For-loop for adding obstacles.
+     */
     public PlayScreen() {
         scoreManager = ScoreManager.getInstance();
         obstacles = new Array<Obstacle>();
+
         for (int i = 1; i <= OBSTACLE_COUNT; i++) { // for loop for adding tubes
             obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
         }
     }
 
+    /***
+     * This method is called when this screen becomes
+     * the current screen for the game.
+     */
     @Override
     public void show() {
         batch = new SpriteBatch();
@@ -48,6 +69,11 @@ public class PlayScreen implements Screen {
         textFont.getData().setScale(TEXT_FONT_SCALE);
     }
 
+
+    /***
+     * This method is called when the Application should render itself.
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         // Clear the screen
@@ -56,7 +82,6 @@ public class PlayScreen implements Screen {
 
         // Update birb
         birb.update(delta);
-
 
 
         // Update camera position to follow the birb
@@ -98,6 +123,13 @@ public class PlayScreen implements Screen {
         batch.end();
     }
 
+    /**
+     * TODO write Javadoc here
+     * @param backgroundX
+     * @param backgroundY
+     * @param backgroundWidth
+     * @param backgroundHeight
+     */
     private void drawTextAndScores(float backgroundX, float backgroundY, float backgroundWidth, float backgroundHeight) {
         float textPadding = 50f;
         int currentScore = scoreManager.getScore();
@@ -110,21 +142,50 @@ public class PlayScreen implements Screen {
         textFont.draw(batch, "High Score: " + highScore, backgroundX + 10, backgroundY + backgroundHeight - 10f - 50f);
     }
 
+
+    /***
+     * This method is called when the Application is resized,
+     * which can happen at any point during a non-paused state.
+     * @param width the new width in pixels
+     * @param height the new height in pixels
+     */
     @Override
     public void resize(int width, int height) {
         // Update the camera's viewport to match the screen size
         camera.setToOrtho(false, width, height);
     }
 
+    /***
+     * This method is called when the Application is paused,
+     * usually when it's not active or visible on-screen.
+     */
     @Override
-    public void pause() {}
+    public void pause() {
+        // could do something here maybe
+    }
 
+    /***
+     * This method is called when the Application is resumed from
+     * a paused state, usually when it regains focus.
+     */
     @Override
-    public void resume() {}
+    public void resume() {
+        // could do something here maybe
+    }
 
+    /***
+     * This method is called when this screen is no longer
+     * the current screen for the game.
+     */
     @Override
-    public void hide() {}
+    public void hide() {
+        // could do something here maybe
+    }
 
+    /***
+     * This method is called when this screen should
+     * release all resources. Preceded by a call to pause().
+     */
     @Override
     public void dispose() {
         // Dispose of resources
