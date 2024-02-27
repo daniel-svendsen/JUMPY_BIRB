@@ -14,8 +14,8 @@ public class Obstacle {
     public static final int OBSTACLE_WIDTH = 40; // pixel width of the tube from the image
     private static final int FLUCTUATION = 340; // so it can move randomly between 0 and 140
     private static final int OBSTACLE_GAP = 200; //  this will be the gap between 2 tubes
-    private static final int FLUCTUATION = 140; // so it can move randomly between 0 and 140
-    private static final int OBSTACLE_GAP = 140; //  this will be the gap between 2 tubes
+    //private static final int FLUCTUATION = 140; // so it can move randomly between 0 and 140
+    //private static final int OBSTACLE_GAP = 140; //  this will be the gap between 2 tubes
     private static final int LOWEST_OPENING = 130; // where from the bottom of the screen can we have top tube
     private Random rand; // to get random top and bottom positions on Y axis
     public Rectangle boundsTop, boundsBot;
