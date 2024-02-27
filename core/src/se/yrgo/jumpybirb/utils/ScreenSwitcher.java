@@ -2,11 +2,9 @@ package se.yrgo.jumpybirb.utils;
 
 
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.Gdx;
 import se.yrgo.jumpybirb.JumpyBirb;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputAdapter;
+import se.yrgo.jumpybirb.screens.PlayScreen;
 
 /***
  * This class is used for switching between screens in the game.
@@ -14,70 +12,59 @@ import com.badlogic.gdx.InputAdapter;
  * checking input from the player accordingly.
  */
 
-public class ScreenSwitcher extends InputAdapter {
+public final class ScreenSwitcher {
+    public static final String TAG = ScreenSwitcher.class.getSimpleName();
+    public final String debuggingName;
     private final JumpyBirb gameSession;
     private Screens currentScreen;
+    private PlayScreen playScreen;
     private boolean splashScreenFinished;
 
     /***
      * Constructor
      * @param gameSession the current game session
      */
-    public ScreenSwitcher(JumpyBirb gameSession) {
+    public ScreenSwitcher(JumpyBirb gameSession, String debuggingName) {
         this.gameSession = gameSession;
+        this.debuggingName = debuggingName;
         this.splashScreenFinished = false;
         this.currentScreen = Screens.SPLASH;
+        playScreen = new PlayScreen();
         switchToScreen(Screens.SPLASH);
-        setTimerOnSplashScreen();
     }
 
-    /***
-     * This method uses an anonymous inner class, and it is used to
-     * ensure that the splashScreen only gets displayed for a certain
-     * amount of seconds (delay seconds).
-     */
-    private void setTimerOnSplashScreen() {
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                splashScreenFinished = true;
-                switchToScreen(Screens.MENU);
-            }
-        }, 3); // seconds delay
+    public void setSplashScreenFinished(boolean trueOrFalse) {
+        splashScreenFinished = trueOrFalse;
     }
 
-    /***
-     * This method gets called when a key was released by the player.
-     * It is used to check the current screen and switch screens based on the players input.
-     * @param keycode one of the constants in {@link com.badlogic.gdx.Input.Keys}
-     * @return whether the input was processed
-     */
-    @Override
-    public boolean keyUp(int keycode) {
-        if (currentScreen == Screens.SPLASH && !splashScreenFinished) {
-            splashScreenFinished = true;
-            Timer.instance().clear(); // Clear the timer
-            switchToScreen(Screens.MENU);
-        } else if (currentScreen == Screens.MENU && keycode == Keys.SPACE) {
-            // Switch to PlayScreen and pass the existing ScoreManager
-            switchToScreen(Screens.PLAY);
-        } else if (currentScreen == Screens.PLAY && keycode == Keys.ESCAPE) {
-            switchToScreen(Screens.MENU);
-        }
-        else if (currentScreen == Screens.MENU && keycode == Input.Buttons.LEFT) {
-            // Switch to PlayScreen and pass the existing ScoreManager
-            switchToScreen(Screens.PLAY);
-        }
-        return true;
+    public boolean isSplashScreenFinished() {
+        return splashScreenFinished;
+    }
+
+    public Screens getCurrentScreen() {
+        return currentScreen;
+    }
+
+    public PlayScreen getPlayScreen() {
+        return playScreen;
+    }
+
+    public String getDebuggingName() {
+        return debuggingName;
     }
 
     /***s
      * This method is a helper method to the keyUp method.
      * @param screen to switch to
      */
-    private void switchToScreen(Screens screen) {
+    public void switchToScreen(Screens screen) {
         currentScreen = screen;
         gameSession.setScreen(screen.getScreenInstance());
+        Gdx.app.log(TAG, debuggingName + " switched to " + screen);
+    }
+
+    public void gameOver() {
+        switchToScreen(Screens.GAME_OVER);
     }
 
 }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Align;
 
 /***
  * The screen that shows when you start up the application.
@@ -48,6 +49,10 @@ public class SplashScreen implements Screen {
         // Render background image
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        // Render placeholder font
+        font.draw(batch, "Splash!!!",  Gdx.graphics.getWidth() / 4f,
+                Gdx.graphics.getHeight() / 2f, 0, Align.left, false);
         batch.end();
     }
 

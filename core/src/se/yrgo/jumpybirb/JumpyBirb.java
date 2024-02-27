@@ -3,6 +3,10 @@ package se.yrgo.jumpybirb;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import se.yrgo.jumpybirb.screens.PlayScreen;
+import se.yrgo.jumpybirb.screens.SplashScreen;
+import se.yrgo.jumpybirb.sprites.Birb;
+import se.yrgo.jumpybirb.utils.InputHandler;
 import se.yrgo.jumpybirb.utils.ScreenSwitcher;
 
 /***
@@ -11,6 +15,7 @@ import se.yrgo.jumpybirb.utils.ScreenSwitcher;
 public class JumpyBirb extends Game {
 
 	public static final String TAG = JumpyBirb.class.getName();
+	private ScreenSwitcher screenSwitcher;
 
 	/**
 	 * This method gets called first (entry point)
@@ -23,7 +28,11 @@ public class JumpyBirb extends Game {
 
 		Gdx.app.log(TAG, "create() called");
 
-		Gdx.input.setInputProcessor(new ScreenSwitcher(this));
+		screenSwitcher = new ScreenSwitcher(this, "MAIN");
+		InputHandler inputHandler = new InputHandler(this, screenSwitcher);
+		Gdx.input.setInputProcessor(inputHandler);
+
+		setScreen(new SplashScreen());
 	}
 
 	/**

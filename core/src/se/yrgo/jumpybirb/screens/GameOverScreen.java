@@ -1,12 +1,23 @@
 package se.yrgo.jumpybirb.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Align;
 
 /***
  * The screen that includes score from this play (+ perhaps highscore current game session?).
  * Always return to menu screen after this screen.
  */
 public class GameOverScreen implements Screen {
+    private static final String TAG = SplashScreen.class.getSimpleName();
+    private static final float FONT_SCALE = 4.0f;
+    private SpriteBatch batch;
+    private BitmapFont textFont;
+    private Texture backgroundTexture;
 
     /**
      * Constructor. Initialize ScoreManager.
@@ -21,7 +32,15 @@ public class GameOverScreen implements Screen {
      */
     @Override
     public void show() {
-        // TODO implement show method
+        Gdx.app.log(TAG, "show() called");
+        batch = new SpriteBatch();
+        textFont = new BitmapFont();
+        textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        textFont.getData().setScale(FONT_SCALE);
+
+        // Load background image
+        backgroundTexture = new Texture(Gdx.files.internal("game-over-placeholder.jpg"));
+        Gdx.app.log(TAG, "Image loaded successfully: " + backgroundTexture);
     }
 
     /***
@@ -30,7 +49,18 @@ public class GameOverScreen implements Screen {
      */
     @Override
     public void render(float delta) {
-        // TODO implement render method
+        // Clear the screen
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Render background image
+        batch.begin();
+        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        // Draw text "Gameover"
+        textFont.draw(batch, "Gameover", Gdx.graphics.getWidth() / 4f,
+                Gdx.graphics.getHeight() / 2f, 0, Align.left, false);
+        batch.end();
     }
 
     /***
@@ -78,6 +108,7 @@ public class GameOverScreen implements Screen {
      */
     @Override
     public void dispose() {
-        // could do something here maybe
+        Gdx.app.log(TAG, "dispose() called");
+        batch.dispose();
     }
 }

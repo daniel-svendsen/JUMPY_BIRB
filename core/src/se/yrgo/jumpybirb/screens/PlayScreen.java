@@ -18,6 +18,8 @@ import se.yrgo.jumpybirb.utils.ScoreManager;
  * The screen that runs the actual game, a round of the game.
  */
 public class PlayScreen implements Screen {
+    public static final String TAG = PlayScreen.class.getSimpleName();
+
     private SpriteBatch batch;
     private Birb birb;
     private ScoreManager scoreManager;
@@ -43,8 +45,9 @@ public class PlayScreen implements Screen {
      * For-loop for adding obstacles.
      */
     public PlayScreen() {
+        birb = new Birb(66, 64);
         scoreManager = ScoreManager.getInstance();
-        obstacles = new Array<Obstacle>();
+        obstacles = new Array<>();
 
         for (int i = 1; i <= OBSTACLE_COUNT; i++) { // for loop for adding tubes
             obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
@@ -59,8 +62,6 @@ public class PlayScreen implements Screen {
     public void show() {
         batch = new SpriteBatch();
         backgroundTexture = new Texture("Bakgrund1.jpg");
-        birb = new Birb();
-        Gdx.input.setInputProcessor(new InputHandler(birb));
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 600, 800); // Adjust this to match your world width and height
 
@@ -69,6 +70,9 @@ public class PlayScreen implements Screen {
         textFont.getData().setScale(TEXT_FONT_SCALE);
     }
 
+    public Birb getBirb() {
+        return birb;
+    }
 
     /***
      * This method is called when the Application should render itself.
@@ -83,18 +87,21 @@ public class PlayScreen implements Screen {
         // Update birb
         birb.update(delta);
 
-
         // Update camera position to follow the birb
         camera.position.x = birb.getPosition().x;
         camera.update();
 
-        // Set the SpriteBatch's projection matrix to the camera's combined matrix
-        batch.setProjectionMatrix(camera.combined);
-
         // Begin batch
         batch.begin();
 
+        // Set the SpriteBatch's projection matrix to the camera's combined matrix
+        batch.setProjectionMatrix(camera.combined);
+
+        // Draw background
         batch.draw(backgroundTexture, camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
+
+        // Draw birb
+        batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
 
         // Draw text and scores, passing the background coordinates and dimensions
         drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
@@ -113,18 +120,15 @@ public class PlayScreen implements Screen {
                 obstacle.reposition(obstacle.getPosTopObstacle().x + (Obstacle.OBSTACLE_WIDTH + OBSTACLE_SPACING) * OBSTACLE_COUNT);
             }
         }
-
-        // Draw birb
-        batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
-
-
-
         // End batch
         batch.end();
+
+        Gdx.app.log(TAG, "Camera position: " + camera.position.x + ", " + camera.position.y); // Add this line for debugging
     }
 
     /**
      * TODO write Javadoc here
+     *
      * @param backgroundX
      * @param backgroundY
      * @param backgroundWidth
