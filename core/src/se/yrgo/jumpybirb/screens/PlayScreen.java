@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import se.yrgo.jumpybirb.sprites.Birb;
 import se.yrgo.jumpybirb.sprites.Obstacle;
-import se.yrgo.jumpybirb.utils.InputHandler;
 import se.yrgo.jumpybirb.utils.ScoreManager;
 import se.yrgo.jumpybirb.utils.ScreenSwitcher;
 import se.yrgo.jumpybirb.utils.Screens;
@@ -25,7 +24,7 @@ public class PlayScreen implements Screen {
     public static final String TAG = PlayScreen.class.getSimpleName();
     private static final float TEXT_FONT_SCALE = 2.0f;
     private static final int OBSTACLE_COUNT = 4;
-    private static final float OBSTACLE_SPACING = 180f; // Spacing between tubes horizontally
+    private static final float OBSTACLE_SPACING = 225f; // Spacing between tubes horizontally
     private SpriteBatch batch;
     private Birb birb;
     private ScoreManager scoreManager;
@@ -199,21 +198,19 @@ public class PlayScreen implements Screen {
         // Draw birb and update the position of the birb's sprite
         batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
 
+        // Does this keep ground scrolling?
         float currentX = groundPosition.x;
         while (currentX < camera.position.x + camera.viewportWidth / 2f) {
             batch.draw(groundTexture, currentX, 0, groundTexture.getWidth(), groundTexture.getHeight());
             currentX += groundTexture.getWidth();
         }
 
-        // Draw text and scores, passing the background coordinates and dimensions
-        drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
-
         // Update obstacles and draw them
         updateObstacles();
         drawObstacles();
 
-        // Render a new obstacle when an obstacle leaves the screen
-        updateObstacles();
+        // Draw text and scores, passing the background coordinates and dimensions
+        drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
         // End batch
         batch.end();
@@ -272,83 +269,83 @@ public class PlayScreen implements Screen {
         return false;
     }
 
-public void resetGame() {
-    // Reset necessary game elements (e.g., birb position, obstacles, score)
-    birb.reset();
-    scoreManager.reset();
+    public void resetGame() {
+        // Reset necessary game elements (e.g., birb position, obstacles, score)
+        birb.reset();
+        scoreManager.reset();
 
-    // Clear existing array of obstacles and create new ones
-    obstacles.clear();
-    for (int i = 1; i <= OBSTACLE_COUNT; i++) {
-        obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
+        // Clear existing array of obstacles and create new ones
+        obstacles.clear();
+        for (int i = 1; i <= OBSTACLE_COUNT; i++) {
+            obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
+        }
     }
-}
 
-/**
- * TODO write Javadoc here
- */
+    /**
+     * TODO write Javadoc here
+     */
 
-private void drawTextAndScores(float backgroundX, float backgroundY, float backgroundWidth, float backgroundHeight) {
-    float textPadding = 50f;
-    int currentScore = scoreManager.getScore();
-    int highScore = scoreManager.getHighScore();
+    private void drawTextAndScores(float backgroundX, float backgroundY, float backgroundWidth, float backgroundHeight) {
+        float textPadding = 50f;
+        int currentScore = scoreManager.getScore();
+        int highScore = scoreManager.getHighScore();
 
-    // Draw text and scores with respect to the background position and dimensions
-    textFont.draw(batch, "Press Esc to go to Menu", backgroundX + backgroundWidth / 4f,
-            backgroundY + backgroundHeight / 3f - textPadding, 0, Align.left, false);
-    textFont.draw(batch, "Score: " + currentScore, backgroundX + 370, backgroundY + backgroundHeight - 10f);
-    textFont.draw(batch, "High Score: " + highScore, backgroundX + 370, backgroundY + backgroundHeight - 10f - 50f);
-}
+        // Draw text and scores with respect to the background position and dimensions
+        textFont.draw(batch, "Press Esc to go to Menu", backgroundX + backgroundWidth / 4f,
+                backgroundY + backgroundHeight / 3f - textPadding, 0, Align.left, false);
+        textFont.draw(batch, "Score: " + currentScore, backgroundX + 370, backgroundY + backgroundHeight - 10f);
+        textFont.draw(batch, "High Score: " + highScore, backgroundX + 370, backgroundY + backgroundHeight - 10f - 50f);
+    }
 
 
-/***
- * This method is called when the Application is resized,
- * which can happen at any point during a non-paused state.
- * @param width the new width in pixels
- * @param height the new height in pixels
- */
-@Override
-public void resize(int width, int height) {
-    // Update the camera's viewport to match the screen size
-    camera.setToOrtho(false, width, height);
-}
+    /***
+     * This method is called when the Application is resized,
+     * which can happen at any point during a non-paused state.
+     * @param width the new width in pixels
+     * @param height the new height in pixels
+     */
+    @Override
+    public void resize(int width, int height) {
+        // Update the camera's viewport to match the screen size
+        camera.setToOrtho(false, width, height);
+    }
 
-/***
- * This method is called when the Application is paused,
- * usually when it's not active or visible on-screen.
- */
-@Override
-public void pause() {
-    // could do something here maybe
-}
+    /***
+     * This method is called when the Application is paused,
+     * usually when it's not active or visible on-screen.
+     */
+    @Override
+    public void pause() {
+        // could do something here maybe
+    }
 
-/***
- * This method is called when the Application is resumed from
- * a paused state, usually when it regains focus.
- */
-@Override
-public void resume() {
-    // could do something here maybe
-}
+    /***
+     * This method is called when the Application is resumed from
+     * a paused state, usually when it regains focus.
+     */
+    @Override
+    public void resume() {
+        // could do something here maybe
+    }
 
-/***
- * This method is called when this screen is no longer
- * the current screen for the game.
- */
-@Override
-public void hide() {
-    // could do something here maybe
-}
+    /***
+     * This method is called when this screen is no longer
+     * the current screen for the game.
+     */
+    @Override
+    public void hide() {
+        // could do something here maybe
+    }
 
-/***
- * This method is called when this screen should
- * release all resources. Preceded by a call to pause().
- */
-@Override
-public void dispose() {
-    // Dispose of resources
-    batch.dispose();
-    backgroundTexture.dispose();
-    textFont.dispose();
-}
+    /***
+     * This method is called when this screen should
+     * release all resources. Preceded by a call to pause().
+     */
+    @Override
+    public void dispose() {
+        // Dispose of resources
+        batch.dispose();
+        backgroundTexture.dispose();
+        textFont.dispose();
+    }
 }
