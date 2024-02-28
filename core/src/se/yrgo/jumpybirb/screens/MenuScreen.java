@@ -34,11 +34,11 @@ public class MenuScreen implements Screen {
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("Welcome1.jpg"));
         headerFont = new BitmapFont();
-        headerFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        headerFont.getRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
         headerFont.getData().setScale(HEADER_FONT_SCALE);
 
         textFont = new BitmapFont();
-        textFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        textFont.getRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
         textFont.getData().setScale(TEXT_FONT_SCALE);
 
 
