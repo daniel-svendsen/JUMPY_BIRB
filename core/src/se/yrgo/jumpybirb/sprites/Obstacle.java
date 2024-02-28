@@ -29,21 +29,10 @@ public class Obstacle {
         topObstacle = new Texture("UpperObstacle1.png");
         bottomObstacle = new Texture("LowerObstacle1.png");
         rand = new Random();
-
-        // Generate random positions for top and bottom obstacles
-        float topY = rand.nextFloat(FLUCTUATION) + OBSTACLE_GAP + LOWEST_OPENING;
-        float bottomY = topY - OBSTACLE_GAP - bottomObstacle.getHeight();
-
-        // Set positions for top and bottom obstacles
-        posTopObstacle = new Vector2(x, topY);
-        posBottomObstacle = new Vector2(x, bottomY);
-
-        // Update bounds for top and bottom obstacles
-        // Adjust bounding box dimensions to match the visual representation of obstacles
-        boundsTop = new Rectangle(posTopObstacle.x, posTopObstacle.y, 100, 300); // Adjusted width and height
-        boundsBot = new Rectangle(posBottomObstacle.x, posBottomObstacle.y, 100, 300); // Adjusted width and height
-
-        // Update boundSpace if necessary
+        posTopObstacle = new Vector2(x, rand.nextFloat(FLUCTUATION) + OBSTACLE_GAP + LOWEST_OPENING);
+        posBottomObstacle = new Vector2(x, posTopObstacle.y - OBSTACLE_GAP - bottomObstacle.getHeight());
+        boundsTop = new Rectangle(posTopObstacle.x, posTopObstacle.y, topObstacle.getWidth() - 5, topObstacle.getHeight() + 5); //Set position of invisible rectangle for top tube
+        boundsBot = new Rectangle(posBottomObstacle.x, posTopObstacle.y, bottomObstacle.getWidth() - 5, bottomObstacle.getHeight() - 5); //Set position of invisible rectangle for bottom tube
         boundSpace = new Rectangle(posTopObstacle.x, posTopObstacle.y - OBSTACLE_GAP, topObstacle.getWidth(), topObstacle.getHeight());
     }
 
