@@ -48,7 +48,6 @@ public class Obstacle {
     }
 
     public boolean collidesWith(Rectangle playerBounds) {
-        // Check if the player's bounds intersect with the obstacle's bounds
         if (Intersector.overlaps(playerBounds, boundsTop)) {
             Gdx.app.log(TAG, "collision detected with top obstacle at coordinates: (" + posTopObstacle.x + ", " + posTopObstacle.y + ")");
             return true;

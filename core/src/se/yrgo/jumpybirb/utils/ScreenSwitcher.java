@@ -15,7 +15,6 @@ public final class ScreenSwitcher {
     private final JumpyBirb gameSession;
     private Screens currentScreen;
     private PlayScreen playScreen;
-    private boolean splashScreenFinished;
 
     /***
      * Constructor
@@ -23,17 +22,9 @@ public final class ScreenSwitcher {
      */
     public ScreenSwitcher(JumpyBirb gameSession) {
         this.gameSession = gameSession;
-        this.splashScreenFinished = false;
         this.currentScreen = Screens.SPLASH;
         playScreen = new PlayScreen(JumpyBirb.getScreenSwitcher());
-    }
-
-    public void setSplashScreenFinished(boolean trueOrFalse) {
-        splashScreenFinished = trueOrFalse;
-    }
-
-    public boolean isSplashScreenFinished() {
-        return splashScreenFinished;
+        this.playScreen = new PlayScreen(this);
     }
 
     public Screens getCurrentScreen() {
@@ -44,15 +35,33 @@ public final class ScreenSwitcher {
         return playScreen;
     }
 
-    /***s
-     * This method is a helper method to the keyUp method.
-     * @param screen to switch to
-     */
     public void switchToScreen(Screens screen) {
+        if (currentScreen != screen) {
+            currentScreen = screen;
+            switch (screen) {
+                case PLAY:
+                    gameSession.setScreen(playScreen);
+                    break;
+                case MENU:
+                    // Reset the playScreen when switching to the menu
+                    playScreen.resetGame();
+                    gameSession.setScreen(screen.getScreenInstance());
+                    break;
+                default:
+                    gameSession.setScreen(screen.getScreenInstance());
+                    break;
+            }
+            Gdx.app.log(TAG,  " switched to " + screen);
+        }
+    }
+
+/*    public void switchToScreen(Screens screen) {
         if (currentScreen != screen) {
             currentScreen = screen;
             gameSession.setScreen(screen.getScreenInstance());
             Gdx.app.log(TAG,  " switched to " + screen);
         }
-    }
+    }*/
 }
+
+

@@ -21,6 +21,14 @@ public class SplashScreen implements Screen {
     private SpriteBatch batch;
     private BitmapFont font;
     private Texture backgroundTexture;
+    private static boolean playScreenDisplayed;
+
+    /**
+     * Constructor
+     */
+    public SplashScreen() {
+        playScreenDisplayed = false;
+    }
 
     /***
      * This method is called when this screen becomes
@@ -68,9 +76,15 @@ public class SplashScreen implements Screen {
             @Override
             public void run() {
                 // Switch to the menu screen
-                JumpyBirb.getScreenSwitcher().switchToScreen(Screens.MENU);
+                if (!playScreenDisplayed) {
+                    JumpyBirb.getScreenSwitcher().switchToScreen(Screens.MENU);
+                }
             }
         }, 3); // 3 seconds
+    }
+
+    public static void setPlayScreenDisplayed(boolean playScreenDisplayed) {
+        SplashScreen.playScreenDisplayed = playScreenDisplayed;
     }
 
     /***

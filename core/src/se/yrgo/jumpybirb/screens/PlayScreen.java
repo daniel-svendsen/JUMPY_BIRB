@@ -58,8 +58,9 @@ public class PlayScreen implements Screen {
 
     /**
      * This method is used in the InputHandler class
-     * @see se.yrgo.jumpybirb.utils.InputHandler
+     *
      * @param currentGameState the GameState to update to
+     * @see se.yrgo.jumpybirb.utils.InputHandler
      */
     public void setCurrentGameState(GameState currentGameState) {
         this.currentGameState = currentGameState;
@@ -71,6 +72,8 @@ public class PlayScreen implements Screen {
      */
     @Override
     public void show() {
+        // dont let the SplashScreen timer interrupt the PlayScreen
+        SplashScreen.setPlayScreenDisplayed(true);
 
         // initialize obstacles
         for (int i = 1; i <= OBSTACLE_COUNT; i++) { // for loop for adding tubes
@@ -126,7 +129,6 @@ public class PlayScreen implements Screen {
     }
 
     private void updateReadyState(float delta) {
-        currentGameState = GameState.READY;
         Gdx.app.log(TAG, "GameState: READY");
 
         // Render the assets without updating their positions
@@ -158,7 +160,6 @@ public class PlayScreen implements Screen {
     }
 
     private void updateRunningState(float delta) {
-        currentGameState = GameState.RUNNING;
         Gdx.app.log(TAG, "GameState: RUNNING");
 
         // Update game logic while in the running state (e.g., birb movement, obstacle movement)
@@ -204,7 +205,6 @@ public class PlayScreen implements Screen {
         // Transition to appropriate state based on user input
         if (checkForGameOver(birb)) {
             resetGame();
-            currentGameState = GameState.GAME_OVER;
             Gdx.app.log(TAG, "GameState: GAME_OVER");
             screenSwitcher.switchToScreen(Screens.GAME_OVER);
         }
@@ -234,7 +234,11 @@ public class PlayScreen implements Screen {
      * @return true if player collided with an obstacle, false otherwise
      */
     public boolean checkForGameOver(Birb player) {
-        // Iterate through obstacles to check for collision with the player
+        // check if the player has collided with the ground
+        if (birb.getPosition().y >= 750) { // ground.getHeight() + GROUND_OFFSET
+            return true;
+        }
+        // iterate through obstacles to check for collision with the player
         for (Obstacle obstacle : obstacles) {
             if (obstacle.collidesWith(player.getBounds())) {
                 return true;
@@ -243,7 +247,8 @@ public class PlayScreen implements Screen {
         return false;
     }
 
-    private void resetGame() {
+
+    public void resetGame() {
         // Reset necessary game elements (e.g., birb position, obstacles, score)
         birb.reset();
         scoreManager.reset();

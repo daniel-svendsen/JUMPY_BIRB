@@ -85,6 +85,14 @@ public class Birb {
         return bounds;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     public void reset() {
         // Reset position and velocity
         position.set(INITIAL_POSITION_X, INITIAL_POSITION_Y);
