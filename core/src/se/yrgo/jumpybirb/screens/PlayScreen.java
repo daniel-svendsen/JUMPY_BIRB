@@ -89,7 +89,7 @@ public class PlayScreen implements Screen {
         textFont.getData().setScale(TEXT_FONT_SCALE);
     }
 
-    public Birb getBirb() {
+    public Birb getPlayerBirb() {
         return birb;
     }
 
@@ -136,11 +136,6 @@ public class PlayScreen implements Screen {
         // Draw background
         batch.draw(backgroundTexture, 0, 0, camera.viewportWidth, camera.viewportHeight);
 
-        // Draw the "get-ready" image
-        float readyImagePositionX = (camera.viewportWidth - getReadyTexture.getWidth()) / 2f;
-        float readyImagePositionY = (camera.viewportHeight - getReadyTexture.getHeight()) / 2f;
-        batch.draw(getReadyTexture, readyImagePositionX, readyImagePositionY);
-
         // Draw birb at its initial position
         batch.draw(birb.getTexture(), birb.getInitialPosition()[0], birb.getInitialPosition()[1]);
 
@@ -151,6 +146,14 @@ public class PlayScreen implements Screen {
         }
 
         // End batch
+        batch.end();
+
+        // Draw the "get-ready" image
+        batch.begin();
+        batch.setProjectionMatrix(camera.combined);
+        float readyImagePositionX = (camera.viewportWidth - getReadyTexture.getWidth()) / 2f;
+        float readyImagePositionY = (camera.viewportHeight - getReadyTexture.getHeight()) / 2f;
+        batch.draw(getReadyTexture, readyImagePositionX, readyImagePositionY);
         batch.end();
     }
 

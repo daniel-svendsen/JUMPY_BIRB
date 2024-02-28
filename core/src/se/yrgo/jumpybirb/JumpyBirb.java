@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import se.yrgo.jumpybirb.screens.SplashScreen;
 import se.yrgo.jumpybirb.utils.InputHandler;
 import se.yrgo.jumpybirb.utils.ScreenSwitcher;
-import se.yrgo.jumpybirb.utils.Screens;
 
 /***
  * The main class of the application. Used as entry point for our game.

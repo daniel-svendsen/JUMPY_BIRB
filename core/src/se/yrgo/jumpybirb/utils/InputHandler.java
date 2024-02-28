@@ -86,7 +86,7 @@ public class InputHandler extends InputAdapter {
     }
 
     private void birbJump(PlayScreen playScreen) {
-        playScreen.getBirb().jump();
+        playScreen.getPlayerBirb().jump();
         Gdx.app.log(TAG, "birbJump called");
     }
 
