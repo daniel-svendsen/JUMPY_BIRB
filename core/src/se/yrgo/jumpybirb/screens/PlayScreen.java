@@ -204,8 +204,6 @@ public class PlayScreen implements Screen {
     }
 
     private void updateGameOverState(float delta) {
-        // Implement logic for game over state (e.g., show game over screen, handle input for restart)
-        // Transition to appropriate state based on user input
         if (checkForGameOver(birb)) {
             resetGame();
             setCurrentGameState(GameState.READY);
