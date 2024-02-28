@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import se.yrgo.jumpybirb.sprites.Birb;
+import se.yrgo.jumpybirb.sprites.Ground;
 import se.yrgo.jumpybirb.sprites.Obstacle;
 import se.yrgo.jumpybirb.utils.ScoreManager;
 import se.yrgo.jumpybirb.utils.ScreenSwitcher;
@@ -35,8 +36,8 @@ public class PlayScreen implements Screen {
     private Texture getReadyTexture;
     private OrthographicCamera camera;
     private Array<Obstacle> obstacles;
+    private Ground ground;
 
-    private Texture groundTexture;
     private Vector2 groundPosition;
     private float obstacleSpeed;
 
@@ -86,13 +87,16 @@ public class PlayScreen implements Screen {
         batch = new SpriteBatch();
         backgroundTexture = new Texture("Bakgrund1.jpg");
         birb = new Birb(66, 64);
+
+        // Initialize ground and groundPosition
+        ground = new Ground(-300, 0, 100f);
+        groundPosition = new Vector2(-300, 0);
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 600, 800); // Adjust this to match your world width and height
 
         getReadyTexture = new Texture("get-ready.png"); // placeholder get-ready image
 
-        groundTexture = new Texture("Ground2.png");
-        groundPosition = new Vector2(-300, 0);
         //obstacleSpeed = obstacles.get(0).getSpeed(); // Adjust this based on your game
 
         textFont = new BitmapFont();
@@ -146,6 +150,9 @@ public class PlayScreen implements Screen {
         // Draw background
         batch.draw(backgroundTexture, 0, 0, camera.viewportWidth, camera.viewportHeight);
 
+        // Draw ground
+        ground.render(batch, camera);
+
         // Draw birb at its initial position
         batch.draw(birb.getTexture(), birb.getInitialPosition()[0], birb.getInitialPosition()[1]);
 
@@ -181,33 +188,22 @@ public class PlayScreen implements Screen {
         // Set the SpriteBatch's projection matrix to the camera's combined matrix
         batch.setProjectionMatrix(camera.combined);
 
-        // Move ground with obstacles
-        groundPosition.x -= obstacleSpeed * delta;
-
-        // Reset ground position when it goes off-screen
-        if (groundPosition.x < -groundTexture.getWidth()) {
-            groundPosition.x += groundTexture.getWidth();
-        }
-
         // Begin batch
         batch.begin();
 
         // Draw background
         batch.draw(backgroundTexture, camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
-        // Draw birb and update the position of the birb's sprite
-        batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
-
-        // Does this keep ground scrolling?
-        float currentX = groundPosition.x;
-        while (currentX < camera.position.x + camera.viewportWidth / 2f) {
-            batch.draw(groundTexture, currentX, 0, groundTexture.getWidth(), groundTexture.getHeight());
-            currentX += groundTexture.getWidth();
-        }
-
         // Update obstacles and draw them
         updateObstacles();
         drawObstacles();
+
+        // Draw and update ground
+        ground.update(delta);
+        ground.render(batch, camera);
+
+        // Draw birb and update the position of the birb's sprite
+        batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
 
         // Draw text and scores, passing the background coordinates and dimensions
         drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
@@ -344,6 +340,7 @@ public class PlayScreen implements Screen {
     @Override
     public void dispose() {
         // Dispose of resources
+        ground.dispose();
         batch.dispose();
         backgroundTexture.dispose();
         textFont.dispose();
