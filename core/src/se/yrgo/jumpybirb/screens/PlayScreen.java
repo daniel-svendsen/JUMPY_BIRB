@@ -54,6 +54,10 @@ public class PlayScreen implements Screen {
         this.screenSwitcher = screenSwitcher;
         currentGameState = GameState.READY;
         obstacles = new Array<>();
+
+        for (int i = 1; i <= OBSTACLE_COUNT; i++) {
+            obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
+        }
     }
 
     /**
@@ -74,11 +78,6 @@ public class PlayScreen implements Screen {
     public void show() {
         // dont let the SplashScreen timer interrupt the PlayScreen
         SplashScreen.setPlayScreenDisplayed(true);
-
-        // initialize obstacles
-        for (int i = 1; i <= OBSTACLE_COUNT; i++) { // for loop for adding tubes
-            obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
-        }
 
         batch = new SpriteBatch();
         backgroundTexture = new Texture("Bakgrund1.jpg");
@@ -237,7 +236,7 @@ public class PlayScreen implements Screen {
      */
     public boolean checkForGameOver(Birb player) {
         // check if the player has collided with the ground
-        if (birb.getPosition().y >= 750) { // ground.getHeight() + GROUND_OFFSET
+    /*    if (birb.getPosition().y >= 780) { // ground.getHeight() + GROUND_OFFSET
             return true;
         }
         // iterate through obstacles to check for collision with the player
@@ -245,7 +244,7 @@ public class PlayScreen implements Screen {
             if (obstacle.collidesWith(player.getBounds())) {
                 return true;
             }
-        }
+        }*/
         return false;
     }
 
