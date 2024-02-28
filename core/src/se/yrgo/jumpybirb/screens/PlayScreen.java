@@ -195,9 +195,12 @@ public class PlayScreen implements Screen {
         // End batch
         batch.end();
 
-        // Check for game over after drawing obstacles
-        checkForGameOver(birb);
         Gdx.app.log(TAG, "Camera position: " + camera.position.x + ", " + camera.position.y);
+
+        // Check for game over after drawing obstacles
+        if (checkForGameOver(birb)) {
+            setCurrentGameState(GameState.GAME_OVER);
+        }
     }
 
     private void updateGameOverState(float delta) {
@@ -205,6 +208,7 @@ public class PlayScreen implements Screen {
         // Transition to appropriate state based on user input
         if (checkForGameOver(birb)) {
             resetGame();
+            setCurrentGameState(GameState.READY);
             Gdx.app.log(TAG, "GameState: GAME_OVER");
             screenSwitcher.switchToScreen(Screens.GAME_OVER);
         }
