@@ -12,7 +12,8 @@ public class Obstacle {
     public static final String TAG = Birb.class.getSimpleName();
     private Texture topObstacle;
     private Texture bottomObstacle;
-    private Vector2 posTopObstacle, posBottomObstacle; // Position of top and bottom tubes on X axis.
+    private Vector2 posTopObstacle;
+    private Vector2 posBottomObstacle; // Position of top and bottom tubes on X axis.
 
     public static final float OBSTACLE_WIDTH = 40f; // pixel width of the tube from the image
     private static final float FLUCTUATION = 140f; // so it can move randomly between 0 and 140

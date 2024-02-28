@@ -250,7 +250,7 @@ public class PlayScreen implements Screen {
 
         // Clear existing array of obstacles and create new ones
         obstacles.clear();
-        for (int i = 1; i <= OBSTACLE_COUNT; i++) { // for loop for adding tubes
+        for (int i = 1; i <= OBSTACLE_COUNT; i++) {
             obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
         }
     }
