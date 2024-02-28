@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import se.yrgo.jumpybirb.sprites.Birb;
@@ -33,7 +34,10 @@ public class PlayScreen implements Screen {
     private OrthographicCamera camera;
     private static final int OBSTACLE_COUNT = 4;
     private Array<Obstacle> obstacles;
-    private static final int OBSTACLE_SPACING = 180; // Spacing between tubes horizontally
+    private static final int OBSTACLE_SPACING = 220; // Spacing between tubes horizontally
+
+    private Texture groundTexture;
+    private Vector2 groundPosition;
 
 
     /***
@@ -83,7 +87,8 @@ public class PlayScreen implements Screen {
         backgroundTexture = new Texture("Bakgrund1.jpg");
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 600, 800); // Adjust this to match your world width and height
-
+        groundTexture = new Texture("Ground2.png");
+        groundPosition = new Vector2(-300, 0);
         getReadyTexture = new Texture("get-ready.png"); // placeholder get-ready image
 
         textFont = new BitmapFont();
@@ -146,6 +151,7 @@ public class PlayScreen implements Screen {
             batch.draw(obstacle.getBottomObstacle(), obstacle.getPosBottomObstacle().x, obstacle.getPosBottomObstacle().y);
         }
 
+
         // End batch
         batch.end();
 
@@ -190,6 +196,16 @@ public class PlayScreen implements Screen {
 
         // Render a new obstacle when an obstacle leaves the screen
         updateObstacles();
+
+        // Move ground with obstacles
+        groundPosition.x -= updateObstacles() * delta;
+
+
+// Reset ground position when it goes off-screen
+        if (groundPosition.x < -groundTexture.getWidth()) {
+            groundPosition.x += groundTexture.getWidth();
+        }
+
 
         // End batch
         batch.end();
