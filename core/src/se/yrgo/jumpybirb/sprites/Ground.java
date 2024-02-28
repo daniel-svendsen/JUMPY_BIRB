@@ -1,6 +1,5 @@
 package se.yrgo.jumpybirb.sprites;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,6 +16,7 @@ public class Ground {
     public Ground(float x, float y, float speed) {
         this.groundTexture = new Texture("Ground2.png");
         this.position = new Vector2(x, y);
+        this.bounds = new Rectangle(x, y, groundTexture.getWidth(), groundTexture.getHeight());
         this.speed = speed;
     }
 
@@ -28,8 +28,10 @@ public class Ground {
      */
     public void update(float delta) {
         position.x -= speed * delta;
+        bounds.setX(position.x); // Update bounds position
         if (position.x < -groundTexture.getWidth()) {
             position.x += groundTexture.getWidth();
+            bounds.setX(position.x); // Update bounds position after reset
         }
     }
 

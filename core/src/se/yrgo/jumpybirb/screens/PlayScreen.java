@@ -253,11 +253,11 @@ public class PlayScreen implements Screen {
      */
     public boolean checkForGameOver(Birb player) {
         // check if the player has collided with the ground
-    /*    if (birb.getPosition().y >= 780) { // ground.getHeight() + GROUND_OFFSET
+        if (birb.getPosition().y <= 50) { // ground.getHeight() + GROUND_OFFSET
             return true;
         }
         // iterate through obstacles to check for collision with the player
-        for (Obstacle obstacle : obstacles) {
+     /*   for (Obstacle obstacle : obstacles) {
             if (obstacle.collidesWith(player.getBounds())) {
                 return true;
             }
