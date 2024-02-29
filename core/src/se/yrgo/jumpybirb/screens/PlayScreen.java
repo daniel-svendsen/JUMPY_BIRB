@@ -25,7 +25,7 @@ public class PlayScreen implements Screen {
     public static final String TAG = PlayScreen.class.getSimpleName();
     private static final float TEXT_FONT_SCALE = 2.0f;
     private static final int OBSTACLE_COUNT = 4;
-    private static final float OBSTACLE_SPACING = 225f; // Spacing between tubes horizontally
+    private static final float OBSTACLE_SPACING = 250f; // Spacing between tubes horizontally
     private SpriteBatch batch;
     private Birb birb;
     private ScoreManager scoreManager;
@@ -277,15 +277,15 @@ public class PlayScreen implements Screen {
      */
     public boolean checkForGameOver(Birb player) {
         // check if the player has collided with the ground
-        if (birb.getPosition().y <= 50) { // ground.getHeight() + GROUND_OFFSET
+        if (birb.getPosition().y <= 37) { // ground.getHeight() + GROUND_OFFSET
             return true;
         }
         // iterate through obstacles to check for collision with the player
-     /*   for (Obstacle obstacle : obstacles) {
+        for (Obstacle obstacle : obstacles) {
             if (obstacle.collidesWith(player.getBounds())) {
                 return true;
             }
-        }*/
+        }
         return false;
     }
 

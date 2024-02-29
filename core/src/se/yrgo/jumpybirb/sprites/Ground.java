@@ -11,7 +11,6 @@ public class Ground {
     private Texture groundTexture;
     private Vector2 position;
     private Rectangle bounds;
-    private float speed;
 
     public Ground(float x, float y, float speed) {
         this.groundTexture = new Texture("Ground2.png");
@@ -26,7 +25,6 @@ public class Ground {
      * @param delta
      */
     public void update(float delta) {
-        position.x -= speed * delta;
         bounds.setX(position.x); // Update bounds position
         if (position.x < -groundTexture.getWidth()) {
             position.x += groundTexture.getWidth();
