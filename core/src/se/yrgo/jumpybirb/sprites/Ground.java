@@ -17,7 +17,6 @@ public class Ground {
         this.groundTexture = new Texture("Ground2.png");
         this.position = new Vector2(x, y);
         this.bounds = new Rectangle(x, y, groundTexture.getWidth(), groundTexture.getHeight());
-        this.speed = speed;
     }
 
     /**
