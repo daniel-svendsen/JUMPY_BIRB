@@ -36,17 +36,10 @@ public class PlayScreen implements Screen {
     private Texture getReadyTexture;
     private OrthographicCamera camera;
     private Array<Obstacle> obstacles;
-
-    private static final int OBSTACLE_SPACING = 220; // Spacing between tubes horizontally
-
     private Texture groundTexture;
     private Vector2 groundPosition;
 
     private Ground ground;
-
-
-    private Vector2 groundPosition;
-    private float obstacleSpeed;
 
     /***
      * This is used to tell which state the playScreen is in.
@@ -224,7 +217,7 @@ public class PlayScreen implements Screen {
         updateObstacles();
 
         // Move ground with obstacles
-        groundPosition.x -= updateObstacles() * delta;
+        //groundPosition.x -= updateObstacles() * delta;
 
 
 // Reset ground position when it goes off-screen
