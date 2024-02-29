@@ -257,11 +257,11 @@ public class PlayScreen implements Screen {
             return true;
         }
         // iterate through obstacles to check for collision with the player
-     /*   for (Obstacle obstacle : obstacles) {
+        for (Obstacle obstacle : obstacles) {
             if (obstacle.collidesWith(player.getBounds())) {
                 return true;
             }
-        }*/
+        }
         return false;
     }
 
