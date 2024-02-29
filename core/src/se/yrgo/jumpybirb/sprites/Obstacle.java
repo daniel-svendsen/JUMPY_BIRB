@@ -16,14 +16,14 @@ public class Obstacle {
     private Vector2 posBottomObstacle; // Position of top and bottom tubes on X axis.
 
     public static final float OBSTACLE_WIDTH = 40f; // pixel width of the tube from the image
-    private static final float FLUCTUATION = 140f; // so it can move randomly between 0 and 140
-    private static final float OBSTACLE_GAP = 140f; //  this will be the gap between 2 tubes
+    private static final float FLUCTUATION = 340f; // so it can move randomly between 0 and 140
+    private static final float OBSTACLE_GAP = 200f; //  this will be the gap between 2 tubes
     private static final float LOWEST_OPENING = 130f; // where from the bottom of the screen can we have top tube
     private Random rand; // to get random top and bottom positions on Y axis
     public Rectangle boundsTop;
     public Rectangle boundsBot;
     private Rectangle boundSpace;
-
+    private boolean isPassed; // Variable to track whether the obstacle is passed
 
     public Obstacle(float x) {
         topObstacle = new Texture("UpperObstacle1.png");
@@ -31,9 +31,15 @@ public class Obstacle {
         rand = new Random();
         posTopObstacle = new Vector2(x, rand.nextFloat(FLUCTUATION) + OBSTACLE_GAP + LOWEST_OPENING);
         posBottomObstacle = new Vector2(x, posTopObstacle.y - OBSTACLE_GAP - bottomObstacle.getHeight());
-        boundsTop = new Rectangle(posTopObstacle.x, posTopObstacle.y, topObstacle.getWidth() - 5, topObstacle.getHeight() + 5); //Set position of invisible rectangle for top tube
-        boundsBot = new Rectangle(posBottomObstacle.x, posTopObstacle.y, bottomObstacle.getWidth() - 5, bottomObstacle.getHeight() - 5); //Set position of invisible rectangle for bottom tube
+        boundsTop = new Rectangle(posTopObstacle.x, posTopObstacle.y, topObstacle.getWidth() - 5f, topObstacle.getHeight() + 5f); //Set position of invisible rectangle for top tube
+        boundsBot = new Rectangle(posBottomObstacle.x, posTopObstacle.y, bottomObstacle.getWidth() - 5f, bottomObstacle.getHeight() - 5f); //Set position of invisible rectangle for bottom tube
         boundSpace = new Rectangle(posTopObstacle.x, posTopObstacle.y - OBSTACLE_GAP, topObstacle.getWidth(), topObstacle.getHeight());
+        isPassed = false;
+    }
+
+    // Method to check if the bird has passed the obstacle
+    public boolean isPassed() {
+        return isPassed;
     }
 
     public boolean collidesWith(Rectangle playerBounds) {
@@ -48,6 +54,7 @@ public class Obstacle {
         return false;
     }
 
+
     public void dispose() {
         topObstacle.dispose();
         bottomObstacle.dispose();
@@ -59,6 +66,7 @@ public class Obstacle {
         boundsTop.setPosition(posTopObstacle.x, posTopObstacle.y);
         boundsBot.setPosition(posBottomObstacle.x, posBottomObstacle.y);
         boundSpace.setPosition(posTopObstacle.x, posTopObstacle.y - OBSTACLE_GAP);
+        isPassed = false;
     }
 
     public Texture getTopObstacle() {

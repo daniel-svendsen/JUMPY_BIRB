@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import se.yrgo.jumpybirb.sprites.Birb;
+import se.yrgo.jumpybirb.sprites.Ground;
 import se.yrgo.jumpybirb.sprites.Obstacle;
 import se.yrgo.jumpybirb.utils.ScoreManager;
 import se.yrgo.jumpybirb.utils.ScreenSwitcher;
@@ -22,6 +23,9 @@ import se.yrgo.jumpybirb.utils.Screens;
  */
 public class PlayScreen implements Screen {
     public static final String TAG = PlayScreen.class.getSimpleName();
+    private static final float TEXT_FONT_SCALE = 2.0f;
+    private static final int OBSTACLE_COUNT = 4;
+    private static final float OBSTACLE_SPACING = 225f; // Spacing between tubes horizontally
     private SpriteBatch batch;
     private Birb birb;
     private ScoreManager scoreManager;
@@ -29,16 +33,20 @@ public class PlayScreen implements Screen {
     private GameState currentGameState;
     private Texture backgroundTexture;
     private BitmapFont textFont;
-    private static final float TEXT_FONT_SCALE = 2.0f;
     private Texture getReadyTexture;
     private OrthographicCamera camera;
-    private static final int OBSTACLE_COUNT = 4;
     private Array<Obstacle> obstacles;
+
     private static final int OBSTACLE_SPACING = 220; // Spacing between tubes horizontally
 
     private Texture groundTexture;
     private Vector2 groundPosition;
 
+    private Ground ground;
+
+
+    private Vector2 groundPosition;
+    private float obstacleSpeed;
 
     /***
      * This is used to tell which state the playScreen is in.
@@ -85,14 +93,22 @@ public class PlayScreen implements Screen {
 
         batch = new SpriteBatch();
         backgroundTexture = new Texture("Bakgrund1.jpg");
+        birb = new Birb(66, 64);
+
+        // Initialize ground and groundPosition
+        ground = new Ground(-300, 0, 100f);
+        groundPosition = new Vector2(-300, 0);
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 600, 800); // Adjust this to match your world width and height
         groundTexture = new Texture("Ground2.png");
         groundPosition = new Vector2(-300, 0);
         getReadyTexture = new Texture("get-ready.png"); // placeholder get-ready image
 
+        //obstacleSpeed = obstacles.get(0).getSpeed(); // Adjust this based on your game
+
         textFont = new BitmapFont();
-        textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         textFont.getData().setScale(TEXT_FONT_SCALE);
     }
 
@@ -142,6 +158,9 @@ public class PlayScreen implements Screen {
         // Draw background
         batch.draw(backgroundTexture, 0, 0, camera.viewportWidth, camera.viewportHeight);
 
+        // Draw ground
+        ground.render(batch, camera);
+
         // Draw birb at its initial position
         batch.draw(birb.getTexture(), birb.getInitialPosition()[0], birb.getInitialPosition()[1]);
 
@@ -150,8 +169,6 @@ public class PlayScreen implements Screen {
             batch.draw(obstacle.getTopObstacle(), obstacle.getPosTopObstacle().x, obstacle.getPosTopObstacle().y);
             batch.draw(obstacle.getBottomObstacle(), obstacle.getPosBottomObstacle().x, obstacle.getPosBottomObstacle().y);
         }
-
-
         // End batch
         batch.end();
 
@@ -171,18 +188,27 @@ public class PlayScreen implements Screen {
         // Check for collisions, update score, etc.
         // Update birb
         birb.update(delta);
+
         // Update camera position to follow the birb
         camera.position.x = birb.getPosition().x;
         camera.update();
 
-        // Begin batch
-        batch.begin();
-
         // Set the SpriteBatch's projection matrix to the camera's combined matrix
         batch.setProjectionMatrix(camera.combined);
 
+        // Begin batch
+        batch.begin();
+
         // Draw background
         batch.draw(backgroundTexture, camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
+
+        // Update obstacles and draw them
+        updateObstacles();
+        drawObstacles();
+
+        // Draw and update ground
+        ground.update(delta);
+        ground.render(batch, camera);
 
         // Draw birb and update the position of the birb's sprite
         batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
@@ -205,7 +231,6 @@ public class PlayScreen implements Screen {
         if (groundPosition.x < -groundTexture.getWidth()) {
             groundPosition.x += groundTexture.getWidth();
         }
-
 
         // End batch
         batch.end();
@@ -264,7 +289,6 @@ public class PlayScreen implements Screen {
         return false;
     }
 
-
     public void resetGame() {
         // Reset necessary game elements (e.g., birb position, obstacles, score)
         birb.reset();
@@ -277,10 +301,10 @@ public class PlayScreen implements Screen {
         }
     }
 
-
     /**
      * TODO write Javadoc here
      */
+
     private void drawTextAndScores(float backgroundX, float backgroundY, float backgroundWidth, float backgroundHeight) {
         float textPadding = 50f;
         int currentScore = scoreManager.getScore();
@@ -289,8 +313,8 @@ public class PlayScreen implements Screen {
         // Draw text and scores with respect to the background position and dimensions
         textFont.draw(batch, "Press Esc to go to Menu", backgroundX + backgroundWidth / 4f,
                 backgroundY + backgroundHeight / 3f - textPadding, 0, Align.left, false);
-        textFont.draw(batch, "Score: " + currentScore, backgroundX + 10, backgroundY + backgroundHeight - 10f);
-        textFont.draw(batch, "High Score: " + highScore, backgroundX + 10, backgroundY + backgroundHeight - 10f - 50f);
+        textFont.draw(batch, "Score: " + currentScore, backgroundX + 370, backgroundY + backgroundHeight - 10f);
+        textFont.draw(batch, "High Score: " + highScore, backgroundX + 370, backgroundY + backgroundHeight - 10f - 50f);
     }
 
 
@@ -340,9 +364,9 @@ public class PlayScreen implements Screen {
     @Override
     public void dispose() {
         // Dispose of resources
+        ground.dispose();
         batch.dispose();
         backgroundTexture.dispose();
         textFont.dispose();
-        getReadyTexture.dispose();
     }
 }
