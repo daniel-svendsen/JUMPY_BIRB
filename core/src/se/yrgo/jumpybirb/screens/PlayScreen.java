@@ -63,7 +63,7 @@ public class PlayScreen implements Screen {
      */
     @Override
     public void show() {
-        // dont let the SplashScreen timer interrupt the PlayScreen
+        // Don't let the SplashScreen timer interrupt the PlayScreen
         SplashScreen.setPlayScreenDisplayed(true);
 
         batch = new SpriteBatch();
@@ -279,7 +279,6 @@ public class PlayScreen implements Screen {
                 obstacles.add(new Obstacle(obstacles.peek().getPosTopObstacle().x + (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
             }
         }
-
     }
 
     private void drawObstacles() {
