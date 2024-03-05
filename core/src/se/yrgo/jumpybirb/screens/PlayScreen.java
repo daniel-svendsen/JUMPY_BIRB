@@ -2,9 +2,7 @@ package se.yrgo.jumpybirb.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -40,6 +38,9 @@ public class PlayScreen implements Screen {
     private Vector2 groundPosition;
 
     private Ground ground;
+    Texture greenTexture; //TODO remove this after debugging
+    private float runningTimer = 0f; // Timer to track elapsed time in running state
+    private static final float OBSTACLE_DELAY = 3f; // Delay in seconds before adding obstacles
 
     /***
      * This is used to tell which state the playScreen is in.
@@ -98,11 +99,17 @@ public class PlayScreen implements Screen {
         groundPosition = new Vector2(-300, 0);
         getReadyTexture = new Texture("get-ready.png"); // placeholder get-ready image
 
-        //obstacleSpeed = obstacles.get(0).getSpeed(); // Adjust this based on your game
-
         textFont = new BitmapFont();
         textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         textFont.getData().setScale(TEXT_FONT_SCALE);
+
+        //TODO remove this after debugging
+        // Create a green pixmap
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.GREEN);
+        pixmap.fill();
+        // Create a texture from the pixmap
+        greenTexture = new Texture(pixmap);
     }
 
     public Birb getPlayerBirb() {
@@ -177,8 +184,10 @@ public class PlayScreen implements Screen {
     private void updateRunningState(float delta) {
         Gdx.app.log(TAG, "GameState: RUNNING");
 
+        // Increment the running timer
+        runningTimer += delta;
+
         // Update game logic while in the running state (e.g., birb movement, obstacle movement)
-        // Check for collisions, update score, etc.
         // Update birb
         birb.update(delta);
 
@@ -194,10 +203,6 @@ public class PlayScreen implements Screen {
 
         // Draw background
         batch.draw(backgroundTexture, camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
-
-        // Update obstacles and draw them
-        updateObstacles();
-        drawObstacles();
 
         // Draw and update ground
         ground.update(delta);
@@ -216,16 +221,29 @@ public class PlayScreen implements Screen {
         // Render a new obstacle when an obstacle leaves the screen
         updateObstacles();
 
-        // Move ground with obstacles
-        //groundPosition.x -= updateObstacles() * delta;
-
-
-// Reset ground position when it goes off-screen
+        // Reset ground position when it goes off-screen
         if (groundPosition.x < -groundTexture.getWidth()) {
             groundPosition.x += groundTexture.getWidth();
         }
 
         // End batch
+        batch.end();
+
+        //TODO remove this after debugging
+        // Render green bounding rectangles for obstacles
+        // Set the color to green with 50% opacity
+        batch.begin();
+        batch.setColor(0f, 1f, 0f, 0.5f);
+        for (Obstacle obstacle : obstacles) {
+            // Draw bounding rectangles for top and bottom obstacles
+            batch.draw(obstacle.getTopObstacle(), obstacle.getPosTopObstacle().x, obstacle.getPosTopObstacle().y);
+            batch.draw(obstacle.getBottomObstacle(), obstacle.getPosBottomObstacle().x, obstacle.getPosBottomObstacle().y);
+
+            // Draw bounding rectangles (green)
+            batch.draw(greenTexture, obstacle.boundsTop.x, obstacle.boundsTop.y, obstacle.boundsTop.width, obstacle.boundsTop.height);
+            batch.draw(greenTexture, obstacle.boundsBot.x, obstacle.boundsBot.y, obstacle.boundsBot.width, obstacle.boundsBot.height);
+        }
+        batch.setColor(Color.WHITE); // Reset color to white
         batch.end();
 
         Gdx.app.log(TAG, "Camera position: " + camera.position.x + ", " + camera.position.y);
@@ -292,6 +310,8 @@ public class PlayScreen implements Screen {
         for (int i = 1; i <= OBSTACLE_COUNT; i++) {
             obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
         }
+        // Reset the running timer
+        runningTimer = 0f;
     }
 
     /**
@@ -361,5 +381,6 @@ public class PlayScreen implements Screen {
         batch.dispose();
         backgroundTexture.dispose();
         textFont.dispose();
+        greenTexture.dispose(); //TODO remove this after debugging
     }
 }

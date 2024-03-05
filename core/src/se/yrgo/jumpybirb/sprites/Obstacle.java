@@ -32,7 +32,7 @@ public class Obstacle {
         posTopObstacle = new Vector2(x, rand.nextFloat(FLUCTUATION) + OBSTACLE_GAP + LOWEST_OPENING);
         posBottomObstacle = new Vector2(x, posTopObstacle.y - OBSTACLE_GAP - bottomObstacle.getHeight());
         boundsTop = new Rectangle(posTopObstacle.x, posTopObstacle.y, topObstacle.getWidth() - 5f, topObstacle.getHeight() + 5f); //Set position of invisible rectangle for top tube
-        boundsBot = new Rectangle(posBottomObstacle.x, posTopObstacle.y, bottomObstacle.getWidth() - 5f, bottomObstacle.getHeight() - 5f); //Set position of invisible rectangle for bottom tube
+        boundsBot = new Rectangle(posBottomObstacle.x, posBottomObstacle.y, bottomObstacle.getWidth() - 5f, bottomObstacle.getHeight() - 5f); //Set position of invisible rectangle for bottom tube
         boundSpace = new Rectangle(posTopObstacle.x, posTopObstacle.y - OBSTACLE_GAP, topObstacle.getWidth(), topObstacle.getHeight());
         isPassed = false;
     }
