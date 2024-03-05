@@ -51,17 +51,8 @@ public final class ScreenSwitcher {
                     gameSession.setScreen(screen.getScreenInstance());
                     break;
             }
-            Gdx.app.log(TAG,  " switched to " + screen);
+            Gdx.app.log(TAG, " switched to " + screen);
         }
     }
-
-/*    public void switchToScreen(Screens screen) {
-        if (currentScreen != screen) {
-            currentScreen = screen;
-            gameSession.setScreen(screen.getScreenInstance());
-            Gdx.app.log(TAG,  " switched to " + screen);
-        }
-    }*/
 }
-
 
