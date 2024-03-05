@@ -37,7 +37,6 @@ public class PlayScreen implements Screen {
     private OrthographicCamera camera;
     private Array<Obstacle> obstacles;
     private Ground ground;
-
     private Vector2 groundPosition;
     private float obstacleSpeed;
 
@@ -61,7 +60,11 @@ public class PlayScreen implements Screen {
         obstacles = new Array<>();
 
         for (int i = 1; i <= OBSTACLE_COUNT; i++) {
-            obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
+            Obstacle obstacle = new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH));
+            obstacles.add(obstacle);
+
+            // Log initial obstacle positions
+            Gdx.app.log(TAG, "Obstacle " + i + " initial position: (" + obstacle.getPosTopObstacle().x + ", " + obstacle.getPosTopObstacle().y + ")");
         }
     }
 
@@ -141,8 +144,15 @@ public class PlayScreen implements Screen {
     }
 
     private void updateReadyState(float delta) {
-        Gdx.app.log(TAG, "GameState: READY");
+//        Gdx.app.log(TAG, "GameState: READY");
 
+//        if (!obstaclesStarted) {
+//            // Update the elapsed time only once when transitioning from READY to RUNNING
+//            elapsedTime += Gdx.graphics.getDeltaTime();
+//            if (elapsedTime >= obstacleDelay) {
+//                obstaclesStarted = true;
+//            }
+//        }
         // Render the assets without updating their positions
         batch.begin();
         batch.setProjectionMatrix(camera.combined);
@@ -156,11 +166,10 @@ public class PlayScreen implements Screen {
         // Draw birb at its initial position
         batch.draw(birb.getTexture(), birb.getInitialPosition()[0], birb.getInitialPosition()[1]);
 
+
+
         // Draw obstacles at their initial positions
-        for (Obstacle obstacle : obstacles) {
-            batch.draw(obstacle.getTopObstacle(), obstacle.getPosTopObstacle().x, obstacle.getPosTopObstacle().y);
-            batch.draw(obstacle.getBottomObstacle(), obstacle.getPosBottomObstacle().x, obstacle.getPosBottomObstacle().y);
-        }
+        drawObstacles();
         // End batch
         batch.end();
 
@@ -238,7 +247,7 @@ public class PlayScreen implements Screen {
 
     private void drawObstacles() {
         for (Obstacle obstacle : obstacles) {
-            if (obstacle.getPosTopObstacle().x > 320) {
+            if (obstacle.getPosTopObstacle().x >= 320) {
                 batch.draw(obstacle.getTopObstacle(), obstacle.getPosTopObstacle().x, obstacle.getPosTopObstacle().y);
                 batch.draw(obstacle.getBottomObstacle(), obstacle.getPosBottomObstacle().x, obstacle.getPosBottomObstacle().y);
             }
