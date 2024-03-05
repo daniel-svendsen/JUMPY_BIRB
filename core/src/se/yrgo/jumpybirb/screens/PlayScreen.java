@@ -213,9 +213,6 @@ public class PlayScreen implements Screen {
         updateObstacles();
         drawObstacles();
 
-        // Render a new obstacle when an obstacle leaves the screen
-        updateObstacles();
-
         // Reset ground position when it goes off-screen
         if (groundPosition.x < -groundTexture.getWidth()) {
             groundPosition.x += groundTexture.getWidth();
@@ -305,8 +302,6 @@ public class PlayScreen implements Screen {
         for (int i = 1; i <= OBSTACLE_COUNT; i++) {
             obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
         }
-        // Reset the running timer
-        runningTimer = 0f;
     }
 
     /**
