@@ -44,7 +44,9 @@ public final class ScreenSwitcher {
                     break;
                 case MENU:
                     // Reset the playScreen when switching to the menu
-                    playScreen.resetGame();
+                    if (playScreen.getCurrentGameState() == PlayScreen.GameState.RUNNING) {
+                        playScreen.resetGame();
+                    }
                     gameSession.setScreen(screen.getScreenInstance());
                     break;
                 default:

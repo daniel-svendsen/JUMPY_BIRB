@@ -39,8 +39,6 @@ public class PlayScreen implements Screen {
 
     private Ground ground;
     Texture greenTexture; //TODO remove this after debugging
-    private float runningTimer = 0f; // Timer to track elapsed time in running state
-    private static final float OBSTACLE_DELAY = 3f; // Delay in seconds before adding obstacles
 
     /***
      * This is used to tell which state the playScreen is in.
@@ -183,9 +181,6 @@ public class PlayScreen implements Screen {
 
     private void updateRunningState(float delta) {
         Gdx.app.log(TAG, "GameState: RUNNING");
-
-        // Increment the running timer
-        runningTimer += delta;
 
         // Update game logic while in the running state (e.g., birb movement, obstacle movement)
         // Update birb
