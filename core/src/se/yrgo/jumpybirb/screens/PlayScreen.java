@@ -23,7 +23,7 @@ public class PlayScreen implements Screen {
     public static final String TAG = PlayScreen.class.getSimpleName();
     private static final float TEXT_FONT_SCALE = 2.0f;
     private static final int OBSTACLE_COUNT = 4;
-    private static final float OBSTACLE_SPACING = 250f; // Spacing between tubes horizontally
+    private static final float OBSTACLE_SPACING = 300f; // Spacing between tubes horizontally
     private SpriteBatch batch;
     private Birb birb;
     private ScoreManager scoreManager;
