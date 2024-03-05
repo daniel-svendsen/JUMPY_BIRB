@@ -22,8 +22,6 @@ import se.yrgo.jumpybirb.utils.Screens;
 public class PlayScreen implements Screen {
     public static final String TAG = PlayScreen.class.getSimpleName();
     private static final float TEXT_FONT_SCALE = 2.0f;
-    private static final int OBSTACLE_COUNT = 4;
-    private static final float OBSTACLE_SPACING = 300f; // Spacing between tubes horizontally
     private SpriteBatch batch;
     private Birb birb;
     private ScoreManager scoreManager;
@@ -57,11 +55,7 @@ public class PlayScreen implements Screen {
         scoreManager = ScoreManager.getInstance();
         this.screenSwitcher = screenSwitcher;
         currentGameState = GameState.READY;
-        obstacles = new Array<>();
-
-        for (int i = 1; i <= OBSTACLE_COUNT; i++) {
-            obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
-        }
+        obstacles = Obstacle.createArray();
     }
 
     /**
@@ -163,9 +157,8 @@ public class PlayScreen implements Screen {
         batch.draw(birb.getTexture(), birb.getInitialPosition()[0], birb.getInitialPosition()[1]);
 
         // Draw obstacles at their initial positions
-        for (Obstacle obstacle : obstacles) {
-            batch.draw(obstacle.getTopObstacle(), obstacle.getPosTopObstacle().x, obstacle.getPosTopObstacle().y);
-            batch.draw(obstacle.getBottomObstacle(), obstacle.getPosBottomObstacle().x, obstacle.getPosBottomObstacle().y);
+        for (Obstacle obs : obstacles) {
+            obs.draw(batch, camera);
         }
         // End batch
         batch.end();
@@ -209,8 +202,10 @@ public class PlayScreen implements Screen {
         // Draw text and scores, passing the background coordinates and dimensions
 
         // Update obstacles and draw them
-        updateObstacles();
-        drawObstacles();
+        for (Obstacle obs : obstacles) {
+            obs.update(camera);
+            obs.draw(batch, camera);
+        }
 
         // Reset ground position when it goes off-screen
         if (groundPosition.x < -groundTexture.getWidth()) {
@@ -255,23 +250,6 @@ public class PlayScreen implements Screen {
         }
     }
 
-    private void updateObstacles() {
-        for (Obstacle obstacle : obstacles) {
-            if (camera.position.x - (camera.viewportWidth / 2) > obstacle.getPosTopObstacle().x + obstacle.getTopObstacle().getWidth()) {
-                obstacle.reposition(obstacle.getPosTopObstacle().x + (Obstacle.OBSTACLE_WIDTH + OBSTACLE_SPACING) * OBSTACLE_COUNT);
-            }
-        }
-    }
-
-    private void drawObstacles() {
-        for (Obstacle obstacle : obstacles) {
-            if (obstacle.getPosTopObstacle().x > 320) {
-                batch.draw(obstacle.getTopObstacle(), obstacle.getPosTopObstacle().x, obstacle.getPosTopObstacle().y);
-                batch.draw(obstacle.getBottomObstacle(), obstacle.getPosBottomObstacle().x, obstacle.getPosBottomObstacle().y);
-            }
-        }
-    }
-
     /**
      * Helper method to updateGameOverState
      *
@@ -297,11 +275,9 @@ public class PlayScreen implements Screen {
         birb.reset();
         scoreManager.reset();
 
-        // Clear existing array of obstacles and create new ones
+        // Clear existing array of obstacles and generate new obstacles in it
         obstacles.clear();
-        for (int i = 1; i <= OBSTACLE_COUNT; i++) {
-            obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
-        }
+        obstacles = Obstacle.createArray();
     }
 
     /**
