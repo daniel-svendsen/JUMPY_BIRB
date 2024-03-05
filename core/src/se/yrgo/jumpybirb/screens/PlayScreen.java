@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -36,7 +37,8 @@ public class PlayScreen implements Screen {
     private Vector2 groundPosition;
 
     private Ground ground;
-    Texture greenTexture; //TODO remove this after debugging
+    private Texture greenTexture; //TODO remove this after debugging
+    private ShapeRenderer shapeRenderer; //TODO remove this after debugging
 
     /***
      * This is used to tell which state the playScreen is in.
@@ -80,6 +82,7 @@ public class PlayScreen implements Screen {
         batch = new SpriteBatch();
         backgroundTexture = new Texture("Bakgrund1.jpg");
         birb = new Birb(66, 64);
+        shapeRenderer = new ShapeRenderer(); //TODO remove this after debugging
 
         // Initialize ground and groundPosition
         ground = new Ground(-300, 0, 100f);
@@ -212,6 +215,10 @@ public class PlayScreen implements Screen {
         if (groundPosition.x < -groundTexture.getWidth()) {
             groundPosition.x += groundTexture.getWidth();
         }
+
+        // Render birb bounds TODO remove this after debugging
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        birb.renderBounds(shapeRenderer);
 
         // End batch
         batch.end();
@@ -349,5 +356,6 @@ public class PlayScreen implements Screen {
         backgroundTexture.dispose();
         textFont.dispose();
         greenTexture.dispose(); //TODO remove this after debugging
+        shapeRenderer.dispose(); //TODO remove this after debugging
     }
 }

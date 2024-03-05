@@ -2,7 +2,10 @@ package se.yrgo.jumpybirb.sprites;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import se.yrgo.jumpybirb.utils.InputHandler;
@@ -15,13 +18,13 @@ public class Birb {
     private static final float[] INITIAL_POSITION = {INITIAL_POSITION_X, INITIAL_POSITION_X};
     private static final float JUMP_VELOCITY = 300f;
     private static final float MOVEMENT_SPEED = 190f;
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
     private Vector2 position;
     private Vector2 velocity;
     private Texture texture;
     private Sound flapSound;
-    private Rectangle bounds;
+    private Circle bounds;
 
     public Birb(int width, int height) {
         this.width = width;
@@ -29,7 +32,15 @@ public class Birb {
         position = new Vector2(INITIAL_POSITION_X, INITIAL_POSITION_Y);
         velocity = new Vector2(0, 0);
         texture = new Texture("Birb1.png");
-        bounds = new Rectangle(position.x, position.y, texture.getWidth(), texture.getHeight());
+
+        // Calculate the radius for the bounds
+        float radius = Math.min(width, height / 3); // 33% of the current size
+
+        // Calculate the position offset to keep the birb in the middle
+        float xOffset = (width - radius) / 1.2f;
+        float yOffset = (height - radius) / 1.2f;
+
+        bounds = new Circle(position.x + xOffset, position.y + yOffset, radius);
         flapSound = Gdx.audio.newSound(Gdx.files.internal("wing.ogg"));
     }
 
@@ -45,7 +56,11 @@ public class Birb {
 
         ensureInBounds();
 
-        bounds.setPosition(position.x, position.y);
+        // Update the position of bounds with the new offset
+        float radius = Math.min(width, height / 3); // 33% of the current size
+        float xOffset = (width - radius) / 1.2f;
+        float yOffset = (height - radius) / 1.2f;
+        bounds.setPosition(position.x + xOffset, position.y + yOffset);
     }
 
     private void ensureInBounds() {
@@ -57,6 +72,14 @@ public class Birb {
         if (position.x < 0)
             position.x = 0;
     }
+
+    //TODO remove this method after debugging
+    public void renderBounds(ShapeRenderer shapeRenderer) {
+        shapeRenderer.setColor(new Color(Color.CYAN.r, Color.CYAN.g, Color.CYAN.b, 0.5f));        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.circle(bounds.x, bounds.y, bounds.radius);
+        shapeRenderer.end();
+    }
+
 
     public float[] getInitialPosition() {
         return INITIAL_POSITION;
@@ -81,16 +104,8 @@ public class Birb {
                 ", position.x: " + position.x + ", position.y: " + position.y);
     }
 
-    public Rectangle getBounds() {
+    public Circle getBounds() {
         return bounds;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     public void reset() {
