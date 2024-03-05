@@ -200,6 +200,7 @@ public class PlayScreen implements Screen {
         batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
 
         // Draw text and scores, passing the background coordinates and dimensions
+        drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
         // Update obstacles and draw them
         for (Obstacle obs : obstacles) {
@@ -230,8 +231,8 @@ public class PlayScreen implements Screen {
             batch.draw(greenTexture, obstacle.boundsBot.x, obstacle.boundsBot.y, obstacle.boundsBot.width, obstacle.boundsBot.height);
         }
         batch.setColor(Color.WHITE); // Reset color to white
-        drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
         batch.end();
+        //TODO remove code above
 
         Gdx.app.log(TAG, "Camera position: " + camera.position.x + ", " + camera.position.y);
 
