@@ -24,6 +24,8 @@ public class PlayScreen implements Screen {
     private static final float TEXT_FONT_SCALE = 2.0f;
     private static final int OBSTACLE_COUNT = 4;
     private static final float OBSTACLE_SPACING = 300f; // Spacing between tubes horizontally
+    private static final float OBSTACLE_DELAY = 3f; // Delay in seconds before adding obstacles
+    Texture greenTexture; //TODO remove this after debugging
     private SpriteBatch batch;
     private Birb birb;
     private ScoreManager scoreManager;
@@ -36,19 +38,8 @@ public class PlayScreen implements Screen {
     private Array<Obstacle> obstacles;
     private Texture groundTexture;
     private Vector2 groundPosition;
-
     private Ground ground;
-    Texture greenTexture; //TODO remove this after debugging
     private float runningTimer = 0f; // Timer to track elapsed time in running state
-    private static final float OBSTACLE_DELAY = 3f; // Delay in seconds before adding obstacles
-
-    /***
-     * This is used to tell which state the playScreen is in.
-     * Not implemented yet...
-     */
-    public enum GameState {
-        MENU, READY, RUNNING, GAME_OVER
-    }
 
     /**
      * Constructor. Initialize ScoreManager.
@@ -64,16 +55,6 @@ public class PlayScreen implements Screen {
         for (int i = 1; i <= OBSTACLE_COUNT; i++) {
             obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
         }
-    }
-
-    /**
-     * This method is used in the InputHandler class
-     *
-     * @param currentGameState the GameState to update to
-     * @see se.yrgo.jumpybirb.utils.InputHandler
-     */
-    public void setCurrentGameState(GameState currentGameState) {
-        this.currentGameState = currentGameState;
     }
 
     /***
@@ -148,6 +129,16 @@ public class PlayScreen implements Screen {
         return currentGameState;
     }
 
+    /**
+     * This method is used in the InputHandler class
+     *
+     * @param currentGameState the GameState to update to
+     * @see se.yrgo.jumpybirb.utils.InputHandler
+     */
+    public void setCurrentGameState(GameState currentGameState) {
+        this.currentGameState = currentGameState;
+    }
+
     private void updateReadyState(float delta) {
         Gdx.app.log(TAG, "GameState: READY");
 
@@ -211,10 +202,23 @@ public class PlayScreen implements Screen {
         // Draw birb and update the position of the birb's sprite
         batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
 
-        // Draw text and scores, passing the background coordinates and dimensions
 
         // Update obstacles and draw them
         updateObstacles();
+
+        // Check if the birb has passed an obstacle
+        for (Obstacle obstacle : obstacles) {
+            if (obstacle.isPassed() && !obstacle.isScored()) {
+                scoreManager.updateScore();  // Call the scoring logic in ScoreManager
+                obstacle.setScored(true);  // Mark the obstacle as scored to avoid multiple increments
+            }
+        }
+        for (Obstacle obstacle : obstacles) {
+            obstacle.checkPassed(birb.getPosition().x);
+        }
+
+
+        // Draw obstacle
         drawObstacles();
 
         // Render a new obstacle when an obstacle leaves the screen
@@ -243,6 +247,8 @@ public class PlayScreen implements Screen {
             batch.draw(greenTexture, obstacle.boundsBot.x, obstacle.boundsBot.y, obstacle.boundsBot.width, obstacle.boundsBot.height);
         }
         batch.setColor(Color.WHITE); // Reset color to white
+
+        // Draw text and scores, passing the background coordinates and dimensions
         drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
         batch.end();
 
@@ -264,11 +270,16 @@ public class PlayScreen implements Screen {
     }
 
     private void updateObstacles() {
+        Obstacle lastObstacle = null;
         for (Obstacle obstacle : obstacles) {
+            // Check if the obstacle is off-screen to the left
             if (camera.position.x - (camera.viewportWidth / 2) > obstacle.getPosTopObstacle().x + obstacle.getTopObstacle().getWidth()) {
-                obstacle.reposition(obstacle.getPosTopObstacle().x + (Obstacle.OBSTACLE_WIDTH + OBSTACLE_SPACING) * OBSTACLE_COUNT);
+                // Reposition the obstacle to the right of the last obstacle
+                obstacle.reposition(obstacles.peek().getPosTopObstacle().x + (Obstacle.OBSTACLE_WIDTH + OBSTACLE_SPACING));
+                obstacles.add(new Obstacle(obstacles.peek().getPosTopObstacle().x + (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
             }
         }
+
     }
 
     private void drawObstacles() {
@@ -330,7 +341,6 @@ public class PlayScreen implements Screen {
         textFont.draw(batch, "High Score: " + highScore, backgroundX + 370, backgroundY + backgroundHeight - 10f - 50f);
     }
 
-
     /***
      * This method is called when the Application is resized,
      * which can happen at any point during a non-paused state.
@@ -382,5 +392,13 @@ public class PlayScreen implements Screen {
         backgroundTexture.dispose();
         textFont.dispose();
         greenTexture.dispose(); //TODO remove this after debugging
+    }
+
+    /***
+     * This is used to tell which state the playScreen is in.
+     * Not implemented yet...
+     */
+    public enum GameState {
+        MENU, READY, RUNNING, GAME_OVER
     }
 }
