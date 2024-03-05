@@ -24,6 +24,7 @@ public class Obstacle {
     public Rectangle boundsBot;
     private Rectangle boundSpace;
     private boolean isPassed; // Variable to track whether the obstacle is passed
+    private boolean isScored; // Variable to make sure an obstacle give 1 score.
 
     public Obstacle(float x) {
         topObstacle = new Texture("UpperObstacle1.png");
@@ -35,6 +36,7 @@ public class Obstacle {
         boundsBot = new Rectangle(posBottomObstacle.x, posBottomObstacle.y, bottomObstacle.getWidth() - 5f, bottomObstacle.getHeight() - 5f); //Set position of invisible rectangle for bottom tube
         boundSpace = new Rectangle(posTopObstacle.x, posTopObstacle.y - OBSTACLE_GAP, topObstacle.getWidth(), topObstacle.getHeight());
         isPassed = false;
+        isScored = false;
     }
 
     // Method to check if the bird has passed the obstacle
@@ -66,9 +68,16 @@ public class Obstacle {
         boundsTop.setPosition(posTopObstacle.x, posTopObstacle.y);
         boundsBot.setPosition(posBottomObstacle.x, posBottomObstacle.y);
         boundSpace.setPosition(posTopObstacle.x, posTopObstacle.y - OBSTACLE_GAP);
-        isPassed = false;
+        isPassed = true;
     }
 
+    public boolean isScored() {
+        return isScored;
+    }
+
+    public void setScored(boolean scored) {
+        isScored = scored;
+    }
     public Texture getTopObstacle() {
         return topObstacle;
     }

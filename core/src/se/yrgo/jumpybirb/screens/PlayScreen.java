@@ -23,7 +23,7 @@ public class PlayScreen implements Screen {
     public static final String TAG = PlayScreen.class.getSimpleName();
     private static final float TEXT_FONT_SCALE = 2.0f;
     private static final int OBSTACLE_COUNT = 4;
-    private static final float OBSTACLE_SPACING = 250f; // Spacing between tubes horizontally
+    private static final float OBSTACLE_SPACING = 300f; // Spacing between tubes horizontally
     private SpriteBatch batch;
     private Birb birb;
     private ScoreManager scoreManager;
@@ -207,7 +207,6 @@ public class PlayScreen implements Screen {
         batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
 
         // Draw text and scores, passing the background coordinates and dimensions
-        drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
         // Update obstacles and draw them
         updateObstacles();
@@ -236,6 +235,7 @@ public class PlayScreen implements Screen {
             batch.draw(greenTexture, obstacle.boundsBot.x, obstacle.boundsBot.y, obstacle.boundsBot.width, obstacle.boundsBot.height);
         }
         batch.setColor(Color.WHITE); // Reset color to white
+        drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
         batch.end();
 
         Gdx.app.log(TAG, "Camera position: " + camera.position.x + ", " + camera.position.y);
