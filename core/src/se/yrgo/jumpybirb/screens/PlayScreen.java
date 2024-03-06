@@ -251,8 +251,7 @@ public class PlayScreen implements Screen {
 
     private void updateGameOverState(float delta) {
         if (checkForGameOver(birb)) {
-            resetGame();
-            setCurrentGameState(GameState.READY);
+            currentGameState = GameState.GAME_OVER;
             Gdx.app.log(TAG, "GameState: GAME_OVER");
             screenSwitcher.switchToScreen(Screens.GAME_OVER);
         }
@@ -355,6 +354,8 @@ public class PlayScreen implements Screen {
         batch.dispose();
         backgroundTexture.dispose();
         textFont.dispose();
+        groundTexture.dispose();
+        getReadyTexture.dispose();
         greenTexture.dispose(); //TODO remove this after debugging
         shapeRenderer.dispose(); //TODO remove this after debugging
     }
