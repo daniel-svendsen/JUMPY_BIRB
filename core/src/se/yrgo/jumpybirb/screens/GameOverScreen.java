@@ -92,7 +92,6 @@ public class GameOverScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             if (playAgainSelected) {
                 // Start a new game
-                screenSwitcher.getPlayScreen();
                 screenSwitcher.switchToScreen(Screens.PLAY); // Assuming PLAY is your play screen identifier
             } else {
                 // Exit the game
