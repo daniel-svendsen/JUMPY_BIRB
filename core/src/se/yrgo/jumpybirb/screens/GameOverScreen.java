@@ -4,10 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+import se.yrgo.jumpybirb.sprites.Birb;
 import se.yrgo.jumpybirb.utils.ScreenSwitcher;
 import se.yrgo.jumpybirb.utils.Screens;
 
@@ -22,12 +25,18 @@ public class GameOverScreen implements Screen {
     private BitmapFont textFont;
     private Texture backgroundTexture;
     private ScreenSwitcher screenSwitcher;
-    private boolean playAgainSelected = false; // Flag to track whether "Play Again" is selected
+    private boolean playAgainSelected = true; // Flag to track whether "Play Again" is selected
+    private Vector2 birbPosition;
+    private Vector2 groundPosition;
 
 
     public GameOverScreen(ScreenSwitcher screenSwitcher) {
 
         this.screenSwitcher = screenSwitcher;
+    }
+    public GameOverScreen(Vector2 birbPosition, Vector2 groundPosition) {
+        this.birbPosition = birbPosition;
+        this.groundPosition = groundPosition;
     }
 
     /**
@@ -57,11 +66,13 @@ public class GameOverScreen implements Screen {
     @Override
     public void render(float delta) {
         // Clear the screen
-        //Gdx.gl.glClearColor(0, 0, 0, 1);
-        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        backgroundTexture = new Texture("Bakgrund1.jpg");
 
         // Render background image
         batch.begin();
+        batch.draw(backgroundTexture, 0, 0);
 
         // Draw text "Gameover"
         // Draw your game over screen elements here
@@ -81,6 +92,7 @@ public class GameOverScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             if (playAgainSelected) {
                 // Start a new game
+                screenSwitcher.getPlayScreen();
                 screenSwitcher.switchToScreen(Screens.PLAY); // Assuming PLAY is your play screen identifier
             } else {
                 // Exit the game

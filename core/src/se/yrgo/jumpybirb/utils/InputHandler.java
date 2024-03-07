@@ -103,8 +103,9 @@ public class InputHandler extends InputAdapter {
             birbJump(playScreen);
             Gdx.app.log(TAG, "handleRunningState() made birb jump");
         } else if (keycode == Input.Keys.ESCAPE) {
-            screenSwitcher.switchToScreen(Screens.MENU);
-            Gdx.app.log(TAG, "handleRunningState(): switched to MenuScreen");
+            // Exit the game
+            Gdx.app.exit();
+            Gdx.app.log(TAG, "handleRunningState(): exited the game");
         }
     }
 

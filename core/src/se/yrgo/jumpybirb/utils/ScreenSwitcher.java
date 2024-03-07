@@ -40,10 +40,14 @@ public final class ScreenSwitcher {
             currentScreen = screen;
             switch (screen) {
                 case PLAY:
+                    if (playScreen.getCurrentGameState() == PlayScreen.GameState.RUNNING) {
+                        playScreen.resetGame(); // Reset the game state if it's already running
+                    } else {
+                        playScreen = new PlayScreen(this); // Create a new instance if not already created
+                    }
                     gameSession.setScreen(playScreen);
                     break;
                 case MENU:
-                    // Reset the playScreen when switching to the menu
                     if (playScreen.getCurrentGameState() == PlayScreen.GameState.RUNNING) {
                         playScreen.resetGame();
                     }
