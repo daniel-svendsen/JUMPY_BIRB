@@ -225,6 +225,7 @@ public class PlayScreen implements Screen {
         shapeRenderer.setProjectionMatrix(camera.combined);
         birb.renderBounds(shapeRenderer);
 
+
         // End batch
         batch.end();
 

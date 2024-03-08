@@ -80,9 +80,7 @@ public class Obstacle {
         return isPassed;
     }
 
-    public void setPassed(boolean passed) {
-        isPassed = passed;
-    }
+
 
     public boolean collidesWith(Circle playerBounds) {
         if (Intersector.overlaps(playerBounds, boundsTop)) {
