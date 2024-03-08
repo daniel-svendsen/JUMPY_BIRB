@@ -12,7 +12,7 @@ public class Obstacle {
     public static final String TAG = Birb.class.getSimpleName();
     public static final float OBSTACLE_WIDTH = 40f; // pixel width of the tube from the image
     private static final float FLUCTUATION = 340f; // so it can move randomly between 0 and 140
-    private static final float OBSTACLE_GAP = 200f; //  this will be the gap between 2 tubes
+    private static final float OBSTACLE_GAP = 250f; //  this will be the gap between 2 tubes
     private static final float LOWEST_OPENING = 130f; // where from the bottom of the screen can we have top tube
     public Rectangle boundsTop;
     public Rectangle boundsBot;
