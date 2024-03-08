@@ -64,7 +64,8 @@ public class Obstacle {
         boundsTop.setPosition(posTopObstacle.x, posTopObstacle.y);
         boundsBot.setPosition(posBottomObstacle.x, posBottomObstacle.y);
         boundSpace.setPosition(posTopObstacle.x, posTopObstacle.y - OBSTACLE_GAP);
-        isPassed = true;
+        isPassed = false;
+        isScored = false;
     }
 
     // Add the draw method to draw the obstacle
