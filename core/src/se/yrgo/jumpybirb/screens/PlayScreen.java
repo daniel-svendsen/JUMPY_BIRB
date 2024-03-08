@@ -24,7 +24,7 @@ public class PlayScreen implements Screen {
     public static final String TAG = PlayScreen.class.getSimpleName();
     private static final float TEXT_FONT_SCALE = 2.0f;
     private SpriteBatch batch;
-    private Birb birb;
+    private static Birb birb;
     private ScoreManager scoreManager;
     private ScreenSwitcher screenSwitcher;
     private GameState currentGameState;
@@ -35,7 +35,9 @@ public class PlayScreen implements Screen {
     private Array<Obstacle> obstacles;
     private Texture groundTexture;
     private Vector2 groundPosition;
+
     private Ground ground;
+
     private Texture greenTexture; //TODO remove this after debugging
     private ShapeRenderer shapeRenderer; //TODO remove this after debugging
 
@@ -258,12 +260,8 @@ public class PlayScreen implements Screen {
     }
 
     private void updateGameOverState(float delta) {
-        if (checkForGameOver(birb)) {
-            resetGame();
-            setCurrentGameState(GameState.READY);
-            Gdx.app.log(TAG, "GameState: GAME_OVER");
-            screenSwitcher.switchToScreen(Screens.GAME_OVER);
-        }
+        Gdx.app.log(TAG, "GameState: GAME_OVER");
+        screenSwitcher.switchToScreen(Screens.GAME_OVER);
     }
 
     /**
@@ -273,11 +271,9 @@ public class PlayScreen implements Screen {
      * @return true if player collided with an obstacle, false otherwise
      */
     public boolean checkForGameOver(Birb player) {
-        // check if the player has collided with the ground
-        if (birb.getPosition().y <= 37) { // ground.getHeight() + GROUND_OFFSET
+        if (player.getPosition().y <= 37) {
             return true;
         }
-        // iterate through obstacles to check for collision with the player
         for (Obstacle obstacle : obstacles) {
             if (obstacle.collidesWith(player.getBounds())) {
                 return true;
@@ -362,6 +358,8 @@ public class PlayScreen implements Screen {
         batch.dispose();
         backgroundTexture.dispose();
         textFont.dispose();
+        groundTexture.dispose();
+        getReadyTexture.dispose();
         greenTexture.dispose(); //TODO remove this after debugging
         shapeRenderer.dispose(); //TODO remove this after debugging
     }

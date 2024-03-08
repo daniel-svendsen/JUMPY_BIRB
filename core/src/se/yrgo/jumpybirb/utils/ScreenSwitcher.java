@@ -23,7 +23,7 @@ public final class ScreenSwitcher {
     public ScreenSwitcher(JumpyBirb gameSession) {
         this.gameSession = gameSession;
         this.currentScreen = Screens.SPLASH;
-        playScreen = new PlayScreen(JumpyBirb.getScreenSwitcher());
+        //playScreen = new PlayScreen(JumpyBirb.getScreenSwitcher());
         this.playScreen = new PlayScreen(this);
     }
 
@@ -40,10 +40,14 @@ public final class ScreenSwitcher {
             currentScreen = screen;
             switch (screen) {
                 case PLAY:
+                    if (playScreen.getCurrentGameState() == PlayScreen.GameState.RUNNING) {
+                        playScreen.resetGame(); // Reset the game state if it's already running
+                    } else {
+                        playScreen = new PlayScreen(this); // Create a new instance if not already created
+                    }
                     gameSession.setScreen(playScreen);
                     break;
                 case MENU:
-                    // Reset the playScreen when switching to the menu
                     if (playScreen.getCurrentGameState() == PlayScreen.GameState.RUNNING) {
                         playScreen.resetGame();
                     }

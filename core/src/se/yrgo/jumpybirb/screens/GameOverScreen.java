@@ -1,12 +1,18 @@
 package se.yrgo.jumpybirb.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+import se.yrgo.jumpybirb.sprites.Birb;
+import se.yrgo.jumpybirb.utils.ScreenSwitcher;
+import se.yrgo.jumpybirb.utils.Screens;
 
 /***
  * The screen that includes score from this play (+ perhaps highscore current game session?).
@@ -18,6 +24,20 @@ public class GameOverScreen implements Screen {
     private SpriteBatch batch;
     private BitmapFont textFont;
     private Texture backgroundTexture;
+    private ScreenSwitcher screenSwitcher;
+    private boolean playAgainSelected = true; // Flag to track whether "Play Again" is selected
+    private Vector2 birbPosition;
+    private Vector2 groundPosition;
+
+
+    public GameOverScreen(ScreenSwitcher screenSwitcher) {
+
+        this.screenSwitcher = screenSwitcher;
+    }
+    public GameOverScreen(Vector2 birbPosition, Vector2 groundPosition) {
+        this.birbPosition = birbPosition;
+        this.groundPosition = groundPosition;
+    }
 
     /**
      * Constructor. Initialize ScoreManager.
@@ -37,10 +57,6 @@ public class GameOverScreen implements Screen {
         textFont = new BitmapFont();
         textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         textFont.getData().setScale(FONT_SCALE);
-
-        // Load background image
-        backgroundTexture = new Texture(Gdx.files.internal("game-over-placeholder.jpg"));
-        Gdx.app.log(TAG, "Image loaded successfully: " + backgroundTexture);
     }
 
     /***
@@ -52,14 +68,26 @@ public class GameOverScreen implements Screen {
         // Clear the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        backgroundTexture = new Texture("Bakgrund1.jpg");
 
         // Render background image
         batch.begin();
-        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(backgroundTexture, 0, 0);
 
         // Draw text "Gameover"
-        textFont.draw(batch, "Gameover", Gdx.graphics.getWidth() / 4f,
+        // Draw your game over screen elements here
+        textFont.draw(batch, "Game Over", Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 2f, 0, Align.left, false);
+        // Handle input
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            playAgainSelected = !playAgainSelected; // Toggle selection between "Play Again" and "Exit"
+        }
+        // Draw menu options
+        textFont.draw(batch, (playAgainSelected ? "> " : "") + "Play Again", Gdx.graphics.getWidth() / 4f,
+                Gdx.graphics.getHeight() / 2f - 100, 0, Align.left, false);
+        textFont.draw(batch, (!playAgainSelected ? "> " : "") + "Exit", Gdx.graphics.getWidth() / 4f,
+                Gdx.graphics.getHeight() / 2f - 150, 0, Align.left, false);
+
         batch.end();
     }
 
