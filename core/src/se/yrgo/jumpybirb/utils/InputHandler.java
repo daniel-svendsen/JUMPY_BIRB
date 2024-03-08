@@ -49,6 +49,14 @@ private boolean playAgainSelected = true;
         if (currentScreen == Screens.SPLASH) {
             screenSwitcher.switchToScreen(Screens.MENU);
             Gdx.app.log(TAG, "TOUCH DOWN: Switched to MenuScreen");
+        } else if (currentScreen == Screens.PLAY) {
+            PlayScreen playScreen = (PlayScreen) gameSession.getScreen();
+            PlayScreen.GameState currentGameState = playScreen.getCurrentGameState();
+            if (button == Input.Buttons.LEFT) {
+                makeBirbJump(playScreen);
+                Gdx.app.log(TAG, "Running state: Birb jumped");
+            }
+
         }
         return false;
     }
