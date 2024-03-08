@@ -57,7 +57,6 @@ public class ScoreManager {
 
     public void reset() {
         score = 0;
-
         saveHighScore(); // Resetting also implies resetting the high score
     }
 }

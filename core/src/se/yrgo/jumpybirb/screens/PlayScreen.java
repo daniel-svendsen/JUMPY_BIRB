@@ -276,10 +276,22 @@ public class PlayScreen implements Screen {
             if (camera.position.x - (camera.viewportWidth / 2) > obstacle.getPosTopObstacle().x + obstacle.getTopObstacle().getWidth()) {
                 // Reposition the obstacle to the right of the last obstacle
                 obstacle.reposition(obstacles.peek().getPosTopObstacle().x + (Obstacle.OBSTACLE_WIDTH + OBSTACLE_SPACING));
-                obstacles.add(new Obstacle(obstacles.peek().getPosTopObstacle().x + (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH)));
+                addObstacle();
             }
         }
     }
+
+    private void addObstacle() {
+        float x = 0; // Set the initial x-coordinate for the first obstacle
+        if (obstacles.size > 0) {
+            // If there are existing obstacles, position the new obstacle to the right of the last one
+            Obstacle lastObstacle = obstacles.peek();
+            x = lastObstacle.getPosTopObstacle().x + (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH);
+        }
+
+        obstacles.add(new Obstacle(x));
+    }
+
 
     private void drawObstacles() {
         for (Obstacle obstacle : obstacles) {
