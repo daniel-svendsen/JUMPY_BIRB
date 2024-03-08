@@ -78,26 +78,16 @@ public class GameOverScreen implements Screen {
         // Draw your game over screen elements here
         textFont.draw(batch, "Game Over", Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 2f, 0, Align.left, false);
-
+        // Handle input
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            playAgainSelected = !playAgainSelected; // Toggle selection between "Play Again" and "Exit"
+        }
         // Draw menu options
         textFont.draw(batch, (playAgainSelected ? "> " : "") + "Play Again", Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 2f - 100, 0, Align.left, false);
         textFont.draw(batch, (!playAgainSelected ? "> " : "") + "Exit", Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 2f - 150, 0, Align.left, false);
 
-        // Handle input
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            playAgainSelected = !playAgainSelected; // Toggle selection between "Play Again" and "Exit"
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            if (playAgainSelected) {
-                // Start a new game
-                screenSwitcher.switchToScreen(Screens.PLAY); // Assuming PLAY is your play screen identifier
-            } else {
-                // Exit the game
-                Gdx.app.exit();
-            }
-        }
         batch.end();
     }
 

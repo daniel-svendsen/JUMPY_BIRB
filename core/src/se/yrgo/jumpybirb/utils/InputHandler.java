@@ -3,14 +3,16 @@ package se.yrgo.jumpybirb.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.utils.Align;
 import se.yrgo.jumpybirb.JumpyBirb;
 import se.yrgo.jumpybirb.screens.PlayScreen;
 
 public class InputHandler extends InputAdapter {
-    public static final String TAG = InputHandler.class.getSimpleName();
+    private static final String TAG = InputHandler.class.getSimpleName();
+
     private final ScreenSwitcher screenSwitcher;
     private final JumpyBirb gameSession;
-
+private boolean playAgainSelected = true;
     public InputHandler(JumpyBirb gameSession, ScreenSwitcher screenSwitcher) {
         this.gameSession = gameSession;
         this.screenSwitcher = screenSwitcher;
@@ -41,27 +43,25 @@ public class InputHandler extends InputAdapter {
         return false;
     }
 
-    private void handleSplashScreen(int keycode) {
-        if (keycode == Input.Keys.SPACE) {
-            screenSwitcher.switchToScreen(Screens.MENU);
-            Gdx.app.log(TAG, "keyDown called: switch to MenuScreen");
-        }
-    }
-
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        var currentScreen = screenSwitcher.getCurrentScreen();
+        Screens currentScreen = screenSwitcher.getCurrentScreen();
         if (currentScreen == Screens.SPLASH) {
             screenSwitcher.switchToScreen(Screens.MENU);
-            Gdx.app.log(TAG, "TOUCH DOWN");
+            Gdx.app.log(TAG, "TOUCH DOWN: Switched to MenuScreen");
         }
-        return super.touchDown(screenX, screenY, pointer, button);
+        return false;
+    }
+
+    private void handleSplashScreen(int keycode) {
+        if (keycode == Input.Keys.SPACE) {
+            switchToMenuScreen();
+        }
     }
 
     private void handleMenuScreen(int keycode) {
         if (keycode == Input.Keys.SPACE) {
-            screenSwitcher.switchToScreen(Screens.PLAY);
-            Gdx.app.log(TAG, "keyDown called: switch to PlayScreen");
+            switchToPlayScreen();
         }
     }
 
@@ -70,63 +70,62 @@ public class InputHandler extends InputAdapter {
         PlayScreen.GameState currentGameState = playScreen.getCurrentGameState();
 
         switch (currentGameState) {
-            case MENU:
-                //TODO implement menu logic
-                break;
             case READY:
-                handleReadyState(keycode, playScreen);
+                if (keycode == Input.Keys.SPACE) {
+                    playScreen.setCurrentGameState(PlayScreen.GameState.RUNNING);
+                    Gdx.app.log(TAG, "Ready state: Switched to Running state");
+                }
                 break;
             case RUNNING:
-                handleRunningState(keycode, playScreen);
+                if (keycode == Input.Keys.SPACE) {
+                    makeBirbJump(playScreen);
+                    Gdx.app.log(TAG, "Running state: Birb jumped");
+                } else if (keycode == Input.Keys.ESCAPE) {
+                    exitGame();
+                }
                 break;
-            case GAME_OVER:
-                handleGameOverState(keycode, playScreen);
-                break;
         }
     }
 
-    private void birbJump(PlayScreen playScreen) {
-        playScreen.getPlayerBirb().jump();
-        Gdx.app.log(TAG, "birbJump called");
-    }
-
-    private void handleReadyState(int keycode, PlayScreen playScreen) {
-        if (keycode == Input.Keys.SPACE) {
-            // transition to RUNNING state using setter method
-            playScreen.setCurrentGameState(PlayScreen.GameState.RUNNING);
-            Gdx.app.log(TAG, "handleReadyState() called: switch to GameState.PLAY");
+    private void handleGameOverScreen(int keycode) {
+        // Handle input
+        if (keycode == Input.Keys.UP || keycode == Input.Keys.DOWN) {
+            playAgainSelected = !playAgainSelected; // Toggle selection between "Play Again" and "Exit"
         }
-    }
-
-    private void handleRunningState(int keycode, PlayScreen playScreen) {
         if (keycode == Input.Keys.SPACE) {
-            birbJump(playScreen);
-            Gdx.app.log(TAG, "handleRunningState() made birb jump");
-        } else if (keycode == Input.Keys.ESCAPE) {
-            // Exit the game
-            Gdx.app.exit();
-            Gdx.app.log(TAG, "handleRunningState(): exited the game");
-        }
-    }
-
-    private void handleGameOverState(int keycode, PlayScreen playScreen) {
-        if (keycode == Input.Keys.SPACE) {
-            screenSwitcher.switchToScreen(Screens.PLAY);
-            Gdx.app.log(TAG, "handleGameOverState(): restarted the game");
+            if (playAgainSelected) {
+                // Start a new game
+                screenSwitcher.switchToScreen(Screens.PLAY); // Assuming PLAY is your play screen identifier
+            } else {
+                // Exit the game
+                Gdx.app.exit();
+            }
         }
     }
 
     private void handleHighScoreScreen(int keycode) {
         if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ESCAPE) {
-            screenSwitcher.switchToScreen(Screens.MENU);
-            Gdx.app.log(TAG, "handleHighScoreScreen() called: switch to PlayScreen");
+            switchToMenuScreen();
         }
     }
 
-    private void handleGameOverScreen(int keycode) {
-        if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ESCAPE) {
-            screenSwitcher.switchToScreen(Screens.MENU);
-            Gdx.app.log(TAG, "handleGameOverScreen() called: switch to PlayScreen");
-        }
+    private void switchToMenuScreen() {
+        screenSwitcher.switchToScreen(Screens.MENU);
+        Gdx.app.log(TAG, "Switched to MenuScreen");
+    }
+
+    private void switchToPlayScreen() {
+        screenSwitcher.switchToScreen(Screens.PLAY);
+        Gdx.app.log(TAG, "Switched to PlayScreen");
+    }
+
+    private void makeBirbJump(PlayScreen playScreen) {
+        playScreen.getPlayerBirb().jump();
+        Gdx.app.log(TAG, "Birb jumped");
+    }
+
+    private void exitGame() {
+        Gdx.app.exit();
+        Gdx.app.log(TAG, "Exited the game");
     }
 }
