@@ -201,9 +201,6 @@ public class PlayScreen implements Screen {
         // Draw birb and update the position of the birb's sprite
         batch.draw(birb.getTexture(), birb.getPosition().x, birb.getPosition().y);
 
-        // Draw text and scores, passing the background coordinates and dimensions
-        drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
-
         // Update obstacles and draw them
         for (Obstacle obs : obstacles) {
             obs.update(camera);
@@ -221,13 +218,17 @@ public class PlayScreen implements Screen {
             groundPosition.x += groundTexture.getWidth();
         }
 
-        // Render birb bounds TODO remove this after debugging
+/*        // Render birb bounds TODO remove this after debugging
         shapeRenderer.setProjectionMatrix(camera.combined);
-        birb.renderBounds(shapeRenderer);
+        birb.renderBounds(shapeRenderer);*/
+
+        // Draw text and scores, passing the background coordinates and dimensions
+        drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
         // End batch
         batch.end();
 
+/*
         //TODO remove this after debugging
         // Render green bounding rectangles for obstacles
         // Set the color to green with 50% opacity
@@ -245,6 +246,7 @@ public class PlayScreen implements Screen {
         batch.setColor(Color.WHITE); // Reset color to white
         batch.end();
         //TODO remove code above
+*/
 
         Gdx.app.log(TAG, "Camera position: " + camera.position.x + ", " + camera.position.y);
 
