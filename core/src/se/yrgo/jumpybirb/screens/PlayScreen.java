@@ -133,6 +133,8 @@ public class PlayScreen implements Screen {
                 break;
             case GAME_OVER:
                 // Handle game over state
+                resetGame();
+                Gdx.app.log(TAG, "ResetGame called");
                 updateGameOverState(delta);
                 break;
             default:
