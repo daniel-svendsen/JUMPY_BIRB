@@ -55,7 +55,7 @@ public class GameOverScreen implements Screen {
         Gdx.app.log(TAG, "show() called");
         batch = new SpriteBatch();
         textFont = new BitmapFont();
-        textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         textFont.getData().setScale(FONT_SCALE);
     }
 
