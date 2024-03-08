@@ -225,6 +225,7 @@ public class PlayScreen implements Screen {
         // Draw text and scores, passing the background coordinates and dimensions
         drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
+
         // End batch
         batch.end();
 
