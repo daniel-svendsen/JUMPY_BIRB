@@ -92,7 +92,7 @@ private boolean playAgainSelected = true;
         if (keycode == Input.Keys.UP || keycode == Input.Keys.DOWN) {
             playAgainSelected = !playAgainSelected; // Toggle selection between "Play Again" and "Exit"
         }
-        if (keycode == Input.Keys.SPACE) {
+        if (keycode == Input.Keys.ENTER) {
             if (playAgainSelected) {
                 // Start a new game
                 screenSwitcher.switchToScreen(Screens.PLAY); // Assuming PLAY is your play screen identifier
