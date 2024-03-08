@@ -14,20 +14,19 @@ import java.util.Random;
 
 public class Obstacle {
     public static final String TAG = Birb.class.getSimpleName();
+    public static final float OBSTACLE_WIDTH = 40f; // pixel width of the tube from the image
+    private static final float FLUCTUATION = 340f; // so it can move randomly between 0 and 140
+    private static final float OBSTACLE_GAP = 250f; //  this will be the gap between 2 tubes
+    private static final float LOWEST_OPENING = 130f; // where from the bottom of the screen can we have top tube
+    private static final int OBSTACLE_COUNT = 4;
+    private static final float OBSTACLE_SPACING = 300f;
+    public Rectangle boundsTop;
+    public Rectangle boundsBot;
     private Texture topObstacle;
     private Texture bottomObstacle;
     private Vector2 posTopObstacle;
     private Vector2 posBottomObstacle; // Position of top and bottom tubes on X axis.
-
-    public static final float OBSTACLE_WIDTH = 40f; // pixel width of the tube from the image
-    private static final float FLUCTUATION = 340f; // so it can move randomly between 0 and 140
-    private static final float OBSTACLE_GAP = 200f; //  this will be the gap between 2 tubes
-    private static final float LOWEST_OPENING = 130f; // where from the bottom of the screen can we have top tube
-    private static final int OBSTACLE_COUNT = 4;
-    private static final float OBSTACLE_SPACING = 300f;
     private Random rand; // to get random top and bottom positions on Y axis
-    public Rectangle boundsTop;
-    public Rectangle boundsBot;
     private Rectangle boundSpace;
     private boolean isPassed; // Variable to track whether the obstacle is passed
     private boolean isScored; // Variable to make sure an obstacle give 1 score.
@@ -81,6 +80,10 @@ public class Obstacle {
         return isPassed;
     }
 
+    public void setPassed(boolean passed) {
+        isPassed = passed;
+    }
+
     public boolean collidesWith(Circle playerBounds) {
         if (Intersector.overlaps(playerBounds, boundsTop)) {
             Gdx.app.log(TAG, "collision detected with top obstacle at coordinates: (" + posTopObstacle.x + ", " + posTopObstacle.y + ")");
@@ -93,6 +96,12 @@ public class Obstacle {
         return false;
     }
 
+
+    public void checkPassed(float birbX) {
+        if (birbX > posTopObstacle.x + topObstacle.getWidth()) {
+            isPassed = true;
+        }
+    }
     public void dispose() {
         topObstacle.dispose();
         bottomObstacle.dispose();

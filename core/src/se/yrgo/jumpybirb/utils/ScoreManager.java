@@ -12,13 +12,13 @@ public class ScoreManager {
     private Preferences preferences;
     private int score;
     private int highScore;
-    private float elapsedTime;
+
 
     private ScoreManager() {
         preferences = Gdx.app.getPreferences(PREFERENCES_KEY);
         loadHighScore();
         score = 0;
-        elapsedTime = 0;
+
     }
 
     public static ScoreManager getInstance() {
@@ -57,7 +57,6 @@ public class ScoreManager {
 
     public void reset() {
         score = 0;
-        elapsedTime = 0;
         saveHighScore(); // Resetting also implies resetting the high score
     }
 }

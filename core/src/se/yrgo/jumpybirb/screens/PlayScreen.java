@@ -35,7 +35,6 @@ public class PlayScreen implements Screen {
     private Array<Obstacle> obstacles;
     private Texture groundTexture;
     private Vector2 groundPosition;
-
     private Ground ground;
     private Texture greenTexture; //TODO remove this after debugging
     private ShapeRenderer shapeRenderer; //TODO remove this after debugging
@@ -76,7 +75,7 @@ public class PlayScreen implements Screen {
      */
     @Override
     public void show() {
-        // dont let the SplashScreen timer interrupt the PlayScreen
+        // Don't let the SplashScreen timer interrupt the PlayScreen
         SplashScreen.setPlayScreenDisplayed(true);
 
         batch = new SpriteBatch();
@@ -209,7 +208,13 @@ public class PlayScreen implements Screen {
         for (Obstacle obs : obstacles) {
             obs.update(camera);
             obs.draw(batch, camera);
+            if (obs.isPassed() && !obs.isScored()) {
+                scoreManager.updateScore();  // Call the scoring logic in ScoreManager
+                obs.setScored(true);  // Mark the obstacle as scored to avoid multiple increments
+                obs.checkPassed(birb.getPosition().x);
+            }
         }
+
 
         // Reset ground position when it goes off-screen
         if (groundPosition.x < -groundTexture.getWidth()) {
@@ -303,7 +308,6 @@ public class PlayScreen implements Screen {
         textFont.draw(batch, "Score: " + currentScore, backgroundX + 370, backgroundY + backgroundHeight - 10f);
         textFont.draw(batch, "High Score: " + highScore, backgroundX + 370, backgroundY + backgroundHeight - 10f - 50f);
     }
-
 
     /***
      * This method is called when the Application is resized,
