@@ -96,7 +96,18 @@ private boolean playAgainSelected = true;
             if (playAgainSelected) {
                 // Start a new game
                 screenSwitcher.switchToScreen(Screens.PLAY); // Assuming PLAY is your play screen identifier
-            } else {
+            }
+            else {
+                // Exit the game
+                Gdx.app.exit();
+            }
+        }
+        else if (keycode == Input.Keys.SPACE) {
+            if (playAgainSelected) {
+                // Start a new game
+                screenSwitcher.switchToScreen(Screens.PLAY); // Assuming PLAY is your play screen identifier
+            }
+            else {
                 // Exit the game
                 Gdx.app.exit();
             }
