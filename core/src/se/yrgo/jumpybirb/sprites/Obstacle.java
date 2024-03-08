@@ -94,7 +94,7 @@ public class Obstacle {
         return false;
     }
 
-
+    // Check if Birb has passed an obstacle
     public void checkPassed(float birbX) {
         if (birbX > posTopObstacle.x + topObstacle.getWidth()) {
             isPassed = true;
