@@ -206,11 +206,11 @@ public class PlayScreen implements Screen {
         // Update obstacles and draw them
         for (Obstacle obs : obstacles) {
             obs.update(camera);
+            obs.checkPassed(birb.getPosition().x);
             obs.draw(batch, camera);
             if (obs.isPassed() && !obs.isScored()) {
                 scoreManager.updateScore();  // Call the scoring logic in ScoreManager
                 obs.setScored(true);  // Mark the obstacle as scored to avoid multiple increments
-                obs.checkPassed(birb.getPosition().x);
             }
         }
 

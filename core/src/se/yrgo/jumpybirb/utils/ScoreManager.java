@@ -29,7 +29,7 @@ public class ScoreManager {
     }
 
     public void updateScore() {
-        score += 1;
+        score += 100;
         if (score > highScore) {
             highScore = score;
             saveHighScore();

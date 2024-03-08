@@ -18,7 +18,7 @@ public class Obstacle {
     private static final float FLUCTUATION = 340f; // so it can move randomly between 0 and 140
     private static final float OBSTACLE_GAP = 250f; //  this will be the gap between 2 tubes
     private static final float LOWEST_OPENING = 130f; // where from the bottom of the screen can we have top tube
-    private static final int OBSTACLE_COUNT = 4;
+    private static final int OBSTACLE_COUNT = 5;
     private static final float OBSTACLE_SPACING = 300f;
     public Rectangle boundsTop;
     public Rectangle boundsBot;
