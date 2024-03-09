@@ -93,7 +93,7 @@ public class PlayScreen implements Screen {
         camera.setToOrtho(false, 600, 800); // Adjust this to match your world width and height
         groundTexture = new Texture("Ground2.png");
         groundPosition = new Vector2(-300, 0);
-        getReadyTexture = new Texture("get-ready.png"); // placeholder get-ready image
+        getReadyTexture = new Texture("GetReady2.png"); // placeholder get-ready image
 
         textFont = new BitmapFont();
         textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);

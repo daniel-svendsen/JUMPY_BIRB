@@ -68,7 +68,7 @@ public class GameOverScreen implements Screen {
         // Clear the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        backgroundTexture = new Texture("Bakgrund1.jpg");
+        backgroundTexture = new Texture("GameOver1.png");
 
         // Render background image
         batch.begin();
