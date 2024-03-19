@@ -345,9 +345,10 @@ public class PlayScreen implements Screen {
      * This method is called when this screen should
      * release all resources. Preceded by a call to pause().
      */
+
+        // Dispose of resources
     @Override
     public void dispose() {
-        // Dispose of resources
         ground.dispose();
         batch.dispose();
         backgroundTexture.dispose();
