@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import se.yrgo.jumpybirb.sprites.Birb;
+import se.yrgo.jumpybirb.utils.ScoreManager;
 import se.yrgo.jumpybirb.utils.ScreenSwitcher;
 import se.yrgo.jumpybirb.utils.Screens;
 
@@ -26,6 +27,7 @@ public class GameOverScreen implements Screen {
     private Texture backgroundTexture;
     private ScreenSwitcher screenSwitcher;
     private boolean playAgainSelected = true; // Flag to track whether "Play Again" is selected
+    private ScoreManager scoreManager;
     private Vector2 birbPosition;
     private Vector2 groundPosition;
 
@@ -78,6 +80,8 @@ public class GameOverScreen implements Screen {
         // Draw your game over screen elements here
         textFont.draw(batch, "Game Over", Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 2f, 0, Align.left, false);
+
+
         // Handle input
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             playAgainSelected = !playAgainSelected; // Toggle selection between "Play Again" and "Exit"
@@ -138,5 +142,15 @@ public class GameOverScreen implements Screen {
     public void dispose() {
         Gdx.app.log(TAG, "dispose() called");
         batch.dispose();
+    }
+
+    private void drawGameOverScores(float backgroundX, float backgroundY, float backgroundWidth, float backgroundHeight) {
+        float textPadding = 50f;
+        int currentScore = scoreManager.getScore();
+        int highScore = scoreManager.getHighScore();
+
+        // Draw scores with respect to the background position and dimensions
+        textFont.draw(batch, "Score: " + currentScore, backgroundX + 370, backgroundY + backgroundHeight - 10f);
+        textFont.draw(batch, "High Score: " + highScore, backgroundX + 370, backgroundY + backgroundHeight - 10f - 50f);
     }
 }

@@ -23,8 +23,8 @@ import se.yrgo.jumpybirb.utils.Screens;
 public class PlayScreen implements Screen {
     public static final String TAG = PlayScreen.class.getSimpleName();
     private static final float TEXT_FONT_SCALE = 2.0f;
-    private SpriteBatch batch;
     private static Birb birb;
+    private SpriteBatch batch;
     private ScoreManager scoreManager;
     private ScreenSwitcher screenSwitcher;
     private GameState currentGameState;
@@ -41,14 +41,6 @@ public class PlayScreen implements Screen {
     private Texture greenTexture; //TODO remove this after debugging
     private ShapeRenderer shapeRenderer; //TODO remove this after debugging
 
-    /***
-     * This is used to tell which state the playScreen is in.
-     * Not implemented yet...
-     */
-    public enum GameState {
-        MENU, READY, RUNNING, GAME_OVER
-    }
-
     /**
      * Constructor. Initialize ScoreManager.
      * For-loop for adding obstacles.
@@ -59,16 +51,6 @@ public class PlayScreen implements Screen {
         this.screenSwitcher = screenSwitcher;
         currentGameState = GameState.READY;
         obstacles = Obstacle.createArray();
-    }
-
-    /**
-     * This method is used in the InputHandler class
-     *
-     * @param currentGameState the GameState to update to
-     * @see se.yrgo.jumpybirb.utils.InputHandler
-     */
-    public void setCurrentGameState(GameState currentGameState) {
-        this.currentGameState = currentGameState;
     }
 
     /***
@@ -144,6 +126,16 @@ public class PlayScreen implements Screen {
 
     public GameState getCurrentGameState() {
         return currentGameState;
+    }
+
+    /**
+     * This method is used in the InputHandler class
+     *
+     * @param currentGameState the GameState to update to
+     * @see se.yrgo.jumpybirb.utils.InputHandler
+     */
+    public void setCurrentGameState(GameState currentGameState) {
+        this.currentGameState = currentGameState;
     }
 
     private void updateReadyState(float delta) {
@@ -364,5 +356,13 @@ public class PlayScreen implements Screen {
         getReadyTexture.dispose();
         greenTexture.dispose(); //TODO remove this after debugging
         shapeRenderer.dispose(); //TODO remove this after debugging
+    }
+
+    /***
+     * This is used to tell which state the playScreen is in.
+     * Not implemented yet...
+     */
+    public enum GameState {
+        MENU, READY, RUNNING, GAME_OVER
     }
 }
