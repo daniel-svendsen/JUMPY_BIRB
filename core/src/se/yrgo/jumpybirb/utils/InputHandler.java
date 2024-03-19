@@ -89,7 +89,7 @@ private boolean playAgainSelected = true;
                     makeBirbJump(playScreen);
                     Gdx.app.log(TAG, "Running state: Birb jumped");
                 } else if (keycode == Input.Keys.ESCAPE) {
-                    exitGame();
+                    screenSwitcher.switchToScreen(Screens.MENU);
                 }
                 break;
         }
