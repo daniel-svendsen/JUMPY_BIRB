@@ -12,10 +12,12 @@ public class InputHandler extends InputAdapter {
 
     private final ScreenSwitcher screenSwitcher;
     private final JumpyBirb gameSession;
+    private final MenuListener menuListener;
 private boolean playAgainSelected = true;
-    public InputHandler(JumpyBirb gameSession, ScreenSwitcher screenSwitcher) {
+    public InputHandler(JumpyBirb gameSession, ScreenSwitcher screenSwitcher, MenuListener menuListener) {
         this.gameSession = gameSession;
         this.screenSwitcher = screenSwitcher;
+        this.menuListener = menuListener;
     }
 
     @Override
