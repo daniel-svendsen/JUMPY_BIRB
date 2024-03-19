@@ -21,7 +21,7 @@ import se.yrgo.jumpybirb.utils.Screens;
  */
 public class GameOverScreen implements Screen {
     private static final String TAG = SplashScreen.class.getSimpleName();
-    private static final float FONT_SCALE = 4.0f;
+    private static final float FONT_SCALE = 3.5f;
     private SpriteBatch batch;
     private BitmapFont textFont;
     private Texture backgroundTexture;
@@ -80,7 +80,7 @@ public class GameOverScreen implements Screen {
         // Draw text "Gameover"
         // Draw your game over screen elements here
         textFont.draw(batch, "Game Over", Gdx.graphics.getWidth() / 4f,
-               2 * Gdx.graphics.getHeight() / 2.5f, 0, Align.left, false);
+                2 * Gdx.graphics.getHeight() / 2.5f, 0, Align.left, false);
 
         //Draw this sessions score and the highscore
         drawGameOverScores();
@@ -105,8 +105,10 @@ public class GameOverScreen implements Screen {
 
         // Draw scores with respect to the background position and dimensions
         // Draw scores
-        textFont.draw(batch, "Score: " + currentScore, Gdx.graphics.getWidth() / 4f, Gdx.graphics.getHeight() / 2f - 80);
-        textFont.draw(batch, "High Score: " + highScore, Gdx.graphics.getWidth() / 4f, Gdx.graphics.getHeight() / 2f - textPadding);
+        textFont.draw(batch, "High Score: " + highScore,
+                Gdx.graphics.getWidth() / 10f, 3 * Gdx.graphics.getHeight() / 4.5f, 0 ,Align.left, false);
+        textFont.draw(batch, "Your score: " + currentScore,
+                Gdx.graphics.getWidth() / 9.2f, 3 * Gdx.graphics.getHeight() / 5.2f, 0, Align.left, false);
     }
 
     /***
