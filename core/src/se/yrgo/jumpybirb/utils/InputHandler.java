@@ -124,9 +124,11 @@ public class InputHandler extends InputAdapter {
         switch (selectedButtonIndex) {
             case 0:
                 screenSwitcher.switchToScreen(Screens.PLAY);
+                selectedButtonIndex = 0;
                 break;
             case 1:
                 screenSwitcher.switchToScreen(Screens.PLAY);
+                selectedButtonIndex = 0;
                 break;
             case 2:
                 Gdx.app.exit();

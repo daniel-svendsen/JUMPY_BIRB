@@ -38,8 +38,6 @@ public class JumpyBirb extends Game {
         menu.setInputHandler(inputHandler); // Set the InputHandler for the MenuScreen
         inputHandler.setMenuListener(menu);
         setScreen(new SplashScreen());
-
-
         Gdx.input.setInputProcessor(inputHandler);
     }
 

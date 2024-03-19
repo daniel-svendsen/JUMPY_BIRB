@@ -74,6 +74,38 @@ public class MenuScreen implements Screen, MenuListener {
         exitButtonSelectedTexture = new Texture(Gdx.files.internal("ExitButton-checked.png"));
 
         // Initialize button styles and instances
+        initializeButtonsAndStyles();
+
+        // Create the stage for allowing buttons to be clickable with ClickListeners
+        stage = new Stage(new ScreenViewport());
+
+        // Create a table to hold the buttons
+        Table buttonTable = new Table();
+        buttonTable.setFillParent(true);
+        buttonTable.center().bottom().padBottom(Gdx.graphics.getHeight() * 0.2f); // Adjust Y position here
+        stage.addActor(buttonTable);
+
+        // Add the buttons to the table with padding
+        float padding = 20f; // Adjust padding between buttons
+        buttonTable.add(playNormalButton).padBottom(padding).row();
+        buttonTable.add(playHardButton).padBottom(padding).row();
+        buttonTable.add(exitButton).padBottom(padding).row();
+
+        batch = new SpriteBatch();
+        backgroundTexture = new Texture(Gdx.files.internal("Welcome1.jpg"));
+
+        // Get the input handling working correctly with multiplexer
+        configureInputMultiplexer();
+
+        // Add click listeners to the buttons
+        addClickListenersToMenuButtons();
+    }
+
+    /**
+     * This method is used to load the textures and create
+     * the menu buttons and the style they get when selected.
+     */
+    private void initializeButtonsAndStyles() {
         if (!buttonStylesInitialized) {
             playNormalButtonStyle = new ImageButton.ImageButtonStyle();
             playNormalButtonStyle.up = new TextureRegionDrawable(normalButtonTexture);
@@ -93,39 +125,30 @@ public class MenuScreen implements Screen, MenuListener {
 
             buttonStylesInitialized = true;
         }
+    }
 
-
-        // Create the stage
-        stage = new Stage(new ScreenViewport());
-
-        // Create a table to hold the buttons
-        Table buttonTable = new Table();
-        buttonTable.setFillParent(true);
-        buttonTable.center().bottom().padBottom(Gdx.graphics.getHeight() * 0.2f); // Adjust Y position here
-        stage.addActor(buttonTable);
-
-        // Add the buttons to the table with padding
-        float padding = 20f; // Adjust padding between buttons
-        buttonTable.add(playNormalButton).padBottom(padding).row();
-        buttonTable.add(playHardButton).padBottom(padding).row();
-        buttonTable.add(exitButton).padBottom(padding).row();
-
-        batch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("Welcome1.jpg"));
-
-        // Set the input processor to the InputHandler, insert the stage for menu ClickEvents being registered
-        // Set the input processor to both the stage and the InputHandler
+    /**
+     * This method is used to get the input handling of
+     * the stage in MenuScreen to work properly with the ClickListeners.
+     * Without this configuration, the player is unable to click the menu buttons.
+     */
+    private void configureInputMultiplexer() {
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(inputHandler);
         Gdx.input.setInputProcessor(multiplexer);
+    }
 
-        // Add click listeners to the buttons
+    /**
+     * This method is used to allow buttons to be clickable.
+     * Here we can set the action we want for each button in the menu.
+     */
+    private void addClickListenersToMenuButtons() {
         playNormalButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log(TAG, "Play Normal Button clicked");
-                playButtonClicked();
+                normalButtonClicked();
                 Gdx.input.setInputProcessor(inputHandler);
             }
         });
@@ -134,7 +157,7 @@ public class MenuScreen implements Screen, MenuListener {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log(TAG, "Play Hard Button clicked");
-                playButtonClicked();
+                hardButtonClicked();
                 Gdx.input.setInputProcessor(inputHandler);
             }
         });
@@ -146,7 +169,6 @@ public class MenuScreen implements Screen, MenuListener {
                 Gdx.app.exit();
             }
         });
-
     }
 
     /***
@@ -171,6 +193,12 @@ public class MenuScreen implements Screen, MenuListener {
         stage.draw();
     }
 
+    /**
+     * This method is used to update the currently selected button
+     * if the player traverses the menu with keyboard.
+     * Texture for selected button is an image file instantiated
+     * in the show method.
+     */
     private void updateButtonStyles() {
         // Update button styles only when the selected button changes
         switch (currentSelectedButtonIndex) {
@@ -194,16 +222,22 @@ public class MenuScreen implements Screen, MenuListener {
         }
     }
 
+    /**
+     * Action to be done if the "NORMAL" button is clicked.
+     */
     @Override
-    public void playButtonClicked() {
-        // this code below is for testing that the call to the method works
+    public void normalButtonClicked() {
         screenSwitcher.switchToScreen(Screens.PLAY);
         Gdx.app.log(TAG, "playButtonClicked() called");
     }
 
+    /**
+     * Action to be done if the "HARD" button is clicked.
+     */
     @Override
-    public void menuButtonClicked() {
-        // will add code here later
+    public void hardButtonClicked() {
+        screenSwitcher.switchToScreen(Screens.PLAY);
+        Gdx.app.log(TAG, "hardButtonClicked() called");
     }
 
     /***
@@ -252,6 +286,7 @@ public class MenuScreen implements Screen, MenuListener {
     public void dispose() {
         Gdx.app.log(TAG, "dispose() called");
         batch.dispose();
+        stage.dispose();
         backgroundTexture.dispose();
     }
 }
