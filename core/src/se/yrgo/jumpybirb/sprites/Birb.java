@@ -16,8 +16,8 @@ public class Birb {
     private static final float INITIAL_POSITION_X = 50;
     private static final float INITIAL_POSITION_Y = 500;
     private static final float[] INITIAL_POSITION = {INITIAL_POSITION_X, INITIAL_POSITION_X};
-    private static final float JUMP_VELOCITY = 300f;
-    private static final float MOVEMENT_SPEED = 210f;
+    private static final float JUMP_VELOCITY = 400f;
+    private static final float MOVEMENT_SPEED = 250f;
     private final int width;
     private final int height;
     private Vector2 position;
