@@ -3,6 +3,7 @@ package se.yrgo.jumpybirb.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
 import se.yrgo.jumpybirb.JumpyBirb;
 import se.yrgo.jumpybirb.screens.PlayScreen;
@@ -13,7 +14,10 @@ public class InputHandler extends InputAdapter {
     private final ScreenSwitcher screenSwitcher;
     private final JumpyBirb gameSession;
     private MenuListener menuListener;
-private boolean playAgainSelected = true;
+    private Stage stage;
+    private int selectedButtonIndex = 0;
+    private boolean playAgainSelected = true;
+
     public InputHandler(JumpyBirb gameSession, ScreenSwitcher screenSwitcher, MenuListener menuListener) {
         this.gameSession = gameSession;
         this.screenSwitcher = screenSwitcher;
@@ -22,6 +26,10 @@ private boolean playAgainSelected = true;
 
     public void setMenuListener(MenuListener menuListener) {
         this.menuListener = menuListener;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     @Override
@@ -57,8 +65,7 @@ private boolean playAgainSelected = true;
             Gdx.app.log(TAG, "TOUCH DOWN: Switched to MenuScreen");
         } else if (currentScreen == Screens.MENU) {
             Gdx.app.log(TAG, "Touch down event received at coordinates: (" + screenX + ", " + screenY + ")");
-        }
-        else if (currentScreen == Screens.PLAY) {
+        } else if (currentScreen == Screens.PLAY) {
             PlayScreen playScreen = (PlayScreen) gameSession.getScreen();
             PlayScreen.GameState currentGameState = playScreen.getCurrentGameState();
             if (button == Input.Buttons.LEFT) {
@@ -77,8 +84,53 @@ private boolean playAgainSelected = true;
     }
 
     private void handleMenuScreen(int keycode) {
-        if (keycode == Input.Keys.SPACE) {
-            switchToPlayScreen();
+        switch (keycode) {
+            case Input.Keys.SPACE:
+                switchToPlayScreen();
+                break;
+            case Input.Keys.UP:
+                navigateMenu(-1); // Move selection up
+                break;
+            case Input.Keys.DOWN:
+                navigateMenu(1); // Move selection down
+                break;
+            case Input.Keys.ENTER:
+                triggerSelectedMenuButtonAction(); // Trigger action for selected button
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void navigateMenu(int direction) {
+        selectedButtonIndex += direction;
+
+        if (selectedButtonIndex < 0) {
+            selectedButtonIndex = 0;
+        } else if (selectedButtonIndex > 2) {
+            selectedButtonIndex = 0;
+        }
+        Gdx.app.log(TAG, "Selected button index: " + selectedButtonIndex);
+    }
+
+    public int getSelectedButtonIndex() {
+        return selectedButtonIndex;
+    }
+
+    /**
+     * Determine which menu button is currently selected and trigger its action
+     */
+    private void triggerSelectedMenuButtonAction() {
+        switch (selectedButtonIndex) {
+            case 0:
+                screenSwitcher.switchToScreen(Screens.PLAY);
+                break;
+            case 1:
+                screenSwitcher.switchToScreen(Screens.PLAY);
+                break;
+            case 2:
+                Gdx.app.exit();
+                break;
         }
     }
 
@@ -113,18 +165,15 @@ private boolean playAgainSelected = true;
             if (playAgainSelected) {
                 // Start a new game
                 screenSwitcher.switchToScreen(Screens.PLAY); // Assuming PLAY is your play screen identifier
-            }
-            else {
+            } else {
                 // Exit the game
                 Gdx.app.exit();
             }
-        }
-        else if (keycode == Input.Keys.SPACE) {
+        } else if (keycode == Input.Keys.SPACE) {
             if (playAgainSelected) {
                 // Start a new game
                 screenSwitcher.switchToScreen(Screens.PLAY); // Assuming PLAY is your play screen identifier
-            }
-            else {
+            } else {
                 // Exit the game
                 Gdx.app.exit();
             }
@@ -150,10 +199,5 @@ private boolean playAgainSelected = true;
     private void makeBirbJump(PlayScreen playScreen) {
         playScreen.getPlayerBirb().jump();
         Gdx.app.log(TAG, "Birb jumped");
-    }
-
-    private void exitGame() {
-        Gdx.app.exit();
-        Gdx.app.log(TAG, "Exited the game");
     }
 }

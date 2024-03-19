@@ -1,20 +1,17 @@
 package se.yrgo.jumpybirb.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import se.yrgo.jumpybirb.JumpyBirb;
 import se.yrgo.jumpybirb.utils.InputHandler;
@@ -29,16 +26,22 @@ import se.yrgo.jumpybirb.utils.Screens;
  */
 public class MenuScreen implements Screen, MenuListener {
     public static final String TAG = MenuScreen.class.getName();
-    private static final Float HEADER_FONT_SCALE = 3.0f;
-    private static final Float TEXT_FONT_SCALE = 2.0f;
-
-    BitmapFont headerFont;
-    BitmapFont textFont;
     SpriteBatch batch;
     private Texture backgroundTexture;
     private Texture normalButtonTexture;
     private Texture hardButtonTexture;
     private Texture exitButtonTexture;
+    private Texture normalButtonSelectedTexture;
+    private Texture hardButtonSelectedTexture;
+    private Texture exitButtonSelectedTexture;
+    private ImageButton playNormalButton;
+    private ImageButton playHardButton;
+    private ImageButton exitButton;
+    private ImageButton.ImageButtonStyle playNormalButtonStyle;
+    private ImageButton.ImageButtonStyle playHardButtonStyle;
+    private ImageButton.ImageButtonStyle exitButtonStyle;
+    private boolean buttonStylesInitialized = false;
+    int currentSelectedButtonIndex = 0;
     private final ScreenSwitcher screenSwitcher;
     private InputHandler inputHandler;
     private Stage stage;
@@ -60,13 +63,40 @@ public class MenuScreen implements Screen, MenuListener {
     public void show() {
         Gdx.app.log(TAG, "show() called");
 
+        // Textures for normal buttons
+        normalButtonTexture = new Texture(Gdx.files.internal("NormalButton.png"));
+        hardButtonTexture = new Texture(Gdx.files.internal("HardButton.png"));
+        exitButtonTexture = new Texture(Gdx.files.internal("ExitButton.png"));
+
+        // Texture for selected buttons
+        normalButtonSelectedTexture = new Texture(Gdx.files.internal("NormalButton-checked.png"));
+        hardButtonSelectedTexture = new Texture(Gdx.files.internal("HardButton-checked.png"));
+        exitButtonSelectedTexture = new Texture(Gdx.files.internal("ExitButton-checked.png"));
+
+        // Initialize button styles and instances
+        if (!buttonStylesInitialized) {
+            playNormalButtonStyle = new ImageButton.ImageButtonStyle();
+            playNormalButtonStyle.up = new TextureRegionDrawable(normalButtonTexture);
+            playNormalButtonStyle.checked = new TextureRegionDrawable(normalButtonSelectedTexture);
+
+            playHardButtonStyle = new ImageButton.ImageButtonStyle();
+            playHardButtonStyle.up = new TextureRegionDrawable(hardButtonTexture);
+            playHardButtonStyle.checked = new TextureRegionDrawable(hardButtonSelectedTexture);
+
+            exitButtonStyle = new ImageButton.ImageButtonStyle();
+            exitButtonStyle.up = new TextureRegionDrawable(exitButtonTexture);
+            exitButtonStyle.checked = new TextureRegionDrawable(exitButtonSelectedTexture);
+
+            playNormalButton = new ImageButton(playNormalButtonStyle);
+            playHardButton = new ImageButton(playHardButtonStyle);
+            exitButton = new ImageButton(exitButtonStyle);
+
+            buttonStylesInitialized = true;
+        }
+
+
+        // Create the stage
         stage = new Stage(new ScreenViewport());
-
-        // Set the input processor to the InputHandler
-        Gdx.input.setInputProcessor(stage);
-
-        batch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("Welcome1.jpg"));
 
         // Create a table to hold the buttons
         Table buttonTable = new Table();
@@ -74,28 +104,21 @@ public class MenuScreen implements Screen, MenuListener {
         buttonTable.center().bottom().padBottom(Gdx.graphics.getHeight() * 0.2f); // Adjust Y position here
         stage.addActor(buttonTable);
 
-        // Create ImageButtons with the textures
-        normalButtonTexture = new Texture(Gdx.files.internal("NormalButton.png"));
-        hardButtonTexture = new Texture(Gdx.files.internal("HardButton.png"));
-        exitButtonTexture = new Texture(Gdx.files.internal("ExitButton.png"));
-
-        ImageButton playNormalButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(normalButtonTexture)));
-        ImageButton playHardButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(hardButtonTexture)));
-        ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(exitButtonTexture)));
-
-        // Set positions and sizes for the buttons
-        float buttonWidth = 290f;
-        float buttonHeight = 155f;
-
-        playNormalButton.setSize(buttonWidth, buttonHeight);
-        playHardButton.setSize(buttonWidth, buttonHeight);
-        exitButton.setSize(buttonWidth, buttonHeight);
-
         // Add the buttons to the table with padding
         float padding = 20f; // Adjust padding between buttons
         buttonTable.add(playNormalButton).padBottom(padding).row();
         buttonTable.add(playHardButton).padBottom(padding).row();
         buttonTable.add(exitButton).padBottom(padding).row();
+
+        batch = new SpriteBatch();
+        backgroundTexture = new Texture(Gdx.files.internal("Welcome1.jpg"));
+
+        // Set the input processor to the InputHandler, insert the stage for menu ClickEvents being registered
+        // Set the input processor to both the stage and the InputHandler
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(stage);
+        multiplexer.addProcessor(inputHandler);
+        Gdx.input.setInputProcessor(multiplexer);
 
         // Add click listeners to the buttons
         playNormalButton.addListener(new ClickListener() {
@@ -124,13 +147,6 @@ public class MenuScreen implements Screen, MenuListener {
             }
         });
 
-        headerFont = new BitmapFont();
-        headerFont.getRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-        headerFont.getData().setScale(HEADER_FONT_SCALE);
-
-        textFont = new BitmapFont();
-        textFont.getRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-        textFont.getData().setScale(TEXT_FONT_SCALE);
     }
 
     /***
@@ -142,19 +158,40 @@ public class MenuScreen implements Screen, MenuListener {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Draw text "Menu" and background
+        // Draw background
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        headerFont.draw(batch, "Menu", Gdx.graphics.getWidth() / 4f, Gdx.graphics.getHeight() / 2f, 0, Align.left, false);
-
-        float textPadding = 50f;
-        textFont.draw(batch, "Press SPACE to play game", Gdx.graphics.getWidth() / 4f, Gdx.graphics.getHeight() / 2f - textPadding, 0, Align.left, false);
         batch.end();
+
+        currentSelectedButtonIndex = inputHandler.getSelectedButtonIndex();
+        updateButtonStyles();
 
         // Draw the stage
         stage.act(delta);
         stage.draw();
+    }
+
+    private void updateButtonStyles() {
+        // Update button styles only when the selected button changes
+        switch (currentSelectedButtonIndex) {
+            case 0:
+                playNormalButton.setChecked(true);
+                playHardButton.setChecked(false);
+                exitButton.setChecked(false);
+                break;
+            case 1:
+                playNormalButton.setChecked(false);
+                playHardButton.setChecked(true);
+                exitButton.setChecked(false);
+                break;
+            case 2:
+                playNormalButton.setChecked(false);
+                playHardButton.setChecked(false);
+                exitButton.setChecked(true);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -215,8 +252,6 @@ public class MenuScreen implements Screen, MenuListener {
     public void dispose() {
         Gdx.app.log(TAG, "dispose() called");
         batch.dispose();
-        headerFont.dispose();
-        textFont.dispose();
         backgroundTexture.dispose();
     }
 }
