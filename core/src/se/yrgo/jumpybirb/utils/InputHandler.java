@@ -12,11 +12,15 @@ public class InputHandler extends InputAdapter {
 
     private final ScreenSwitcher screenSwitcher;
     private final JumpyBirb gameSession;
-    private final MenuListener menuListener;
+    private MenuListener menuListener;
 private boolean playAgainSelected = true;
     public InputHandler(JumpyBirb gameSession, ScreenSwitcher screenSwitcher, MenuListener menuListener) {
         this.gameSession = gameSession;
         this.screenSwitcher = screenSwitcher;
+        this.menuListener = menuListener;
+    }
+
+    public void setMenuListener(MenuListener menuListener) {
         this.menuListener = menuListener;
     }
 
@@ -51,7 +55,10 @@ private boolean playAgainSelected = true;
         if (currentScreen == Screens.SPLASH) {
             screenSwitcher.switchToScreen(Screens.MENU);
             Gdx.app.log(TAG, "TOUCH DOWN: Switched to MenuScreen");
-        } else if (currentScreen == Screens.PLAY) {
+        } else if (currentScreen == Screens.MENU) {
+            Gdx.app.log(TAG, "Touch down event received at coordinates: (" + screenX + ", " + screenY + ")");
+        }
+        else if (currentScreen == Screens.PLAY) {
             PlayScreen playScreen = (PlayScreen) gameSession.getScreen();
             PlayScreen.GameState currentGameState = playScreen.getCurrentGameState();
             if (button == Input.Buttons.LEFT) {

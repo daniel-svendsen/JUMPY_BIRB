@@ -27,15 +27,19 @@ public class JumpyBirb extends Game {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
         Gdx.app.log(TAG, "create() called");
-        screenSwitcher = new ScreenSwitcher(this);
-        MenuScreen menu = new MenuScreen(inputHandler);
-        inputHandler = new InputHandler(this, screenSwitcher, menu);
         initializeGame(this);
-        setScreen(new SplashScreen());
         Gdx.app.log(TAG, "create() ended");
     }
 
     private void initializeGame(JumpyBirb gameSession) {
+        screenSwitcher = new ScreenSwitcher(this);
+        inputHandler = new InputHandler(this, screenSwitcher, null); // Pass null temporarily
+        MenuScreen menu = new MenuScreen(inputHandler); // Pass the inputHandler to the MenuScreen constructor
+        menu.setInputHandler(inputHandler); // Set the InputHandler for the MenuScreen
+        inputHandler.setMenuListener(menu);
+        setScreen(new SplashScreen());
+
+
         Gdx.input.setInputProcessor(inputHandler);
     }
 

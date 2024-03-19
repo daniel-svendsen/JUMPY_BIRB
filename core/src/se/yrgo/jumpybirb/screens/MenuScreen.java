@@ -40,12 +40,16 @@ public class MenuScreen implements Screen, MenuListener {
     private Texture hardButtonTexture;
     private Texture exitButtonTexture;
     private final ScreenSwitcher screenSwitcher;
-    private final InputHandler inputHandler;
+    private InputHandler inputHandler;
     private Stage stage;
 
     public MenuScreen(InputHandler inputHandler) {
-        this.inputHandler = JumpyBirb.getInputHandler();
+        this.inputHandler = inputHandler;
         screenSwitcher = JumpyBirb.getScreenSwitcher();
+    }
+
+    public void setInputHandler(InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
     }
 
     /***
@@ -55,7 +59,11 @@ public class MenuScreen implements Screen, MenuListener {
     @Override
     public void show() {
         Gdx.app.log(TAG, "show() called");
+
         stage = new Stage(new ScreenViewport());
+
+        // Set the input processor to the InputHandler
+        Gdx.input.setInputProcessor(stage);
 
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("Welcome1.jpg"));
@@ -93,21 +101,26 @@ public class MenuScreen implements Screen, MenuListener {
         playNormalButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Handle button1 click
+                Gdx.app.log(TAG, "Play Normal Button clicked");
+                playButtonClicked();
+                Gdx.input.setInputProcessor(inputHandler);
             }
         });
 
         playHardButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Handle button2 click
+                Gdx.app.log(TAG, "Play Hard Button clicked");
+                playButtonClicked();
+                Gdx.input.setInputProcessor(inputHandler);
             }
         });
 
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Handle button3 click
+                Gdx.app.log(TAG, "Exit Button clicked");
+                Gdx.app.exit();
             }
         });
 
@@ -118,9 +131,6 @@ public class MenuScreen implements Screen, MenuListener {
         textFont = new BitmapFont();
         textFont.getRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
         textFont.getData().setScale(TEXT_FONT_SCALE);
-
-        // Set the input processor to the InputHandler
-        Gdx.input.setInputProcessor(inputHandler);
     }
 
     /***
@@ -143,18 +153,20 @@ public class MenuScreen implements Screen, MenuListener {
         batch.end();
 
         // Draw the stage
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.act(delta);
         stage.draw();
     }
 
     @Override
     public void playButtonClicked() {
+        // this code below is for testing that the call to the method works
         screenSwitcher.switchToScreen(Screens.PLAY);
+        Gdx.app.log(TAG, "playButtonClicked() called");
     }
 
     @Override
     public void menuButtonClicked() {
-        screenSwitcher.switchToScreen(Screens.PLAY);
+        // will add code here later
     }
 
     /***
