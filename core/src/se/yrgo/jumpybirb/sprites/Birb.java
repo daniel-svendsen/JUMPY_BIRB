@@ -12,7 +12,7 @@ import se.yrgo.jumpybirb.utils.InputHandler;
 
 public class Birb {
     public static final String TAG = Birb.class.getSimpleName();
-    private static final int GRAVITY = -800;
+    private static final int GRAVITY = -900;
     private static final float INITIAL_POSITION_X = 50;
     private static final float INITIAL_POSITION_Y = 500;
     private static final float[] INITIAL_POSITION = {INITIAL_POSITION_X, INITIAL_POSITION_X};
