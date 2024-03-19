@@ -7,8 +7,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import se.yrgo.jumpybirb.JumpyBirb;
 import se.yrgo.jumpybirb.utils.InputHandler;
 import se.yrgo.jumpybirb.utils.MenuListener;
@@ -48,13 +54,61 @@ public class MenuScreen implements Screen, MenuListener {
     @Override
     public void show() {
         Gdx.app.log(TAG, "show() called");
-        stage = new Stage()
+        stage = new Stage(new ScreenViewport());
+
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("Welcome1.jpg"));
 
         normalButtonTexture = new Texture(Gdx.files.internal("NormalButton.png"));
         hardButtonTexture = new Texture(Gdx.files.internal("HardButton.png"));
         exitButtonTexture = new Texture(Gdx.files.internal("ExitButton.png"));
+
+        // Create ImageButtons with the textures
+        ImageButton playNormalButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(normalButtonTexture)));
+        ImageButton playHardButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(hardButtonTexture)));
+        ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(exitButtonTexture)));
+
+        // Set positions and sizes for the buttons
+        float buttonWidth = 290f;
+        float buttonHeight = 155f;
+        float padding = 20f; // Adjust padding between buttons
+        float startX = (Gdx.graphics.getWidth() - 3 * buttonWidth - 2 * padding) / 2f;
+        float startY = Gdx.graphics.getHeight() / 3f;
+
+        playNormalButton.setSize(buttonWidth, buttonHeight);
+        playHardButton.setSize(buttonWidth, buttonHeight);
+        exitButton.setSize(buttonWidth, buttonHeight);
+
+        playNormalButton.setPosition(startX, startY);
+        playHardButton.setPosition(startX + buttonWidth + padding, startY);
+        exitButton.setPosition(startX + 2 * (buttonWidth + padding), startY);
+
+        // Add click listeners to the buttons
+        playNormalButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Handle button1 click
+            }
+        });
+
+        playHardButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Handle button2 click
+            }
+        });
+
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Handle button3 click
+            }
+        });
+
+        // Add buttons to the stage
+        stage.addActor(playNormalButton);
+        stage.addActor(playHardButton);
+        stage.addActor(exitButton);
 
         headerFont = new BitmapFont();
         headerFont.getRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
@@ -64,6 +118,7 @@ public class MenuScreen implements Screen, MenuListener {
         textFont.getRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
         textFont.getData().setScale(TEXT_FONT_SCALE);
 
+        // Set the input processor to the InputHandler
         Gdx.input.setInputProcessor(inputHandler);
     }
 
@@ -85,6 +140,10 @@ public class MenuScreen implements Screen, MenuListener {
         float textPadding = 50f;
         textFont.draw(batch, "Press SPACE to play game", Gdx.graphics.getWidth() / 4f, Gdx.graphics.getHeight() / 2f - textPadding, 0, Align.left, false);
         batch.end();
+
+        // Draw the stage
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.draw();
     }
 
     @Override
