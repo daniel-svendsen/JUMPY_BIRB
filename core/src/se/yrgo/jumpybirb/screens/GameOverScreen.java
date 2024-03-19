@@ -25,26 +25,11 @@ public class GameOverScreen implements Screen {
     private SpriteBatch batch;
     private BitmapFont textFont;
     private Texture backgroundTexture;
-    private ScreenSwitcher screenSwitcher;
     private boolean playAgainSelected = true; // Flag to track whether "Play Again" is selected
     private ScoreManager scoreManager;
-    private Vector2 birbPosition;
-    private Vector2 groundPosition;
 
 
-    public GameOverScreen(ScreenSwitcher screenSwitcher) {
-
-        this.screenSwitcher = screenSwitcher;
-    }
-
-    public GameOverScreen(Vector2 birbPosition, Vector2 groundPosition) {
-        this.birbPosition = birbPosition;
-        this.groundPosition = groundPosition;
-    }
-
-    /**
-     * Constructor. Initialize ScoreManager.
-     */
+    // Constructor. Initialize ScoreManager.
     public GameOverScreen() {
         scoreManager = ScoreManager.getInstance();
     }
