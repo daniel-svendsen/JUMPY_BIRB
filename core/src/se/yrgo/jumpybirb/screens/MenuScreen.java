@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -59,11 +60,17 @@ public class MenuScreen implements Screen, MenuListener {
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("Welcome1.jpg"));
 
+        // Create a table to hold the buttons
+        Table buttonTable = new Table();
+        buttonTable.setFillParent(true);
+        buttonTable.center().bottom().padBottom(Gdx.graphics.getHeight() * 0.2f); // Adjust Y position here
+        stage.addActor(buttonTable);
+
+        // Create ImageButtons with the textures
         normalButtonTexture = new Texture(Gdx.files.internal("NormalButton.png"));
         hardButtonTexture = new Texture(Gdx.files.internal("HardButton.png"));
         exitButtonTexture = new Texture(Gdx.files.internal("ExitButton.png"));
 
-        // Create ImageButtons with the textures
         ImageButton playNormalButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(normalButtonTexture)));
         ImageButton playHardButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(hardButtonTexture)));
         ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(exitButtonTexture)));
@@ -71,17 +78,16 @@ public class MenuScreen implements Screen, MenuListener {
         // Set positions and sizes for the buttons
         float buttonWidth = 290f;
         float buttonHeight = 155f;
-        float padding = 20f; // Adjust padding between buttons
-        float startX = (Gdx.graphics.getWidth() - 3 * buttonWidth - 2 * padding) / 2f;
-        float startY = Gdx.graphics.getHeight() / 3f;
 
         playNormalButton.setSize(buttonWidth, buttonHeight);
         playHardButton.setSize(buttonWidth, buttonHeight);
         exitButton.setSize(buttonWidth, buttonHeight);
 
-        playNormalButton.setPosition(startX, startY);
-        playHardButton.setPosition(startX + buttonWidth + padding, startY);
-        exitButton.setPosition(startX + 2 * (buttonWidth + padding), startY);
+        // Add the buttons to the table with padding
+        float padding = 20f; // Adjust padding between buttons
+        buttonTable.add(playNormalButton).padBottom(padding).row();
+        buttonTable.add(playHardButton).padBottom(padding).row();
+        buttonTable.add(exitButton).padBottom(padding).row();
 
         // Add click listeners to the buttons
         playNormalButton.addListener(new ClickListener() {
@@ -104,11 +110,6 @@ public class MenuScreen implements Screen, MenuListener {
                 // Handle button3 click
             }
         });
-
-        // Add buttons to the stage
-        stage.addActor(playNormalButton);
-        stage.addActor(playHardButton);
-        stage.addActor(exitButton);
 
         headerFont = new BitmapFont();
         headerFont.getRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
