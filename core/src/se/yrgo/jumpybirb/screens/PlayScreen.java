@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
@@ -15,6 +16,8 @@ import se.yrgo.jumpybirb.sprites.Obstacle;
 import se.yrgo.jumpybirb.utils.ScoreManager;
 import se.yrgo.jumpybirb.utils.ScreenSwitcher;
 import se.yrgo.jumpybirb.utils.Screens;
+
+import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
 
 /***
  * The screen that runs the actual game, a round of the game.
@@ -30,7 +33,13 @@ public class PlayScreen implements Screen {
     private GameState currentGameState;
     private Texture backgroundTexture;
     private BitmapFont textFont;
+    private BitmapFont fontSize40;
+    private FreeTypeFontGenerator fontGenerator;
+    private FreeTypeFontParameter fontParameter;
     private Texture getReadyTexture;
+    private float getReadyCountDownTimer = 3f;
+    private float delayTimerAfterCountDown;
+    private boolean countDownFinished = false;
     private OrthographicCamera camera;
     private Array<Obstacle> obstacles;
     private Texture groundTexture;
@@ -78,8 +87,14 @@ public class PlayScreen implements Screen {
         getReadyTexture = new Texture("GetReady2.png"); // placeholder get-ready image
 
         textFont = new BitmapFont();
-        textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        textFont.getData().setScale(TEXT_FONT_SCALE);
+
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/CrackerWinter-VGLPl.ttf"));
+        fontParameter = new FreeTypeFontParameter();
+        fontParameter.size = 120;
+        fontParameter.color = Color.valueOf("#ffda05");
+        fontParameter.borderColor = Color.valueOf("#522f22");
+        fontParameter.borderWidth = 5;
+        fontSize40 = fontGenerator.generateFont(fontParameter);
 
         //TODO remove this after debugging
         // Create a green pixmap
@@ -170,7 +185,37 @@ public class PlayScreen implements Screen {
         float readyImagePositionX = (camera.viewportWidth - getReadyTexture.getWidth()) / 2f;
         float readyImagePositionY = (camera.viewportHeight - getReadyTexture.getHeight()) / 2f;
         batch.draw(getReadyTexture, readyImagePositionX, readyImagePositionY);
+
+        // Countdown logic
+        if (!countDownFinished) {
+            getReadyCountDownTimer -= delta;
+            if (getReadyCountDownTimer <= 0) {
+                displayGoText();
+                countDownFinished = true;
+                delayTimerAfterCountDown = 1f; // Start the delay timer after "GO!" is displayed
+            } else {
+                displayCountdownText();
+            }
+        } else {
+            // Delay timer after "GO!" is displayed
+            delayTimerAfterCountDown -= delta;
+            displayGoText();
+            if (delayTimerAfterCountDown <= 0) {
+                setCurrentGameState(GameState.RUNNING);
+            }
+        }
+
         batch.end();
+    }
+
+    private void displayCountdownText() {
+        int countdownNumber = (int) Math.ceil(getReadyCountDownTimer); // Round up to nearest integer
+        String textToDisplay = countdownNumber > 0 ? String.valueOf(countdownNumber) : ""; // Ensure not to display negative numbers
+        fontSize40.draw(batch, textToDisplay, camera.viewportWidth / 2f, camera.viewportHeight / 1.75f, 0, Align.center, false);
+    }
+
+    private void displayGoText() {
+        fontSize40.draw(batch, "GO!", camera.viewportWidth / 2f, camera.viewportHeight / 1.75f, 0, Align.center, false);
     }
 
     private void updateRunningState(float delta) {
@@ -348,13 +393,14 @@ public class PlayScreen implements Screen {
      * release all resources. Preceded by a call to pause().
      */
 
-        // Dispose of resources
+    // Dispose of resources
     @Override
     public void dispose() {
         ground.dispose();
         batch.dispose();
         backgroundTexture.dispose();
-        textFont.dispose();
+        // textFont.dispose();
+        fontGenerator.dispose();
         groundTexture.dispose();
         getReadyTexture.dispose();
         greenTexture.dispose(); //TODO remove this after debugging
