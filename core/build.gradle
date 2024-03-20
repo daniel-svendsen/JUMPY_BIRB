@@ -12,3 +12,8 @@ java {
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 eclipse.project.name = appName + "-core"
+
+
+dependencies {
+    api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+}
