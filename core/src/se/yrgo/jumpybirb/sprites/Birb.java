@@ -60,7 +60,7 @@ public class Birb {
         animationFrames = new TextureRegion[]{frame1, frame2, frame3};
 
         // Create animation
-        animation = new Animation<TextureRegion>(0.001f, animationFrames);
+        animation = new Animation<TextureRegion>(0.2f, animationFrames);
         stateTime = 0f;
     }
 
@@ -81,6 +81,10 @@ public class Birb {
         float xOffset = (width - radius) / 1.2f;
         float yOffset = (height - radius) / 1.2f;
         bounds.setPosition(position.x + xOffset, position.y + yOffset);
+
+        // Update animation state
+        stateTime += deltaTime;
+        animate();
     }
 
     private void ensureInBounds() {
