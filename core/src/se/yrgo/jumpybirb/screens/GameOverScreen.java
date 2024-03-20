@@ -3,17 +3,18 @@ package se.yrgo.jumpybirb.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-import se.yrgo.jumpybirb.sprites.Birb;
 import se.yrgo.jumpybirb.utils.ScoreManager;
-import se.yrgo.jumpybirb.utils.ScreenSwitcher;
-import se.yrgo.jumpybirb.utils.Screens;
+
+import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
 
 /***
  * The screen that includes score from this play (+ perhaps highscore current game session?).
@@ -24,6 +25,13 @@ public class GameOverScreen implements Screen {
     private static final float FONT_SCALE = 3.5f;
     private SpriteBatch batch;
     private BitmapFont textFont;
+    private FreeTypeFontGenerator fontGenerator;
+    private FreeTypeFontGenerator scoreNumbersFontGenerator;
+    private BitmapFont gameOverFont;
+    private BitmapFont scoreFont;
+    private BitmapFont scoreNumbersFont;
+    private BitmapFont playOrExitFont;
+
     private Texture backgroundTexture;
     private boolean playAgainSelected = true; // Flag to track whether "Play Again" is selected
     private ScoreManager scoreManager;
@@ -45,6 +53,40 @@ public class GameOverScreen implements Screen {
         textFont = new BitmapFont();
         textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         textFont.getData().setScale(FONT_SCALE);
+
+        // Set up gameOverFont
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/CrackerWinter-VGLPl.ttf"));
+        scoreNumbersFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Ignotum-7BMMw.ttf"));
+        FreeTypeFontParameter largeStyle = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        largeStyle.size = 60;
+        largeStyle.color = Color.valueOf("#ffda05");
+        largeStyle.borderColor = Color.valueOf("#522f22");
+        largeStyle.borderWidth = 5;
+
+        FreeTypeFontParameter mediumStyle = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        mediumStyle.size = 42;
+        mediumStyle.color = Color.valueOf("#ffda05");
+        mediumStyle.borderColor = Color.valueOf("#522f22");
+        mediumStyle.borderWidth = 5;
+
+        FreeTypeFontParameter smallStyle = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        smallStyle.size = 25;
+        smallStyle.color = Color.valueOf("#ffda05");
+        smallStyle.borderColor = Color.valueOf("#522f22");
+        smallStyle.borderWidth = 5;
+
+        FreeTypeFontParameter scoreNumbersStyle = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        scoreNumbersStyle.size = 25;
+        scoreNumbersStyle.color = Color.valueOf("#ffda05");
+        scoreNumbersStyle.borderColor = Color.valueOf("#522f22");
+        scoreNumbersStyle.borderWidth = 5;
+
+        gameOverFont = fontGenerator.generateFont(largeStyle);
+        scoreFont = fontGenerator.generateFont(smallStyle);
+        scoreNumbersFont = scoreNumbersFontGenerator.generateFont(scoreNumbersStyle);
+        playOrExitFont = fontGenerator.generateFont(mediumStyle);
+
+        backgroundTexture = new Texture("Bakgrund1.jpg");
     }
 
     /***
@@ -56,7 +98,6 @@ public class GameOverScreen implements Screen {
         // Clear the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        backgroundTexture = new Texture("Bakgrund1.jpg");
 
         // Render background image
         batch.begin();
@@ -64,7 +105,7 @@ public class GameOverScreen implements Screen {
 
         // Draw text "Gameover"
         // Draw your game over screen elements here
-        textFont.draw(batch, "Game Over", Gdx.graphics.getWidth() / 4f,
+        gameOverFont.draw(batch, "Game Over", Gdx.graphics.getWidth() / 5f,
                 2 * Gdx.graphics.getHeight() / 2.5f, 0, Align.left, false);
 
         //Draw this sessions score and the highscore
@@ -75,25 +116,45 @@ public class GameOverScreen implements Screen {
             playAgainSelected = !playAgainSelected; // Toggle selection between "Play Again" and "Exit"
         }
         // Draw menu options
-        textFont.draw(batch, (playAgainSelected ? "> " : "") + "Play Again", Gdx.graphics.getWidth() / 4f,
+        playOrExitFont.draw(batch, (playAgainSelected ? "> " : "") + "Play Again", Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 2f - 100, 0, Align.left, false);
-        textFont.draw(batch, (!playAgainSelected ? "> " : "") + "Exit", Gdx.graphics.getWidth() / 4f,
+        playOrExitFont.draw(batch, (!playAgainSelected ? "> " : "") + "Exit", Gdx.graphics.getWidth() / 4f,
                 Gdx.graphics.getHeight() / 2f - 150, 0, Align.left, false);
 
         batch.end();
     }
 
     private void drawGameOverScores() {
-        float textPadding = 50f;
         int currentScore = scoreManager.getScore();
         int highScore = scoreManager.getHighScore();
 
-        // Draw scores with respect to the background position and dimensions
-        // Draw scores
-        textFont.draw(batch, "High Score: " + highScore,
-                Gdx.graphics.getWidth() / 10f, 3 * Gdx.graphics.getHeight() / 4.5f, 0 ,Align.left, false);
-        textFont.draw(batch, "Your score: " + currentScore,
-                Gdx.graphics.getWidth() / 9.2f, 3 * Gdx.graphics.getHeight() / 5.2f, 0, Align.left, false);
+        Table table = new Table();
+        table.setPosition(Gdx.graphics.getWidth() / 10f, Gdx.graphics.getHeight() / 2f); // Adjust position as needed
+
+        // Add "High Score" label with scoreFont to the table
+        Label highScoreLabel = new Label("High Score: ", new Label.LabelStyle(scoreFont, Color.WHITE));
+        table.add(highScoreLabel).align(Align.left);
+
+        // Add high score value with scoreNumbersFont to the table
+        Label highScoreValueLabel = new Label(String.valueOf(highScore), new Label.LabelStyle(scoreNumbersFont, Color.WHITE));
+        table.add(highScoreValueLabel).align(Align.left).padLeft(10).row();
+
+        // Add padding between columns
+        table.pad(40);
+
+        // Add empty row for spacing
+        table.row().height(scoreNumbersFont.getXHeight() * 3);
+
+        // Add "Your score" label with scoreFont to the table
+        Label yourScoreLabel = new Label("Your Score: ", new Label.LabelStyle(scoreFont, Color.WHITE));
+        table.add(yourScoreLabel).align(Align.left);
+
+        // Add current score value with scoreNumbersFont to the table
+        Label yourScoreValueLabel = new Label(String.valueOf(currentScore), new Label.LabelStyle(scoreNumbersFont, Color.WHITE));
+        table.add(yourScoreValueLabel).align(Align.left).padLeft(10).row();
+
+        table.pack(); // Pack the table to adjust its size according to its content
+        table.draw(batch, 1); // Draw the table onto the batch
     }
 
     /***
@@ -143,6 +204,7 @@ public class GameOverScreen implements Screen {
     public void dispose() {
         Gdx.app.log(TAG, "dispose() called");
         batch.dispose();
+        fontGenerator.dispose();
     }
 
 }
