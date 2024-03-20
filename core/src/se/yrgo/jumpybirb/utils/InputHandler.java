@@ -68,7 +68,7 @@ public class InputHandler extends InputAdapter {
         } else if (currentScreen == Screens.PLAY) {
             PlayScreen playScreen = (PlayScreen) gameSession.getScreen();
             PlayScreen.GameState currentGameState = playScreen.getCurrentGameState();
-            if (button == Input.Buttons.LEFT) {
+            if (button == Input.Buttons.LEFT && currentGameState != PlayScreen.GameState.READY) {
                 makeBirbJump(playScreen);
                 Gdx.app.log(TAG, "Running state: Birb jumped");
             }
@@ -78,7 +78,7 @@ public class InputHandler extends InputAdapter {
     }
 
     private void handleSplashScreen(int keycode) {
-        if (keycode == Input.Keys.SPACE) {
+        if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER) {
             switchToMenuScreen();
         }
     }
@@ -142,9 +142,9 @@ public class InputHandler extends InputAdapter {
 
         switch (currentGameState) {
             case READY:
-                if (keycode == Input.Keys.SPACE) {
-                    playScreen.setCurrentGameState(PlayScreen.GameState.RUNNING);
-                    Gdx.app.log(TAG, "Ready state: Switched to Running state");
+                if (keycode == Input.Keys.ESCAPE) {
+                    screenSwitcher.switchToScreen(Screens.MENU);
+                    Gdx.app.log(TAG, "Ready state: Switched to Menu Screen");
                 }
                 break;
             case RUNNING:
@@ -153,6 +153,7 @@ public class InputHandler extends InputAdapter {
                     Gdx.app.log(TAG, "Running state: Birb jumped");
                 } else if (keycode == Input.Keys.ESCAPE) {
                     screenSwitcher.switchToScreen(Screens.MENU);
+                    playScreen.setCurrentGameState(PlayScreen.GameState.READY);
                 }
                 break;
         }
