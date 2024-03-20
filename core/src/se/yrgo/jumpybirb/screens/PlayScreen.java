@@ -32,10 +32,9 @@ public class PlayScreen implements Screen {
     private ScreenSwitcher screenSwitcher;
     private GameState currentGameState;
     private Texture backgroundTexture;
-    private BitmapFont textFont;
-    private BitmapFont fontSize40;
+    private BitmapFont scoreFont;
+    private BitmapFont countDownFont;
     private FreeTypeFontGenerator fontGenerator;
-    private FreeTypeFontParameter fontParameter;
     private Texture getReadyTexture;
     private float getReadyCountDownTimer = 3f;
     private float delayTimerAfterCountDown;
@@ -86,15 +85,18 @@ public class PlayScreen implements Screen {
         groundPosition = new Vector2(-300, 0);
         getReadyTexture = new Texture("GetReady2.png"); // placeholder get-ready image
 
-        textFont = new BitmapFont();
+        scoreFont = new BitmapFont();
+        scoreFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        scoreFont.getData().setScale(TEXT_FONT_SCALE);
 
+        // Set up countdown font
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/CrackerWinter-VGLPl.ttf"));
-        fontParameter = new FreeTypeFontParameter();
+        FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
         fontParameter.size = 120;
         fontParameter.color = Color.valueOf("#ffda05");
         fontParameter.borderColor = Color.valueOf("#522f22");
         fontParameter.borderWidth = 5;
-        fontSize40 = fontGenerator.generateFont(fontParameter);
+        countDownFont = fontGenerator.generateFont(fontParameter);
 
         //TODO remove this after debugging
         // Create a green pixmap
@@ -211,11 +213,11 @@ public class PlayScreen implements Screen {
     private void displayCountdownText() {
         int countdownNumber = (int) Math.ceil(getReadyCountDownTimer); // Round up to nearest integer
         String textToDisplay = countdownNumber > 0 ? String.valueOf(countdownNumber) : ""; // Ensure not to display negative numbers
-        fontSize40.draw(batch, textToDisplay, camera.viewportWidth / 2f, camera.viewportHeight / 1.75f, 0, Align.center, false);
+        countDownFont.draw(batch, textToDisplay, camera.viewportWidth / 2f, camera.viewportHeight / 1.75f, 0, Align.center, false);
     }
 
     private void displayGoText() {
-        fontSize40.draw(batch, "GO!", camera.viewportWidth / 2f, camera.viewportHeight / 1.75f, 0, Align.center, false);
+        countDownFont.draw(batch, "GO!", camera.viewportWidth / 2f, camera.viewportHeight / 1.75f, 0, Align.center, false);
     }
 
     private void updateRunningState(float delta) {
@@ -343,10 +345,10 @@ public class PlayScreen implements Screen {
         int highScore = scoreManager.getHighScore();
 
         // Draw text and scores with respect to the background position and dimensions
-        textFont.draw(batch, "Press Esc to go to Menu", backgroundX + backgroundWidth / 4f,
+        scoreFont.draw(batch, "Press Esc to go to Menu", backgroundX + backgroundWidth / 4f,
                 backgroundY + backgroundHeight / 3f - textPadding, 0, Align.left, false);
-        textFont.draw(batch, "Score: " + currentScore, backgroundX + 370, backgroundY + backgroundHeight - 10f);
-        textFont.draw(batch, "High Score: " + highScore, backgroundX + 370, backgroundY + backgroundHeight - 10f - 50f);
+        scoreFont.draw(batch, "Score: " + currentScore, backgroundX + 370, backgroundY + backgroundHeight - 10f);
+        scoreFont.draw(batch, "High Score: " + highScore, backgroundX + 370, backgroundY + backgroundHeight - 10f - 50f);
     }
 
     /***
