@@ -21,31 +21,17 @@ import se.yrgo.jumpybirb.utils.Screens;
  */
 public class GameOverScreen implements Screen {
     private static final String TAG = SplashScreen.class.getSimpleName();
-    private static final float FONT_SCALE = 4.0f;
+    private static final float FONT_SCALE = 3.5f;
     private SpriteBatch batch;
     private BitmapFont textFont;
     private Texture backgroundTexture;
-    private ScreenSwitcher screenSwitcher;
     private boolean playAgainSelected = true; // Flag to track whether "Play Again" is selected
     private ScoreManager scoreManager;
-    private Vector2 birbPosition;
-    private Vector2 groundPosition;
 
 
-    public GameOverScreen(ScreenSwitcher screenSwitcher) {
-
-        this.screenSwitcher = screenSwitcher;
-    }
-    public GameOverScreen(Vector2 birbPosition, Vector2 groundPosition) {
-        this.birbPosition = birbPosition;
-        this.groundPosition = groundPosition;
-    }
-
-    /**
-     * Constructor. Initialize ScoreManager.
-     */
+    // Constructor. Initialize ScoreManager.
     public GameOverScreen() {
-        // TODO add constructor
+        scoreManager = ScoreManager.getInstance();
     }
 
     /***
@@ -70,7 +56,7 @@ public class GameOverScreen implements Screen {
         // Clear the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        backgroundTexture = new Texture("GameOver1.png");
+        backgroundTexture = new Texture("Bakgrund1.jpg");
 
         // Render background image
         batch.begin();
@@ -79,8 +65,10 @@ public class GameOverScreen implements Screen {
         // Draw text "Gameover"
         // Draw your game over screen elements here
         textFont.draw(batch, "Game Over", Gdx.graphics.getWidth() / 4f,
-                Gdx.graphics.getHeight() / 2f, 0, Align.left, false);
+                2 * Gdx.graphics.getHeight() / 2.5f, 0, Align.left, false);
 
+        //Draw this sessions score and the highscore
+        drawGameOverScores();
 
         // Handle input
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
@@ -93,6 +81,19 @@ public class GameOverScreen implements Screen {
                 Gdx.graphics.getHeight() / 2f - 150, 0, Align.left, false);
 
         batch.end();
+    }
+
+    private void drawGameOverScores() {
+        float textPadding = 50f;
+        int currentScore = scoreManager.getScore();
+        int highScore = scoreManager.getHighScore();
+
+        // Draw scores with respect to the background position and dimensions
+        // Draw scores
+        textFont.draw(batch, "High Score: " + highScore,
+                Gdx.graphics.getWidth() / 10f, 3 * Gdx.graphics.getHeight() / 4.5f, 0 ,Align.left, false);
+        textFont.draw(batch, "Your score: " + currentScore,
+                Gdx.graphics.getWidth() / 9.2f, 3 * Gdx.graphics.getHeight() / 5.2f, 0, Align.left, false);
     }
 
     /***
@@ -144,13 +145,4 @@ public class GameOverScreen implements Screen {
         batch.dispose();
     }
 
-    private void drawGameOverScores(float backgroundX, float backgroundY, float backgroundWidth, float backgroundHeight) {
-        float textPadding = 50f;
-        int currentScore = scoreManager.getScore();
-        int highScore = scoreManager.getHighScore();
-
-        // Draw scores with respect to the background position and dimensions
-        textFont.draw(batch, "Score: " + currentScore, backgroundX + 370, backgroundY + backgroundHeight - 10f);
-        textFont.draw(batch, "High Score: " + highScore, backgroundX + 370, backgroundY + backgroundHeight - 10f - 50f);
-    }
 }

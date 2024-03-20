@@ -141,6 +141,9 @@ public class PlayScreen implements Screen {
     private void updateReadyState(float delta) {
         Gdx.app.log(TAG, "GameState: READY");
 
+        // Reset score
+        scoreManager.reset();
+
         // Render the assets without updating their positions
         batch.begin();
         batch.setProjectionMatrix(camera.combined);
@@ -277,9 +280,8 @@ public class PlayScreen implements Screen {
     }
 
     public void resetGame() {
-        // Reset necessary game elements (e.g., birb position, obstacles, score)
+        // Reset necessary game elements (e.g., birb position, obstacles)
         birb.reset();
-        scoreManager.reset();
 
         // Clear existing array of obstacles and generate new obstacles in it
         obstacles.clear();
@@ -345,9 +347,10 @@ public class PlayScreen implements Screen {
      * This method is called when this screen should
      * release all resources. Preceded by a call to pause().
      */
+
+        // Dispose of resources
     @Override
     public void dispose() {
-        // Dispose of resources
         ground.dispose();
         batch.dispose();
         backgroundTexture.dispose();

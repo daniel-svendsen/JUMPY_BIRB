@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
@@ -12,12 +14,12 @@ import se.yrgo.jumpybirb.utils.InputHandler;
 
 public class Birb {
     public static final String TAG = Birb.class.getSimpleName();
-    private static final int GRAVITY = -800;
+    private static final int GRAVITY = -900;
     private static final float INITIAL_POSITION_X = 50;
     private static final float INITIAL_POSITION_Y = 500;
     private static final float[] INITIAL_POSITION = {INITIAL_POSITION_X, INITIAL_POSITION_X};
-    private static final float JUMP_VELOCITY = 300f;
-    private static final float MOVEMENT_SPEED = 210f;
+    private static final float JUMP_VELOCITY = 400f;
+    private static final float MOVEMENT_SPEED = 250f;
     private final int width;
     private final int height;
     private Vector2 position;
@@ -26,13 +28,17 @@ public class Birb {
     private Sound flapSound;
     private Circle bounds;
 
+    private TextureRegion[] animationFrames;
+    private Animation<TextureRegion> animation;
+    private float stateTime;
+
     public Birb(int width, int height) {
         this.width = width;
         this.height = height;
         position = new Vector2(INITIAL_POSITION_X, INITIAL_POSITION_Y);
         velocity = new Vector2(0, 0);
         texture = new Texture("Birb1.png");
-
+        loadAnimationFrames();
         // Calculate the radius for the bounds
         float radius = Math.min(width, height / 3); // 33% of the current size
 
@@ -42,6 +48,20 @@ public class Birb {
 
         bounds = new Circle(position.x + xOffset, position.y + yOffset, radius);
         flapSound = Gdx.audio.newSound(Gdx.files.internal("wing.ogg"));
+    }
+
+    private void loadAnimationFrames() {
+        // Load three textures for animation frames
+        TextureRegion frame1 = new TextureRegion(new Texture("Birb2.png"));
+        TextureRegion frame2 = new TextureRegion(new Texture("Birb3.png"));
+        TextureRegion frame3 = new TextureRegion(new Texture("Birb4.png"));
+
+        // Add frames to animation frames array
+        animationFrames = new TextureRegion[]{frame1, frame2, frame3};
+
+        // Create animation
+        animation = new Animation<TextureRegion>(0.2f, animationFrames);
+        stateTime = 0f;
     }
 
     public void update(float deltaTime) {
@@ -61,6 +81,10 @@ public class Birb {
         float xOffset = (width - radius) / 1.2f;
         float yOffset = (height - radius) / 1.2f;
         bounds.setPosition(position.x + xOffset, position.y + yOffset);
+
+        // Update animation state
+        stateTime += deltaTime;
+        animate();
     }
 
     private void ensureInBounds() {
@@ -102,8 +126,14 @@ public class Birb {
                 "velocity.y = " + velocity.y + " ," +
                 "velocity.x = " + velocity.x +
                 ", position.x: " + position.x + ", position.y: " + position.y);
+        // Call animation method
+        animate();
     }
-
+    private void animate() {
+        stateTime += Gdx.graphics.getDeltaTime();
+        TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
+        texture = currentFrame.getTexture();
+    }
     public Circle getBounds() {
         return bounds;
     }
