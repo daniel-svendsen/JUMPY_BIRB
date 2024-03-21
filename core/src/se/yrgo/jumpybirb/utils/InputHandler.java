@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Align;
 import se.yrgo.jumpybirb.JumpyBirb;
 import se.yrgo.jumpybirb.screens.PlayScreen;
 
@@ -15,8 +14,8 @@ public class InputHandler extends InputAdapter {
     private final JumpyBirb gameSession;
     private MenuListener menuListener;
     private Stage stage;
-    private int selectedButtonIndex = 0;
-    private boolean playAgainSelected = true;
+    private int selectedButtonIndexMainMenu = 0;
+    private int selectedButtonIndexGameOver = 0;
 
     public InputHandler(JumpyBirb gameSession, ScreenSwitcher screenSwitcher, MenuListener menuListener) {
         this.gameSession = gameSession;
@@ -103,32 +102,32 @@ public class InputHandler extends InputAdapter {
     }
 
     private void navigateMenu(int direction) {
-        selectedButtonIndex += direction;
+        selectedButtonIndexMainMenu += direction;
 
-        if (selectedButtonIndex < 0) {
-            selectedButtonIndex = 0;
-        } else if (selectedButtonIndex > 2) {
-            selectedButtonIndex = 0;
+        if (selectedButtonIndexMainMenu < 0) {
+            selectedButtonIndexMainMenu = 0;
+        } else if (selectedButtonIndexMainMenu > 1) {
+            selectedButtonIndexMainMenu = 0;
         }
-        Gdx.app.log(TAG, "Selected button index: " + selectedButtonIndex);
+        Gdx.app.log(TAG, "Selected button index: " + selectedButtonIndexMainMenu);
     }
 
-    public int getSelectedButtonIndex() {
-        return selectedButtonIndex;
+    public int getSelectedButtonIndexMainMenu() {
+        return selectedButtonIndexMainMenu;
     }
 
     /**
      * Determine which menu button is currently selected and trigger its action
      */
     private void triggerSelectedMenuButtonAction() {
-        switch (selectedButtonIndex) {
+        switch (selectedButtonIndexMainMenu) {
             case 0:
                 screenSwitcher.switchToScreen(Screens.PLAY);
-                selectedButtonIndex = 0;
+                selectedButtonIndexMainMenu = 0;
                 break;
             case 1:
                 screenSwitcher.switchToScreen(Screens.PLAY);
-                selectedButtonIndex = 0;
+                selectedButtonIndexMainMenu = 0;
                 break;
             case 2:
                 Gdx.app.exit();
@@ -160,26 +159,51 @@ public class InputHandler extends InputAdapter {
     }
 
     private void handleGameOverScreen(int keycode) {
-        // Handle input
-        if (keycode == Input.Keys.UP || keycode == Input.Keys.DOWN) {
-            playAgainSelected = !playAgainSelected; // Toggle selection between "Play Again" and "Exit"
+        switch (keycode) {
+            case Input.Keys.SPACE:
+                switchToPlayScreen();
+                break;
+            case Input.Keys.UP:
+                navigateGameOverMenu(-1); // Move selection up
+                break;
+            case Input.Keys.DOWN:
+                navigateGameOverMenu(1); // Move selection down
+                break;
+            case Input.Keys.ENTER:
+                triggerSelectedGameOverButtonAction(); // Trigger action for selected button
+                break;
+            default:
+                break;
         }
-        if (keycode == Input.Keys.ENTER) {
-            if (playAgainSelected) {
-                // Start a new game
-                screenSwitcher.switchToScreen(Screens.PLAY); // Assuming PLAY is your play screen identifier
-            } else {
-                // Exit the game
+    }
+
+    private void navigateGameOverMenu(int direction) {
+        selectedButtonIndexGameOver += direction;
+
+        if (selectedButtonIndexGameOver < 0) {
+            selectedButtonIndexGameOver= 0;
+        } else if (selectedButtonIndexGameOver > 1) {
+            selectedButtonIndexGameOver = 0;
+        }
+        Gdx.app.log(TAG, "Selected button index: " + selectedButtonIndexGameOver);
+    }
+
+    public int getSelectedButtonIndexGameOver() {
+        return selectedButtonIndexGameOver;
+    }
+
+    /**
+     * Determine which menu button is currently selected and trigger its action
+     */
+    private void triggerSelectedGameOverButtonAction() {
+        switch (selectedButtonIndexGameOver) {
+            case 0:
+                screenSwitcher.switchToScreen(Screens.PLAY);
+                selectedButtonIndexMainMenu = 0;
+                break;
+            case 1:
                 Gdx.app.exit();
-            }
-        } else if (keycode == Input.Keys.SPACE) {
-            if (playAgainSelected) {
-                // Start a new game
-                screenSwitcher.switchToScreen(Screens.PLAY); // Assuming PLAY is your play screen identifier
-            } else {
-                // Exit the game
-                Gdx.app.exit();
-            }
+                break;
         }
     }
 

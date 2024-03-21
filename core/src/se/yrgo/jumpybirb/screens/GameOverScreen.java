@@ -88,7 +88,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         // Create a table to hold the buttons
         Table buttonTable = new Table();
         buttonTable.setFillParent(true);
-        buttonTable.center().bottom().padBottom(Gdx.graphics.getHeight() * 0.1f); // Adjust Y position here
+        buttonTable.center().bottom().padBottom(Gdx.graphics.getHeight() * 0.08f); // Adjust Y position here
         stage.addActor(buttonTable);
 
         // Add the buttons to the table with padding
@@ -152,7 +152,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         //Draw this sessions score and the highscore
         drawGameOverScores();
 
-        currentSelectedButtonIndex = inputHandler.getSelectedButtonIndex();
+        currentSelectedButtonIndex = inputHandler.getSelectedButtonIndexGameOver();
         updateButtonStyles();
 
         // Draw the stage
@@ -267,11 +267,9 @@ public class GameOverScreen implements Screen, GameOverListener {
         switch (currentSelectedButtonIndex) {
             case 0:
                 playAgainButton.setChecked(true);
-                playAgainButton.setChecked(false);
                 exitButton.setChecked(false);
                 break;
             case 1:
-                exitButton.setChecked(false);
                 exitButton.setChecked(true);
                 playAgainButton.setChecked(false);
                 break;

@@ -184,7 +184,7 @@ public class MenuScreen implements Screen, MenuListener {
         batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
 
-        currentSelectedButtonIndex = inputHandler.getSelectedButtonIndex();
+        currentSelectedButtonIndex = inputHandler.getSelectedButtonIndexMainMenu();
         updateButtonStyles();
 
         // Draw the stage
