@@ -24,15 +24,14 @@ public class GameOverScreen implements Screen {
     private static final String TAG = SplashScreen.class.getSimpleName();
     private static final float FONT_SCALE = 3.5f;
     private SpriteBatch batch;
-    private BitmapFont textFont;
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator scoreNumbersFontGenerator;
-    private BitmapFont gameOverFont;
     private BitmapFont scoreFont;
     private BitmapFont scoreNumbersFont;
     private BitmapFont playOrExitFont;
 
     private Texture backgroundTexture;
+    private Texture gameOverHeaderImage;
     private boolean playAgainSelected = true; // Flag to track whether "Play Again" is selected
     private ScoreManager scoreManager;
 
@@ -50,18 +49,10 @@ public class GameOverScreen implements Screen {
     public void show() {
         Gdx.app.log(TAG, "show() called");
         batch = new SpriteBatch();
-        textFont = new BitmapFont();
-        textFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        textFont.getData().setScale(FONT_SCALE);
 
-        // Set up gameOverFont
+        // Set up fonts
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BRLNSDB.ttf"));
         scoreNumbersFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BRLNSDB.ttf"));
-        FreeTypeFontParameter largeStyle = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        largeStyle.size = 60;
-        largeStyle.color = Color.valueOf("#ffda05");
-        largeStyle.borderColor = Color.valueOf("#522f22");
-        largeStyle.borderWidth = 5;
 
         FreeTypeFontParameter mediumStyle = new FreeTypeFontGenerator.FreeTypeFontParameter();
         mediumStyle.size = 42;
@@ -81,12 +72,12 @@ public class GameOverScreen implements Screen {
         scoreNumbersStyle.borderColor = Color.valueOf("#522f22");
         scoreNumbersStyle.borderWidth = 5;
 
-        gameOverFont = fontGenerator.generateFont(largeStyle);
         scoreFont = fontGenerator.generateFont(mediumStyle);
         scoreNumbersFont = scoreNumbersFontGenerator.generateFont(scoreNumbersStyle);
         playOrExitFont = fontGenerator.generateFont(mediumStyle);
 
         backgroundTexture = new Texture("Bakgrund1.jpg");
+        gameOverHeaderImage = new Texture("GameOver.png");
     }
 
     /***
@@ -103,10 +94,8 @@ public class GameOverScreen implements Screen {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0);
 
-        // Draw text "Gameover"
-        // Draw your game over screen elements here
-        gameOverFont.draw(batch, "Game Over", Gdx.graphics.getWidth() / 5f,
-                2 * Gdx.graphics.getHeight() / 2.5f, 0, Align.left, false);
+        // Draw gameover image over background
+        batch.draw(gameOverHeaderImage, 0, 0);
 
         //Draw this sessions score and the highscore
         drawGameOverScores();
