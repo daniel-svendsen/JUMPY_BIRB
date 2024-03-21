@@ -104,9 +104,7 @@ public class InputHandler extends InputAdapter {
     private void navigateMenu(int direction) {
         selectedButtonIndexMainMenu += direction;
 
-        if (selectedButtonIndexMainMenu < 0) {
-            selectedButtonIndexMainMenu = 0;
-        } else if (selectedButtonIndexMainMenu > 1) {
+        if (selectedButtonIndexMainMenu < 0 || selectedButtonIndexMainMenu > 2) {
             selectedButtonIndexMainMenu = 0;
         }
         Gdx.app.log(TAG, "Selected button index: " + selectedButtonIndexMainMenu);
@@ -163,17 +161,14 @@ public class InputHandler extends InputAdapter {
 
     private void handleGameOverScreen(int keycode) {
         switch (keycode) {
-            case Input.Keys.SPACE:
-                switchToPlayScreen();
-                break;
             case Input.Keys.UP:
                 navigateGameOverMenu(-1); // Move selection up
                 break;
             case Input.Keys.DOWN:
                 navigateGameOverMenu(1); // Move selection down
                 break;
-            case Input.Keys.ENTER:
-                triggerSelectedGameOverButtonAction(); // Trigger action for selected button
+            case Input.Keys.SPACE, Input.Keys.ENTER:
+                triggerSelectedGameOverButtonAction();
                 break;
             default:
                 break;
@@ -183,10 +178,8 @@ public class InputHandler extends InputAdapter {
     private void navigateGameOverMenu(int direction) {
         selectedButtonIndexGameOver += direction;
 
-        if (selectedButtonIndexGameOver < 0) {
+        if (selectedButtonIndexGameOver < 0 || selectedButtonIndexGameOver > 1) {
             selectedButtonIndexGameOver= 0;
-        } else if (selectedButtonIndexGameOver > 1) {
-            selectedButtonIndexGameOver = 0;
         }
         Gdx.app.log(TAG, "Selected button index: " + selectedButtonIndexGameOver);
     }
