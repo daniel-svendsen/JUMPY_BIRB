@@ -2,11 +2,11 @@ package se.yrgo.jumpybirb.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -45,9 +45,7 @@ public class PlayScreen implements Screen {
     private Vector2 groundPosition;
 
     private Ground ground;
-
-    private Texture greenTexture; //TODO remove this after debugging
-    private ShapeRenderer shapeRenderer; //TODO remove this after debugging
+    private Sound gameOverSound;
 
     /**
      * Constructor. Initialize ScoreManager.
@@ -62,6 +60,14 @@ public class PlayScreen implements Screen {
     }
 
     /***
+     * This is used to tell which state the playScreen is in.
+     * Not implemented yet...
+     */
+    public enum GameState {
+        MENU, READY, RUNNING, GAME_OVER
+    }
+
+    /***
      * This method is called when this screen becomes
      * the current screen for the game.
      */
@@ -73,7 +79,7 @@ public class PlayScreen implements Screen {
         batch = new SpriteBatch();
         backgroundTexture = new Texture("Bakgrund1.jpg");
         birb = new Birb(66, 64);
-        shapeRenderer = new ShapeRenderer(); //TODO remove this after debugging
+        gameOverSound = Gdx.audio.newSound(Gdx.files.internal("death-sound.ogg"));
 
         // Initialize ground and groundPosition
         ground = new Ground(-300, 0, 100f);
@@ -97,14 +103,6 @@ public class PlayScreen implements Screen {
         fontParameter.borderColor = Color.valueOf("#522f22");
         fontParameter.borderWidth = 5;
         countDownFont = fontGenerator.generateFont(fontParameter);
-
-        //TODO remove this after debugging
-        // Create a green pixmap
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.GREEN);
-        pixmap.fill();
-        // Create a texture from the pixmap
-        greenTexture = new Texture(pixmap);
     }
 
     public Birb getPlayerBirb() {
@@ -264,41 +262,17 @@ public class PlayScreen implements Screen {
             groundPosition.x += groundTexture.getWidth();
         }
 
-/*        // Render birb bounds TODO remove this after debugging
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        birb.renderBounds(shapeRenderer);*/
-
         // Draw text and scores, passing the background coordinates and dimensions
         drawTextAndScores(camera.position.x - camera.viewportWidth / 2f, 0, camera.viewportWidth, camera.viewportHeight);
 
-
         // End batch
         batch.end();
-
-/*
-        //TODO remove this after debugging
-        // Render green bounding rectangles for obstacles
-        // Set the color to green with 50% opacity
-        batch.begin();
-        batch.setColor(0f, 1f, 0f, 0.5f);
-        for (Obstacle obstacle : obstacles) {
-            // Draw bounding rectangles for top and bottom obstacles
-            batch.draw(obstacle.getTopObstacle(), obstacle.getPosTopObstacle().x, obstacle.getPosTopObstacle().y);
-            batch.draw(obstacle.getBottomObstacle(), obstacle.getPosBottomObstacle().x, obstacle.getPosBottomObstacle().y);
-
-            // Draw bounding rectangles (green)
-            batch.draw(greenTexture, obstacle.boundsTop.x, obstacle.boundsTop.y, obstacle.boundsTop.width, obstacle.boundsTop.height);
-            batch.draw(greenTexture, obstacle.boundsBot.x, obstacle.boundsBot.y, obstacle.boundsBot.width, obstacle.boundsBot.height);
-        }
-        batch.setColor(Color.WHITE); // Reset color to white
-        batch.end();
-        //TODO remove code above
-*/
 
         Gdx.app.log(TAG, "Camera position: " + camera.position.x + ", " + camera.position.y);
 
         // Check for game over after drawing obstacles
         if (checkForGameOver(birb)) {
+            gameOverSound.play();
             setCurrentGameState(GameState.GAME_OVER);
         }
     }
@@ -398,20 +372,10 @@ public class PlayScreen implements Screen {
     public void dispose() {
         ground.dispose();
         batch.dispose();
+        gameOverSound.dispose();
         backgroundTexture.dispose();
-        // textFont.dispose();
         fontGenerator.dispose();
         groundTexture.dispose();
         getReadyTexture.dispose();
-        greenTexture.dispose(); //TODO remove this after debugging
-        shapeRenderer.dispose(); //TODO remove this after debugging
-    }
-
-    /***
-     * This is used to tell which state the playScreen is in.
-     * Not implemented yet...
-     */
-    public enum GameState {
-        MENU, READY, RUNNING, GAME_OVER
     }
 }

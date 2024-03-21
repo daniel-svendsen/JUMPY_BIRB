@@ -60,7 +60,7 @@ public class Birb {
         animationFrames = new TextureRegion[]{frame1, frame2, frame3};
 
         // Create animation
-        animation = new Animation<TextureRegion>(0.2f, animationFrames);
+        animation = new Animation<>(0.2f, animationFrames);
         stateTime = 0f;
     }
 
