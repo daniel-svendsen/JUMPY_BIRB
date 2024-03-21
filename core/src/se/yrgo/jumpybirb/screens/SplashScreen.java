@@ -65,9 +65,6 @@ public class SplashScreen implements Screen {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        // Render placeholder font
-        font.draw(batch, "Splash!!!", Gdx.graphics.getWidth() / 4f,
-                Gdx.graphics.getHeight() / 2f, 0, Align.left, false);
         batch.end();
     }
 
