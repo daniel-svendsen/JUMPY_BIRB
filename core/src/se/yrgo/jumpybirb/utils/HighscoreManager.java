@@ -1,5 +1,7 @@
 package se.yrgo.jumpybirb.utils;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import java.util.*;
 
 public class HighscoreManager {
@@ -14,9 +16,12 @@ public class HighscoreManager {
         return highscores;
     }
 
-    public void addHighscore(String name, int score) {
+    public void addHighscore(int score) {
+        String name = getPlayerName();
+
         highscores.put(name, score);
         highscores = sortByValue(highscores);
+
         if (highscores.size() > MAX_HIGHSCORES) {
             Iterator<Map.Entry<String, Integer>> iterator = highscores.entrySet().iterator();
             int count = 0;
@@ -41,5 +46,25 @@ public class HighscoreManager {
             sortedHashMap.put(entry.getKey(), entry.getValue());
         }
         return sortedHashMap;
+    }
+
+    // Method to get player name using LibGDX input
+    public static String getPlayerName() {
+        StringBuilder name = new StringBuilder();
+        boolean enterPressed = false;
+        while (!enterPressed) {
+            for (int i = 29; i >= 0; i--) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.A + i)) {
+                    name.append((char)('A' + i));
+                }
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE) && name.length() > 0) {
+                name.deleteCharAt(name.length() - 1);
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && name.length() > 0) {
+                enterPressed = true;
+            }
+        }
+        return name.toString();
     }
 }

@@ -12,9 +12,11 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
+import se.yrgo.jumpybirb.utils.HighscoreManager;
 import se.yrgo.jumpybirb.utils.ScoreManager;
 
 import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
+import static com.badlogic.gdx.scenes.scene2d.ui.Table.Debug.table;
 
 /***
  * The screen that includes score from this play (+ perhaps highscore current game session?).
@@ -34,11 +36,15 @@ public class GameOverScreen implements Screen {
     private Texture gameOverHeaderImage;
     private boolean playAgainSelected = true; // Flag to track whether "Play Again" is selected
     private ScoreManager scoreManager;
+    private String playerName = ""; // Variable to store player name
+    private HighscoreManager highscoreManager;
 
 
     // Constructor. Initialize ScoreManager.
     public GameOverScreen() {
         scoreManager = ScoreManager.getInstance();
+        scoreManager = ScoreManager.getInstance();
+        highscoreManager = new HighscoreManager();
     }
 
     /***
@@ -99,6 +105,11 @@ public class GameOverScreen implements Screen {
 
         //Draw this sessions score and the highscore
         drawGameOverScores();
+        handleNameInput();
+        // Draw player name on the screen
+
+        drawPlayerName();
+
 
         // Handle input
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
@@ -144,6 +155,34 @@ public class GameOverScreen implements Screen {
 
         table.pack(); // Pack the table to adjust its size according to its content
         table.draw(batch, 1); // Draw the table onto the batch
+        table.row().height(scoreNumbersFont.getXHeight() * 3);
+    }
+
+    private void handleNameInput() {
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            if (!playerName.isEmpty()) { // If player name is not empty
+                highscoreManager.addHighscore(scoreManager.getScore()); // Add score to highscores
+                //scoreManager.resetScore(); // Reset score for next game
+                playerName = ""; // Reset player name for next game
+                // Go back to menu screen
+                // You can implement this transition as per your game's structure
+            }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE) && !playerName.isEmpty()) {
+            playerName = playerName.substring(0, playerName.length() - 1); // Remove last character
+        } else if (playerName.length() < 10) { // Limit player name to 10 characters
+            for (int i = 29; i >= 0; i--) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.A + i)) {
+                    playerName += (char) ('A' + i); // Add character based on key pressed
+                }
+            }
+        }
+    }
+
+    private void drawPlayerName() {
+        // Draw player name at a specific position on the screen
+        playOrExitFont.draw(batch, "Enter your name: " + playerName, Gdx.graphics.getWidth() / 4f,
+                Gdx.graphics.getHeight() / 2f + 100, 0, Align.left, false);
     }
 
     /***
