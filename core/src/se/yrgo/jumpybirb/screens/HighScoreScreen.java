@@ -1,12 +1,20 @@
 package se.yrgo.jumpybirb.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import se.yrgo.jumpybirb.JumpyBirb;
+import se.yrgo.jumpybirb.utils.ScoreManager;
 
 /***
  * The screen that shows highscore board.
  */
 public class HighScoreScreen implements Screen {
+    private Texture backgroundTexture;
+    private SpriteBatch batch;
+    private ScoreManager scoreManager;
 
     /**
      * Constructor
@@ -21,7 +29,8 @@ public class HighScoreScreen implements Screen {
      */
     @Override
     public void show() {
-        // TODO implement show method
+        backgroundTexture = new Texture("Bakgrund1.jpg");
+
     }
 
     /***
@@ -30,7 +39,14 @@ public class HighScoreScreen implements Screen {
      */
     @Override
     public void render(float delta) {
-        // TODO implement render method
+        // Clear the screen
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Render background image
+        batch.begin();
+        batch.draw(backgroundTexture, 0, 0);
+        batch.end();
     }
 
     /***
