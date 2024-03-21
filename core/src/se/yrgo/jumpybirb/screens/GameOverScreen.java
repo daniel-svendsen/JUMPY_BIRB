@@ -48,9 +48,9 @@ public class GameOverScreen implements Screen, GameOverListener {
     private final ScreenSwitcher screenSwitcher;
     private InputHandler inputHandler;
     private FreeTypeFontGenerator fontGenerator;
-    private FreeTypeFontGenerator scoreNumbersFontGenerator;
     private BitmapFont scoreFont;
     private BitmapFont scoreNumbersFont;
+    private BitmapFont playOrExitFont;
     private Texture backgroundTexture;
     private Texture gameOverHeaderImage;
     private final ScoreManager scoreManager;
@@ -110,7 +110,6 @@ public class GameOverScreen implements Screen, GameOverListener {
 
         // Set up fonts
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BRLNSDB.ttf"));
-        scoreNumbersFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BRLNSDB.ttf"));
 
         FreeTypeFontParameter mediumStyle = new FreeTypeFontGenerator.FreeTypeFontParameter();
         mediumStyle.size = 42;
@@ -131,7 +130,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         scoreNumbersStyle.borderWidth = 5;
 
         scoreFont = fontGenerator.generateFont(mediumStyle);
-        scoreNumbersFont = scoreNumbersFontGenerator.generateFont(scoreNumbersStyle);
+        scoreNumbersFont = fontGenerator.generateFont(scoreNumbersStyle);
 
         // Set up background images
         backgroundTexture = new Texture("Bakgrund1.jpg");
@@ -363,7 +362,6 @@ public class GameOverScreen implements Screen, GameOverListener {
         Gdx.app.log(TAG, "dispose() called");
         batch.dispose();
         fontGenerator.dispose();
-        scoreNumbersFontGenerator.dispose();
         playAgainButtonTexture.dispose();
         exitButtonTexture.dispose();
         playAgainButtonSelectedTexture.dispose();
