@@ -1,6 +1,7 @@
 package se.yrgo.jumpybirb.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -20,6 +21,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import se.yrgo.jumpybirb.JumpyBirb;
 import se.yrgo.jumpybirb.utils.*;
+import se.yrgo.jumpybirb.utils.HighscoreManager;
+import se.yrgo.jumpybirb.utils.ScoreManager;
 
 import static com.badlogic.gdx.scenes.scene2d.ui.ImageButton.*;
 import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
@@ -51,11 +54,14 @@ public class GameOverScreen implements Screen, GameOverListener {
     private Texture backgroundTexture;
     private Texture gameOverHeaderImage;
     private final ScoreManager scoreManager;
+    private String playerName = ""; // Variable to store player name
+    private HighscoreManager highscoreManager; /// ???????
 
     public GameOverScreen(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
         screenSwitcher = JumpyBirb.getScreenSwitcher();
         scoreManager = ScoreManager.getInstance();
+        highscoreManager = new HighscoreManager(); /// ????????
     }
 
     public void setInputHandler(InputHandler inputHandler) {
@@ -146,11 +152,15 @@ public class GameOverScreen implements Screen, GameOverListener {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0);
 
-        // Draw gameover image over background
+        // Draw GameOver image over background
         batch.draw(gameOverHeaderImage, 0, 0);
 
         //Draw this sessions score and the highscore
         drawGameOverScores();
+        handlePlayerNameInput();
+
+        // Draw player name on the screen
+        drawPlayerInputName();
 
         currentSelectedButtonIndex = inputHandler.getSelectedButtonIndexGameOver();
         updateButtonStyles();
@@ -215,7 +225,7 @@ public class GameOverScreen implements Screen, GameOverListener {
     }
 
     /**
-     * Action to be done if the "NORMAL" button is clicked.
+     * Action to be done if the "PLAY AGAIN" button is clicked.
      */
     @Override
     public void playAgainButtonClicked() {
@@ -254,6 +264,33 @@ public class GameOverScreen implements Screen, GameOverListener {
 
         table.pack(); // Pack the table to adjust its size according to its content
         table.draw(batch, 1); // Draw the table onto the batch
+        table.row().height(scoreNumbersFont.getXHeight() * 3);
+    }
+
+    private void handlePlayerNameInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            if (!playerName.isEmpty()) { // If player name is not empty
+                highscoreManager.addHighscore(scoreManager.getScore()); // Add score to highscores
+                //scoreManager.resetScore(); // Reset score for next game
+                playerName = ""; // Reset player name for next game
+                // Go back to menu screen
+                // You can implement this transition as per your game's structure
+            }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE) && !playerName.isEmpty()) {
+            playerName = playerName.substring(0, playerName.length() - 1); // Remove last character
+        } else if (playerName.length() < 4) { // Limit player name to 4 characters
+            for (int i = 29; i >= 0; i--) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.A + i)) {
+                    playerName += (char) ('A' + i); // Add character based on key pressed
+                }
+            }
+        }
+    }
+
+    private void drawPlayerInputName() {
+        // Draw player name at a specific position on the screen
+        scoreNumbersFont.draw(batch, "Enter your name: " + playerName, Gdx.graphics.getWidth() / 5f,
+                Gdx.graphics.getHeight() / 2.1f, 0, Align.left, false);
     }
 
     /**
