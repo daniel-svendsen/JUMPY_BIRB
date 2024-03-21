@@ -82,7 +82,7 @@ public class GameOverScreen implements Screen {
         scoreNumbersStyle.borderWidth = 5;
 
         gameOverFont = fontGenerator.generateFont(largeStyle);
-        scoreFont = fontGenerator.generateFont(smallStyle);
+        scoreFont = fontGenerator.generateFont(mediumStyle);
         scoreNumbersFont = scoreNumbersFontGenerator.generateFont(scoreNumbersStyle);
         playOrExitFont = fontGenerator.generateFont(mediumStyle);
 
