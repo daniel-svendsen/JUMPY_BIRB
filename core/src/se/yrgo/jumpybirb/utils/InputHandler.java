@@ -142,8 +142,11 @@ public class InputHandler extends InputAdapter {
         switch (currentGameState) {
             case READY:
                 if (keycode == Input.Keys.ESCAPE) {
-                    screenSwitcher.switchToScreen(Screens.MENU);
+                    switchToMenuScreen();
                     Gdx.app.log(TAG, "Ready state: Switched to Menu Screen");
+                }
+                else if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER) {
+                    playScreen.setCurrentGameState(PlayScreen.GameState.RUNNING);
                 }
                 break;
             case RUNNING:
