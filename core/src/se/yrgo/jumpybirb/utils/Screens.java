@@ -44,7 +44,7 @@ public enum Screens {
                 case SPLASH -> new SplashScreen();
                 case MENU -> new MenuScreen(JumpyBirb.getInputHandler());
                 case PLAY -> new PlayScreen(JumpyBirb.getScreenSwitcher());
-                case GAME_OVER -> new GameOverScreen();
+                case GAME_OVER -> new GameOverScreen(JumpyBirb.getInputHandler());
                 case HIGH_SCORE -> new HighScoreScreen();
             };
 

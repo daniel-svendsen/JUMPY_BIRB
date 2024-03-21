@@ -1,7 +1,7 @@
 package se.yrgo.jumpybirb.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,36 +9,57 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import se.yrgo.jumpybirb.utils.ScoreManager;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import se.yrgo.jumpybirb.JumpyBirb;
+import se.yrgo.jumpybirb.utils.*;
 
+import static com.badlogic.gdx.scenes.scene2d.ui.ImageButton.*;
 import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
 
 /***
  * The screen that includes score from this play (+ perhaps highscore current game session?).
  * Always return to menu screen after this screen.
  */
-public class GameOverScreen implements Screen {
+public class GameOverScreen implements Screen, GameOverListener {
     private static final String TAG = SplashScreen.class.getSimpleName();
-    private static final float FONT_SCALE = 3.5f;
     private SpriteBatch batch;
+    private Texture playAgainButtonTexture;
+    private Texture exitButtonTexture;
+    private Texture playAgainButtonSelectedTexture;
+    private Texture exitButtonSelectedTexture;
+    private ImageButton playAgainButton;
+    private ImageButton exitButton;
+    private ImageButtonStyle playAgainButtonStyle;
+    private ImageButtonStyle exitButtonStyle;
+    private boolean buttonStylesInitialized;
+    int currentSelectedButtonIndex = 0;
+    private Stage stage;
+    private final ScreenSwitcher screenSwitcher;
+    private InputHandler inputHandler;
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator scoreNumbersFontGenerator;
     private BitmapFont scoreFont;
     private BitmapFont scoreNumbersFont;
-    private BitmapFont playOrExitFont;
-
     private Texture backgroundTexture;
     private Texture gameOverHeaderImage;
-    private boolean playAgainSelected = true; // Flag to track whether "Play Again" is selected
-    private ScoreManager scoreManager;
+    private final ScoreManager scoreManager;
 
-
-    // Constructor. Initialize ScoreManager.
-    public GameOverScreen() {
+    public GameOverScreen(InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
+        screenSwitcher = JumpyBirb.getScreenSwitcher();
         scoreManager = ScoreManager.getInstance();
+    }
+
+    public void setInputHandler(InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
     }
 
     /***
@@ -49,6 +70,37 @@ public class GameOverScreen implements Screen {
     public void show() {
         Gdx.app.log(TAG, "show() called");
         batch = new SpriteBatch();
+
+        // Textures for normal buttons
+        playAgainButtonTexture = new Texture(Gdx.files.internal("PlayAgainButton.png"));
+        exitButtonTexture = new Texture(Gdx.files.internal("ExitButton.png"));
+
+        // Texture for selected buttons
+        playAgainButtonSelectedTexture = new Texture(Gdx.files.internal("PlayAgainButton-checked.png"));
+        exitButtonSelectedTexture = new Texture(Gdx.files.internal("ExitButton-checked.png"));
+
+        // Initialize button styles and instances
+        initializeButtonsAndStyles();
+
+        // Create the stage for allowing buttons to be clickable with ClickListeners
+        stage = new Stage(new ScreenViewport());
+
+        // Create a table to hold the buttons
+        Table buttonTable = new Table();
+        buttonTable.setFillParent(true);
+        buttonTable.center().bottom().padBottom(Gdx.graphics.getHeight() * 0.1f); // Adjust Y position here
+        stage.addActor(buttonTable);
+
+        // Add the buttons to the table with padding
+        float padding = 20f; // Adjust padding between buttons
+        buttonTable.add(playAgainButton).padBottom(padding).row();
+        buttonTable.add(exitButton).padBottom(padding).row();
+
+        // Get the input handling working correctly with multiplexer
+        configureInputMultiplexer();
+
+        // Add click listeners to the buttons
+        addClickListenersToGameOverButtons();
 
         // Set up fonts
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BRLNSDB.ttf"));
@@ -74,8 +126,8 @@ public class GameOverScreen implements Screen {
 
         scoreFont = fontGenerator.generateFont(mediumStyle);
         scoreNumbersFont = scoreNumbersFontGenerator.generateFont(scoreNumbersStyle);
-        playOrExitFont = fontGenerator.generateFont(mediumStyle);
 
+        // Set up background images
         backgroundTexture = new Texture("Bakgrund1.jpg");
         gameOverHeaderImage = new Texture("GameOver.png");
     }
@@ -100,17 +152,75 @@ public class GameOverScreen implements Screen {
         //Draw this sessions score and the highscore
         drawGameOverScores();
 
-        // Handle input
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            playAgainSelected = !playAgainSelected; // Toggle selection between "Play Again" and "Exit"
-        }
-        // Draw menu options
-        playOrExitFont.draw(batch, (playAgainSelected ? "> " : "") + "Play Again", Gdx.graphics.getWidth() / 4f,
-                Gdx.graphics.getHeight() / 2f - 100, 0, Align.left, false);
-        playOrExitFont.draw(batch, (!playAgainSelected ? "> " : "") + "Exit", Gdx.graphics.getWidth() / 4f,
-                Gdx.graphics.getHeight() / 2f - 150, 0, Align.left, false);
+        currentSelectedButtonIndex = inputHandler.getSelectedButtonIndex();
+        updateButtonStyles();
+
+        // Draw the stage
+        stage.act(delta);
+        stage.draw();
 
         batch.end();
+    }
+
+    private void initializeButtonsAndStyles() {
+        if (!buttonStylesInitialized) {
+            playAgainButtonStyle = new ImageButtonStyle();
+            playAgainButtonStyle.up = new TextureRegionDrawable(playAgainButtonTexture);
+            playAgainButtonStyle.checked = new TextureRegionDrawable(playAgainButtonSelectedTexture);
+
+            exitButtonStyle = new ImageButtonStyle();
+            exitButtonStyle.up = new TextureRegionDrawable(exitButtonTexture);
+            exitButtonStyle.checked = new TextureRegionDrawable(exitButtonSelectedTexture);
+
+            playAgainButton = new ImageButton(playAgainButtonStyle);
+            exitButton = new ImageButton(exitButtonStyle);
+
+            buttonStylesInitialized = true;
+        }
+    }
+
+    /**
+     * This method is used to get the input handling of
+     * the stage in MenuScreen to work properly with the ClickListeners.
+     * Without this configuration, the player is unable to click the menu buttons.
+     */
+    private void configureInputMultiplexer() {
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(stage);
+        multiplexer.addProcessor(inputHandler);
+        Gdx.input.setInputProcessor(multiplexer);
+    }
+
+    /**
+     * This method is used to allow buttons to be clickable.
+     * Here we can set the action we want for each button in the menu.
+     */
+    private void addClickListenersToGameOverButtons() {
+        playAgainButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log(TAG, "Play Again Button clicked");
+                playAgainButtonClicked();
+                Gdx.input.setInputProcessor(inputHandler);
+            }
+        });
+
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log(TAG, "Exit Button clicked");
+                Gdx.app.exit();
+            }
+        });
+    }
+
+    /**
+     * Action to be done if the "NORMAL" button is clicked.
+     */
+    @Override
+    public void playAgainButtonClicked() {
+        screenSwitcher.switchToScreen(Screens.PLAY);
+        Gdx.app.log(TAG, "playAgainButtonClicked() called");
     }
 
     private void drawGameOverScores() {
@@ -144,6 +254,30 @@ public class GameOverScreen implements Screen {
 
         table.pack(); // Pack the table to adjust its size according to its content
         table.draw(batch, 1); // Draw the table onto the batch
+    }
+
+    /**
+     * This method is used to update the currently selected button
+     * if the player traverses the menu with keyboard.
+     * Texture for selected button is an image file instantiated
+     * in the show method.
+     */
+    private void updateButtonStyles() {
+        // Update button styles only when the selected button changes
+        switch (currentSelectedButtonIndex) {
+            case 0:
+                playAgainButton.setChecked(true);
+                playAgainButton.setChecked(false);
+                exitButton.setChecked(false);
+                break;
+            case 1:
+                exitButton.setChecked(false);
+                exitButton.setChecked(true);
+                playAgainButton.setChecked(false);
+                break;
+            default:
+                break;
+        }
     }
 
     /***
@@ -194,6 +328,13 @@ public class GameOverScreen implements Screen {
         Gdx.app.log(TAG, "dispose() called");
         batch.dispose();
         fontGenerator.dispose();
+        scoreNumbersFontGenerator.dispose();
+        playAgainButtonTexture.dispose();
+        exitButtonTexture.dispose();
+        playAgainButtonSelectedTexture.dispose();
+        exitButtonSelectedTexture.dispose();
+        backgroundTexture.dispose();
+        gameOverHeaderImage.dispose();
     }
 
 }

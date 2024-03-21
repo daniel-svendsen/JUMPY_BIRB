@@ -19,6 +19,8 @@ import se.yrgo.jumpybirb.utils.MenuListener;
 import se.yrgo.jumpybirb.utils.ScreenSwitcher;
 import se.yrgo.jumpybirb.utils.Screens;
 
+import static com.badlogic.gdx.scenes.scene2d.ui.ImageButton.*;
+
 /***
  * The menu screen that always shows after the splash screen when you run the game.
  * Choose to play again, show highscore from current game session, enable/disable music.
@@ -37,11 +39,8 @@ public class MenuScreen implements Screen, MenuListener {
     private ImageButton playNormalButton;
     private ImageButton playHardButton;
     private ImageButton exitButton;
-    private ImageButton.ImageButtonStyle playNormalButtonStyle;
-    private ImageButton.ImageButtonStyle playHardButtonStyle;
-    private ImageButton.ImageButtonStyle exitButtonStyle;
     private boolean buttonStylesInitialized = false;
-    int currentSelectedButtonIndex = 0;
+    private int currentSelectedButtonIndex = 0;
     private final ScreenSwitcher screenSwitcher;
     private InputHandler inputHandler;
     private Stage stage;
@@ -107,15 +106,15 @@ public class MenuScreen implements Screen, MenuListener {
      */
     private void initializeButtonsAndStyles() {
         if (!buttonStylesInitialized) {
-            playNormalButtonStyle = new ImageButton.ImageButtonStyle();
+            ImageButtonStyle playNormalButtonStyle = new ImageButtonStyle();
             playNormalButtonStyle.up = new TextureRegionDrawable(normalButtonTexture);
             playNormalButtonStyle.checked = new TextureRegionDrawable(normalButtonSelectedTexture);
 
-            playHardButtonStyle = new ImageButton.ImageButtonStyle();
+            ImageButtonStyle playHardButtonStyle = new ImageButtonStyle();
             playHardButtonStyle.up = new TextureRegionDrawable(hardButtonTexture);
             playHardButtonStyle.checked = new TextureRegionDrawable(hardButtonSelectedTexture);
 
-            exitButtonStyle = new ImageButton.ImageButtonStyle();
+            ImageButtonStyle exitButtonStyle = new ImageButtonStyle();
             exitButtonStyle.up = new TextureRegionDrawable(exitButtonTexture);
             exitButtonStyle.checked = new TextureRegionDrawable(exitButtonSelectedTexture);
 
@@ -287,6 +286,12 @@ public class MenuScreen implements Screen, MenuListener {
         Gdx.app.log(TAG, "dispose() called");
         batch.dispose();
         stage.dispose();
+        normalButtonTexture.dispose();
+        normalButtonSelectedTexture.dispose();
+        hardButtonTexture.dispose();
+        hardButtonSelectedTexture.dispose();
+        exitButtonTexture.dispose();
+        exitButtonSelectedTexture.dispose();
         backgroundTexture.dispose();
     }
 }
