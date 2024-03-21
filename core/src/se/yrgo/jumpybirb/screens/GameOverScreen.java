@@ -55,8 +55,8 @@ public class GameOverScreen implements Screen {
         textFont.getData().setScale(FONT_SCALE);
 
         // Set up gameOverFont
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/CrackerWinter-VGLPl.ttf"));
-        scoreNumbersFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Ignotum-7BMMw.ttf"));
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BRLNSDB.ttf"));
+        scoreNumbersFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BRLNSDB.ttf"));
         FreeTypeFontParameter largeStyle = new FreeTypeFontGenerator.FreeTypeFontParameter();
         largeStyle.size = 60;
         largeStyle.color = Color.valueOf("#ffda05");
