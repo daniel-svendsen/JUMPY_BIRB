@@ -99,8 +99,8 @@ public class GameOverScreen implements Screen, GameOverListener {
 
         // Add the buttons to the table with padding
         float padding = 20f; // Adjust padding between buttons
-        buttonTable.add(playAgainButton).padBottom(padding).row();
-        buttonTable.add(exitButton).padBottom(padding).row();
+        buttonTable.add(playAgainButton).padBottom(padding).size(232f, 92f).row();
+        buttonTable.add(exitButton).padBottom(padding).size(232f, 92f).row();
 
         // Get the input handling working correctly with multiplexer
         configureInputMultiplexer();
