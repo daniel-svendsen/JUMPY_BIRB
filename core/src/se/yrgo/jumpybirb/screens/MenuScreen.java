@@ -32,9 +32,11 @@ public class MenuScreen implements Screen, MenuListener {
     private Texture backgroundTexture;
     private Texture normalButtonTexture;
     private Texture hardButtonTexture;
+    private Texture highscoreButtonTexture;
     private Texture exitButtonTexture;
     private Texture normalButtonSelectedTexture;
     private Texture hardButtonSelectedTexture;
+    private Texture highscoreButtonSelectedTexture;
     private Texture exitButtonSelectedTexture;
     private ImageButton playNormalButton;
     private ImageButton playHardButton;
@@ -65,11 +67,14 @@ public class MenuScreen implements Screen, MenuListener {
         // Textures for normal buttons
         normalButtonTexture = new Texture(Gdx.files.internal("NormalButton.png"));
         hardButtonTexture = new Texture(Gdx.files.internal("HardButton.png"));
+        highscoreButtonTexture = new Texture(Gdx.files.internal("Highscore.png"));
         exitButtonTexture = new Texture(Gdx.files.internal("ExitButton.png"));
+
 
         // Texture for selected buttons
         normalButtonSelectedTexture = new Texture(Gdx.files.internal("NormalButton-checked.png"));
         hardButtonSelectedTexture = new Texture(Gdx.files.internal("HardButton-checked.png"));
+        highscoreButtonSelectedTexture = new Texture(Gdx.files.internal("Highscore-checked.png"));
         exitButtonSelectedTexture = new Texture(Gdx.files.internal("ExitButton-checked.png"));
 
         // Initialize button styles and instances
