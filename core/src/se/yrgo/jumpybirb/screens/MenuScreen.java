@@ -67,6 +67,7 @@ public class MenuScreen implements Screen, MenuListener {
         highScoreButtonTexture = new Texture(Gdx.files.internal("HighScore.png"));
         exitButtonTexture = new Texture(Gdx.files.internal("ExitButton.png"));
 
+
         // Texture for selected buttons
         playButtonSelectedTexture = new Texture(Gdx.files.internal("Play-checked.png"));
         highScoreButtonSelectedTexture = new Texture(Gdx.files.internal("HighScore-checked.png"));
