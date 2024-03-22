@@ -30,6 +30,7 @@ public class HighScoreScreen implements Screen {
     @Override
     public void show() {
         backgroundTexture = new Texture("Bakgrund1.jpg");
+        batch = new SpriteBatch();
 
     }
 

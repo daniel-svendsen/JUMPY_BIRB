@@ -84,16 +84,13 @@ public class InputHandler extends InputAdapter {
 
     private void handleMenuScreen(int keycode) {
         switch (keycode) {
-            case Input.Keys.SPACE:
-                switchToPlayScreen();
-                break;
             case Input.Keys.UP:
                 navigateMenu(-1); // Move selection up
                 break;
             case Input.Keys.DOWN:
                 navigateMenu(1); // Move selection down
                 break;
-            case Input.Keys.ENTER:
+            case Input.Keys.ENTER, Input.Keys.SPACE:
                 triggerSelectedMenuButtonAction(); // Trigger action for selected button
                 break;
             default:
@@ -124,7 +121,7 @@ public class InputHandler extends InputAdapter {
                 selectedButtonIndexMainMenu = 0;
                 break;
             case 1:
-                screenSwitcher.switchToScreen(Screens.PLAY);
+                screenSwitcher.switchToScreen(Screens.HIGH_SCORE);
                 selectedButtonIndexMainMenu = 0;
                 break;
             case 2:
