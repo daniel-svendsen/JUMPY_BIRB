@@ -10,24 +10,27 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import se.yrgo.jumpybirb.JumpyBirb;
+import se.yrgo.jumpybirb.utils.ScreenSwitcher;
 import se.yrgo.jumpybirb.utils.Screens;
 
 /***
  * The screen that shows when you start up the application.
  */
-public class SplashScreen implements Screen {
+public final class SplashScreen implements Screen {
     private static final String TAG = SplashScreen.class.getSimpleName();
     private static final float FONT_SCALE = 4.0f;
+    private Timer.Task timer;
     private SpriteBatch batch;
     private BitmapFont font;
     private Texture backgroundTexture;
-    private static boolean playScreenDisplayed;
+    private static boolean playScreenDisplayed = false;
+    private ScreenSwitcher screenSwitcher;
 
     /**
      * Constructor
      */
-    public SplashScreen() {
-        playScreenDisplayed = false;
+    public SplashScreen(ScreenSwitcher screenSwitcher) {
+        this.screenSwitcher = screenSwitcher;
     }
 
     /***
@@ -48,6 +51,8 @@ public class SplashScreen implements Screen {
 
         // Set a timer to switch to the menu screen after 3 seconds
         setTimer();
+        // Cancel if MenuScreen is displayed
+        cancelTimer();
     }
 
 
@@ -78,6 +83,12 @@ public class SplashScreen implements Screen {
                 }
             }
         }, 3); // 3 seconds
+    }
+
+    public void cancelTimer() {
+        if (screenSwitcher.getCurrentScreen() == Screens.MENU) {
+            timer.cancel();
+        }
     }
 
     public static void setPlayScreenDisplayed(boolean playScreenDisplayed) {

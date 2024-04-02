@@ -50,7 +50,6 @@ public class GameOverScreen implements Screen, GameOverListener {
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont scoreFont;
     private BitmapFont scoreNumbersFont;
-    private BitmapFont playOrExitFont;
     private Texture backgroundTexture;
     private Texture gameOverHeaderImage;
     private final ScoreManager scoreManager;
@@ -62,10 +61,6 @@ public class GameOverScreen implements Screen, GameOverListener {
         screenSwitcher = JumpyBirb.getScreenSwitcher();
         scoreManager = ScoreManager.getInstance();
         highscoreManager = new HighscoreManager(); /// ????????
-    }
-
-    public void setInputHandler(InputHandler inputHandler) {
-        this.inputHandler = inputHandler;
     }
 
     /***
@@ -368,6 +363,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         exitButtonSelectedTexture.dispose();
         backgroundTexture.dispose();
         gameOverHeaderImage.dispose();
+        stage.dispose();
     }
 
 }

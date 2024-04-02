@@ -7,15 +7,24 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import se.yrgo.jumpybirb.JumpyBirb;
-import se.yrgo.jumpybirb.utils.HighscoreManager;
-import se.yrgo.jumpybirb.utils.InputHandler;
-import se.yrgo.jumpybirb.utils.ScoreManager;
+import se.yrgo.jumpybirb.utils.*;
+
+import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
+
 
 /***
  * The screen that shows highscore board.
  */
 public class HighScoreScreen implements Screen {
+    private static final String TAG = HighScoreScreen.class.getSimpleName();
+    private Texture backButtonSelectedTexture;
+    private ImageButton backButton;
+    private boolean isBackButtonClicked = false;
     private Texture backgroundTexture;
     private Texture highscoreTitle;
     private SpriteBatch batch;
@@ -33,7 +42,6 @@ public class HighScoreScreen implements Screen {
         batch = new SpriteBatch();
         font = new BitmapFont();
         highscoreManager = new HighscoreManager();
-
     }
 
     /***
@@ -42,11 +50,30 @@ public class HighScoreScreen implements Screen {
      */
     @Override
     public void show() {
+        Gdx.app.log(TAG, "show() called");
+
         backgroundTexture = new Texture("Background1.jpg");
         highscoreTitle = new Texture("Highscores.png");
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         font.getData().setScale(TEXT_FONT_SCALE);
 
+        // Texture for selected back button
+        backButtonSelectedTexture = new Texture(Gdx.files.internal("Back-checked.png"));
+
+        // Initialize back button
+        backButton = new ImageButton(new TextureRegionDrawable(backButtonSelectedTexture));
+        backButton.setSize(232f, 92f);
+        float buttonY = Gdx.graphics.getHeight() / 5.5f;
+        float buttonX = (Gdx.graphics.getWidth() - backButton.getWidth()) / 2f;
+        backButton.setPosition(buttonX, buttonY);
+
+        // Create click listener for the back button
+        backButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                isBackButtonClicked = true;
+            }
+        });
     }
 
     /***
@@ -59,6 +86,17 @@ public class HighScoreScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Check if the back button is clicked
+        if (Gdx.input.justTouched()) {
+            float touchX = Gdx.input.getX();
+            float touchY = (float) Gdx.graphics.getHeight() - Gdx.input.getY();
+
+            if (touchX >= backButton.getX() && touchX <= backButton.getX() + backButton.getWidth() &&
+                    touchY >= backButton.getY() && touchY <= backButton.getY() + backButton.getHeight()) {
+                isBackButtonClicked = true;
+            }
+        }
+
         // Render background image & header
         batch.begin();
         batch.draw(backgroundTexture, 0, 0);
@@ -67,7 +105,16 @@ public class HighScoreScreen implements Screen {
         // Render high scores
         printHighScores();
 
+        // Render back button
+        backButton.draw(batch, 1);
+
         batch.end();
+
+        // Switch to menu if the back button is clicked
+        if (isBackButtonClicked) {
+            JumpyBirb.getScreenSwitcher().switchToScreen(Screens.MENU);
+            isBackButtonClicked = false;
+        }
     }
 
     private void printHighScores() {
@@ -139,6 +186,10 @@ public class HighScoreScreen implements Screen {
      */
     @Override
     public void dispose() {
-        // could do something here maybe
+        batch.dispose();
+        font.dispose();
+        backButtonSelectedTexture.dispose();
+        highscoreTitle.dispose();
+        backgroundTexture.dispose();
     }
 }
