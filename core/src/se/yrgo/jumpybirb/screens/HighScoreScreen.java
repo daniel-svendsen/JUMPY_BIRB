@@ -27,7 +27,7 @@ public class HighScoreScreen implements Screen {
      * Constructor
      */
     public HighScoreScreen() {
-        backgroundTexture = new Texture("Bakgrund1.jpg");
+        backgroundTexture = new Texture("Background1.jpg");
         hishscoreTitle = new Texture(Gdx.files.internal("Highscores.png"));
         batch = new SpriteBatch();
         font = new BitmapFont();

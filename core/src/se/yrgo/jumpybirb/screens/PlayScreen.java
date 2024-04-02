@@ -77,7 +77,7 @@ public class PlayScreen implements Screen {
         SplashScreen.setPlayScreenDisplayed(true);
 
         batch = new SpriteBatch();
-        backgroundTexture = new Texture("Bakgrund1.jpg");
+        backgroundTexture = new Texture("Background1.jpg");
         birb = new Birb(66, 64);
         gameOverSound = Gdx.audio.newSound(Gdx.files.internal("death-sound.ogg"));
 

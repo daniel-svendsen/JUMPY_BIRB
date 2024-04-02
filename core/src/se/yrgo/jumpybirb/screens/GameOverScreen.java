@@ -133,7 +133,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         scoreNumbersFont = fontGenerator.generateFont(scoreNumbersStyle);
 
         // Set up background images
-        backgroundTexture = new Texture("Bakgrund1.jpg");
+        backgroundTexture = new Texture("BackGround1.jpg");
         gameOverHeaderImage = new Texture("GameOver.png");
     }
 
