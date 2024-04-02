@@ -59,9 +59,10 @@ public class InputHandler extends InputAdapter {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Screens currentScreen = screenSwitcher.getCurrentScreen();
+
         if (currentScreen == Screens.SPLASH) {
             screenSwitcher.switchToScreen(Screens.MENU);
-            Gdx.app.log(TAG, "TOUCH DOWN: Switched to MenuScreen");
+            Gdx.app.log(TAG, "Switched to MenuScreen");
         } else if (currentScreen == Screens.MENU) {
             Gdx.app.log(TAG, "Touch down event received at coordinates: (" + screenX + ", " + screenY + ")");
         } else if (currentScreen == Screens.PLAY) {
@@ -71,8 +72,11 @@ public class InputHandler extends InputAdapter {
                 makeBirbJump(playScreen);
                 Gdx.app.log(TAG, "Running state: Birb jumped");
             }
-
+        } else if (currentScreen == Screens.HIGH_SCORE) {
+            screenSwitcher.switchToScreen(Screens.HIGH_SCORE);
+            Gdx.app.log(TAG, "Switched to HighScoreScreen");
         }
+
         return false;
     }
 
@@ -139,8 +143,7 @@ public class InputHandler extends InputAdapter {
                 if (keycode == Input.Keys.ESCAPE) {
                     switchToMenuScreen();
                     Gdx.app.log(TAG, "Ready state: Switched to Menu Screen");
-                }
-                else if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER) {
+                } else if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER) {
                     playScreen.setCurrentGameState(PlayScreen.GameState.RUNNING);
                 }
                 break;
@@ -176,7 +179,7 @@ public class InputHandler extends InputAdapter {
         selectedButtonIndexGameOver += direction;
 
         if (selectedButtonIndexGameOver < 0 || selectedButtonIndexGameOver > 1) {
-            selectedButtonIndexGameOver= 0;
+            selectedButtonIndexGameOver = 0;
         }
         Gdx.app.log(TAG, "Selected button index: " + selectedButtonIndexGameOver);
     }

@@ -44,7 +44,6 @@ public class HighScoreScreen implements Screen {
     public void show() {
         backgroundTexture = new Texture("Background1.jpg");
         highscoreTitle = new Texture("Highscores.png");
-        highscoreManager.getHighscores();
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         font.getData().setScale(TEXT_FONT_SCALE);
 
@@ -66,7 +65,12 @@ public class HighScoreScreen implements Screen {
         batch.draw(highscoreTitle, 0, 90);
 
         // Render high scores
-        // Starting position for the high score list
+        printHighScores();
+
+        batch.end();
+    }
+
+    private void printHighScores() {
         Vector2 position = new Vector2(180, 600);
 
         // Ensure there are 10 spots in the high scores list
@@ -89,8 +93,6 @@ public class HighScoreScreen implements Screen {
             // Render score
             font.draw(batch, String.valueOf(score), position.x + 200, position.y - i * 30);
         }
-
-        batch.end();
     }
 
     /***

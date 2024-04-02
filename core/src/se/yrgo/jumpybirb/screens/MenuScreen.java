@@ -156,7 +156,7 @@ public class MenuScreen implements Screen, MenuListener {
         highScoreButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log(TAG, "Play Hard Button clicked");
+                Gdx.app.log(TAG, "Highscore Button clicked");
                 highScoreButtonClicked();
                 Gdx.input.setInputProcessor(inputHandler);
             }
@@ -232,11 +232,11 @@ public class MenuScreen implements Screen, MenuListener {
     }
 
     /**
-     * Action to be done if the "HARD" button is clicked.
+     * Action to be done if the "Highscore" button is clicked.
      */
     @Override
     public void highScoreButtonClicked() {
-        screenSwitcher.switchToScreen(Screens.PLAY);
+        screenSwitcher.switchToScreen(Screens.HIGH_SCORE);
         Gdx.app.log(TAG, "highScoreButtonClicked() called");
     }
 
