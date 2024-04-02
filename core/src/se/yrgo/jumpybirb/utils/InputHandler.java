@@ -72,9 +72,6 @@ public class InputHandler extends InputAdapter {
                 makeBirbJump(playScreen);
                 Gdx.app.log(TAG, "Running state: Birb jumped");
             }
-        } else if (currentScreen == Screens.HIGH_SCORE) {
-            screenSwitcher.switchToScreen(Screens.HIGH_SCORE);
-            Gdx.app.log(TAG, "Switched to HighScoreScreen");
         }
 
         return false;
