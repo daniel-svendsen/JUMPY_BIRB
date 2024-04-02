@@ -45,7 +45,7 @@ public enum Screens {
                 case MENU -> new MenuScreen(JumpyBirb.getInputHandler());
                 case PLAY -> new PlayScreen(JumpyBirb.getScreenSwitcher());
                 case GAME_OVER -> new GameOverScreen(JumpyBirb.getInputHandler());
-                case HIGH_SCORE -> new HighScoreScreen();
+                case HIGH_SCORE -> new HighScoreScreen(JumpyBirb.getInputHandler());
             };
 
             Gdx.app.log("Screens", "Instance of " + screen.getSimpleName() + " created successfully");

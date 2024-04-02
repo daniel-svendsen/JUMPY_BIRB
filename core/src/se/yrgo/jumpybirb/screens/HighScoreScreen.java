@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import se.yrgo.jumpybirb.JumpyBirb;
 import se.yrgo.jumpybirb.utils.HighscoreManager;
+import se.yrgo.jumpybirb.utils.InputHandler;
 import se.yrgo.jumpybirb.utils.ScoreManager;
 
 /***
@@ -16,19 +17,19 @@ import se.yrgo.jumpybirb.utils.ScoreManager;
  */
 public class HighScoreScreen implements Screen {
     private Texture backgroundTexture;
-    private Texture hishscoreTitle;
+    private Texture highscoreTitle;
     private SpriteBatch batch;
     private BitmapFont font;
     private ScoreManager scoreManager;
     private HighscoreManager highscoreManager;
+    private InputHandler inputHandler;
     private static final float TEXT_FONT_SCALE = 2.0f;
 
     /**
      * Constructor
      */
-    public HighScoreScreen() {
-        backgroundTexture = new Texture("Background1.jpg");
-        hishscoreTitle = new Texture(Gdx.files.internal("Highscores.png"));
+    public HighScoreScreen(InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
         batch = new SpriteBatch();
         font = new BitmapFont();
         highscoreManager = new HighscoreManager();
@@ -41,6 +42,8 @@ public class HighScoreScreen implements Screen {
      */
     @Override
     public void show() {
+        backgroundTexture = new Texture("Background1.jpg");
+        highscoreTitle = new Texture("Highscores.png");
         highscoreManager.getHighscores();
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         font.getData().setScale(TEXT_FONT_SCALE);
@@ -57,9 +60,10 @@ public class HighScoreScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Render background image
+        // Render background image & header
         batch.begin();
         batch.draw(backgroundTexture, 0, 0);
+        batch.draw(highscoreTitle, 0, 90);
 
         // Render high scores
         // Starting position for the high score list
