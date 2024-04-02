@@ -4,8 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import se.yrgo.jumpybirb.JumpyBirb;
+import se.yrgo.jumpybirb.utils.HighscoreManager;
 import se.yrgo.jumpybirb.utils.ScoreManager;
 
 /***
@@ -13,14 +16,23 @@ import se.yrgo.jumpybirb.utils.ScoreManager;
  */
 public class HighScoreScreen implements Screen {
     private Texture backgroundTexture;
+    private Texture hishscoreTitle;
     private SpriteBatch batch;
+    private BitmapFont font;
     private ScoreManager scoreManager;
+    private HighscoreManager highscoreManager;
+    private static final float TEXT_FONT_SCALE = 2.0f;
 
     /**
      * Constructor
      */
     public HighScoreScreen() {
-        // TODO add constructor
+        backgroundTexture = new Texture("Bakgrund1.jpg");
+        hishscoreTitle = new Texture(Gdx.files.internal("Highscores.png"));
+        batch = new SpriteBatch();
+        font = new BitmapFont();
+        highscoreManager = new HighscoreManager();
+
     }
 
     /***
@@ -29,8 +41,9 @@ public class HighScoreScreen implements Screen {
      */
     @Override
     public void show() {
-        backgroundTexture = new Texture("Bakgrund1.jpg");
-        batch = new SpriteBatch();
+        highscoreManager.getHighscores();
+        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        font.getData().setScale(TEXT_FONT_SCALE);
 
     }
 
@@ -47,6 +60,32 @@ public class HighScoreScreen implements Screen {
         // Render background image
         batch.begin();
         batch.draw(backgroundTexture, 0, 0);
+
+        // Render high scores
+        // Starting position for the high score list
+        Vector2 position = new Vector2(180, 600);
+
+        // Ensure there are 10 spots in the high scores list
+        for (int i = 0; i < 10; i++) {
+            String playerName = "-----";
+            int score = 0;
+
+            if (i < highscoreManager.getHighscores().size()) {
+                // Get player name and score if available
+                playerName = highscoreManager.getPlayerNameByIndex(i);
+                score = highscoreManager.getHighscoreByIndex(i);
+            }
+
+            // Render position number (left-aligned)
+            font.draw(batch, String.format("%d.", i + 1), position.x, position.y - i * 30);
+
+            // Render player name (limited to 4 characters)
+            font.draw(batch, playerName.substring(0, Math.min(playerName.length(), 4)), position.x + 50, position.y - i * 30);
+
+            // Render score
+            font.draw(batch, String.valueOf(score), position.x + 200, position.y - i * 30);
+        }
+
         batch.end();
     }
 

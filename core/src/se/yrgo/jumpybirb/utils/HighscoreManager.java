@@ -67,4 +67,32 @@ public class HighscoreManager {
         }
         return name.toString();
     }
+
+    // Method to get player name by index
+    public String getPlayerNameByIndex(int index) {
+        if (index >= 0 && index < highscores.size()) {
+            int count = 0;
+            for (String playerName : highscores.keySet()) {
+                if (count == index) {
+                    return playerName;
+                }
+                count++;
+            }
+        }
+        return "----"; // Placeholder if index is out of bounds
+    }
+
+    // Method to get score by index
+    public int getHighscoreByIndex(int index) {
+        if (index >= 0 && index < highscores.size()) {
+            int count = 0;
+            for (Integer score : highscores.values()) {
+                if (count == index) {
+                    return score;
+                }
+                count++;
+            }
+        }
+        return 0; // Placeholder if index is out of bounds
+    }
 }
