@@ -152,7 +152,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         batch.draw(backgroundTexture, 0, 0);
 
         // Draw GameOver image over background
-        batch.draw(gameOverHeaderImage, 0, 0);
+        batch.draw(gameOverHeaderImage, 0, 50 );
 
         //Draw this sessions score and the highscore
         drawGameOverScores();
