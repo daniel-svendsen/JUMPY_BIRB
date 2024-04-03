@@ -4,6 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import java.util.*;
 
+/***
+ * This class is responsible for managing the highscore top 10 list and saving
+ * it locally so that it's available when you run the game again after closing it.
+ * The list should always be sorted in DESC order of score.
+ * Check if score from game session (play) should enter the top 10 list.
+ * Player name from GameOverScreen should be saved with its score to the top 10 list.
+ */
 public class HighscoreManager {
     private static final int MAX_HIGHSCORES = 10;
     private HashMap<Integer, String> highscores;
