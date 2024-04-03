@@ -3,12 +3,13 @@ package se.yrgo.jumpybirb.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
+/***
+ * This class is responsible for keeping count of score during a game session (play).
+ */
 public class ScoreManager {
     private static final String PREFERENCES_KEY = "se.yrgo.jumpybirb.settings";
     private static final String HIGH_SCORE_KEY = "highScore";
-
     private static ScoreManager instance;
-
     private Preferences preferences;
     private int score;
     private int highScore;
