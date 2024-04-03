@@ -55,13 +55,13 @@ public class GameOverScreen implements Screen, GameOverListener {
     private Table gameOverScoresTable;
     private final ScoreManager scoreManager;
     private String playerName = ""; // Variable to store player name
-    private HighscoreManager highscoreManager; /// ???????
+    private HighscoreManager highscoreManager;
 
     public GameOverScreen(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
         screenSwitcher = JumpyBirb.getScreenSwitcher();
         scoreManager = ScoreManager.getInstance();
-        highscoreManager = new HighscoreManager(); /// ????????
+        highscoreManager = new HighscoreManager();
     }
 
     /***
@@ -109,25 +109,25 @@ public class GameOverScreen implements Screen, GameOverListener {
         addClickListenersToGameOverButtons();
 
         // Set up fonts
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BRLNSDB.ttf"));
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/AtlantisInternational-jen0.ttf"));
 
         FreeTypeFontParameter mediumStyle = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        mediumStyle.size = 42;
-        mediumStyle.color = Color.valueOf("#ffda05");
+        mediumStyle.size = 52;
+        mediumStyle.color = Color.valueOf("#ffffff");
         mediumStyle.borderColor = Color.valueOf("#522f22");
-        mediumStyle.borderWidth = 5;
+        mediumStyle.borderWidth = 2.5f;
 
         FreeTypeFontParameter smallStyle = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        smallStyle.size = 25;
-        smallStyle.color = Color.valueOf("#ffda05");
+        smallStyle.size = 52;
+        smallStyle.color = Color.valueOf("#ffffff");
         smallStyle.borderColor = Color.valueOf("#522f22");
-        smallStyle.borderWidth = 5;
+        smallStyle.borderWidth = 2.5f;
 
         FreeTypeFontParameter scoreNumbersStyle = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        scoreNumbersStyle.size = 25;
+        scoreNumbersStyle.size = 43;
         scoreNumbersStyle.color = Color.valueOf("#ffda05");
         scoreNumbersStyle.borderColor = Color.valueOf("#522f22");
-        scoreNumbersStyle.borderWidth = 5;
+        scoreNumbersStyle.borderWidth = 2;
 
         scoreFont = fontGenerator.generateFont(mediumStyle);
         scoreNumbersFont = fontGenerator.generateFont(scoreNumbersStyle);
@@ -152,7 +152,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         batch.draw(backgroundTexture, 0, 0);
 
         // Draw GameOver image over background
-        batch.draw(gameOverHeaderImage, 0, 0);
+        batch.draw(gameOverHeaderImage, 0, 50);
 
         //Draw this sessions score and the highscore
         drawGameOverScores();
@@ -160,7 +160,7 @@ public class GameOverScreen implements Screen, GameOverListener {
 
         // If the player's score reaches a certain threshold, prompt for name input
         int currentScore = scoreManager.getScore();
-        if (currentScore >= 200) {
+        if (currentScore >= 0) {
             handlePlayerNameInput();
         }
 
@@ -298,6 +298,8 @@ public class GameOverScreen implements Screen, GameOverListener {
 
     private void drawPlayerInputName() {
         // Draw player name at a specific position on the screen
+        scoreNumbersFont.draw(batch, "You got a highscore! ", Gdx.graphics.getWidth() / 5f,
+                Gdx.graphics.getHeight() / 1.9f, 0, Align.left, false);
         scoreNumbersFont.draw(batch, "Enter your name: " + playerName, Gdx.graphics.getWidth() / 5f,
                 Gdx.graphics.getHeight() / 2.1f, 0, Align.left, false);
     }
