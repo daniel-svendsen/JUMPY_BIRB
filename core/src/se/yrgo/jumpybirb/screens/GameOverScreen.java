@@ -156,7 +156,12 @@ public class GameOverScreen implements Screen, GameOverListener {
 
         //Draw this sessions score and the highscore
         drawGameOverScores();
-        handlePlayerNameInput();
+
+        // If the player's score reaches a certain threshold, prompt for name input
+        int currentScore = scoreManager.getScore();
+        if (currentScore >= 200) {
+            handlePlayerNameInput();
+        }
 
         // Draw player name on the screen
         drawPlayerInputName();
@@ -269,7 +274,8 @@ public class GameOverScreen implements Screen, GameOverListener {
     private void handlePlayerNameInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             if (!playerName.isEmpty()) { // If player name is not empty
-                highscoreManager.addHighscore(scoreManager.getScore()); // Add score to highscores
+                int currentScore = scoreManager.getScore();
+                highscoreManager.addHighscore(currentScore); // Add score to highscores
                 //scoreManager.resetScore(); // Reset score for next game
                 playerName = ""; // Reset player name for next game
                 // Go back to menu screen

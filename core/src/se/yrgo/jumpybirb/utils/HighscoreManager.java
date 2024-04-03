@@ -6,24 +6,24 @@ import java.util.*;
 
 public class HighscoreManager {
     private static final int MAX_HIGHSCORES = 10;
-    private HashMap<String, Integer> highscores;
+    private HashMap<Integer, String> highscores;
 
     public HighscoreManager() {
         highscores = new HashMap<>();
     }
 
-    public HashMap<String, Integer> getHighscores() {
+    public HashMap<Integer, String> getHighscores() {
         return highscores;
     }
 
     public void addHighscore(int score) {
         String name = getPlayerName();
 
-        highscores.put(name, score);
-        highscores = sortByValue(highscores);
+        highscores.put(score, name);
+        highscores = sortByKey(highscores);
 
         if (highscores.size() > MAX_HIGHSCORES) {
-            Iterator<Map.Entry<String, Integer>> iterator = highscores.entrySet().iterator();
+            Iterator<Map.Entry<Integer, String>> iterator = highscores.entrySet().iterator();
             int count = 0;
             while (iterator.hasNext() && count < MAX_HIGHSCORES) {
                 iterator.next();
@@ -33,19 +33,15 @@ public class HighscoreManager {
         }
     }
 
-    // Utility method to sort HashMap by values
-    private HashMap<String, Integer> sortByValue(HashMap<String, Integer> hm) {
-        List<Map.Entry<String, Integer>> list = new LinkedList<>(hm.entrySet());
+    // Utility method to sort HashMap by keys
+    private HashMap<Integer, String> sortByKey(HashMap<Integer, String> hm) {
+        LinkedHashMap<Integer, String> sortedMap = new LinkedHashMap<>();
 
-        // Sorting the list based on values
-        Collections.sort(list, (o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
+        hm.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+                .forEach(entry -> sortedMap.put(entry.getKey(), entry.getValue()));
 
-        // Maintaining insertion order with the help of LinkedList
-        HashMap<String, Integer> sortedHashMap = new LinkedHashMap<>();
-        for (Map.Entry<String, Integer> entry : list) {
-            sortedHashMap.put(entry.getKey(), entry.getValue());
-        }
-        return sortedHashMap;
+        return sortedMap;
     }
 
     // Method to get player name using LibGDX input
@@ -72,9 +68,9 @@ public class HighscoreManager {
     public String getPlayerNameByIndex(int index) {
         if (index >= 0 && index < highscores.size()) {
             int count = 0;
-            for (String playerName : highscores.keySet()) {
+            for (Integer score : highscores.keySet()) {
                 if (count == index) {
-                    return playerName;
+                    return highscores.get(score);
                 }
                 count++;
             }
@@ -86,7 +82,7 @@ public class HighscoreManager {
     public int getHighscoreByIndex(int index) {
         if (index >= 0 && index < highscores.size()) {
             int count = 0;
-            for (Integer score : highscores.values()) {
+            for (Integer score : highscores.keySet()) {
                 if (count == index) {
                     return score;
                 }
