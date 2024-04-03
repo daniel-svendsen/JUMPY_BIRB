@@ -14,8 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import se.yrgo.jumpybirb.JumpyBirb;
 import se.yrgo.jumpybirb.utils.*;
 
-import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
-
 
 /***
  * The screen that shows highscore board.
@@ -29,7 +27,6 @@ public class HighScoreScreen implements Screen {
     private Texture highscoreTitle;
     private SpriteBatch batch;
     private BitmapFont font;
-    private ScoreManager scoreManager;
     private HighscoreManager highscoreManager;
     private InputHandler inputHandler;
     private static final float TEXT_FONT_SCALE = 2.0f;
@@ -41,7 +38,7 @@ public class HighScoreScreen implements Screen {
         this.inputHandler = inputHandler;
         batch = new SpriteBatch();
         font = new BitmapFont();
-        highscoreManager = new HighscoreManager();
+        highscoreManager = HighscoreManager.getInstance();
     }
 
     /***
@@ -125,7 +122,7 @@ public class HighScoreScreen implements Screen {
             String playerName = "-----";
             int score = 0;
 
-            if (i < highscoreManager.getHighscores().size()) {
+            if (i < highscoreManager.getHighScoreBoard().size()) {
                 // Get player name and score if available
                 playerName = highscoreManager.getPlayerNameByIndex(i);
                 score = highscoreManager.getHighscoreByIndex(i);

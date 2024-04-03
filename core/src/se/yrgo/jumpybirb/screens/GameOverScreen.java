@@ -33,6 +33,7 @@ import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
  */
 public class GameOverScreen implements Screen, GameOverListener {
     private static final String TAG = SplashScreen.class.getSimpleName();
+    private GameOverScreen.HighScoreState currentState;
     private SpriteBatch batch;
     private Texture playAgainButtonTexture;
     private Texture exitButtonTexture;
@@ -40,13 +41,11 @@ public class GameOverScreen implements Screen, GameOverListener {
     private Texture exitButtonSelectedTexture;
     private ImageButton playAgainButton;
     private ImageButton exitButton;
-    private ImageButtonStyle playAgainButtonStyle;
-    private ImageButtonStyle exitButtonStyle;
     private boolean buttonStylesInitialized;
     int currentSelectedButtonIndex = 0;
     private Stage stage;
     private final ScreenSwitcher screenSwitcher;
-    private InputHandler inputHandler;
+    private final InputHandler inputHandler;
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont scoreFont;
     private BitmapFont scoreNumbersFont;
@@ -54,14 +53,28 @@ public class GameOverScreen implements Screen, GameOverListener {
     private Texture gameOverHeaderImage;
     private Table gameOverScoresTable;
     private final ScoreManager scoreManager;
+    private final int gameScore;
+    private final HighscoreManager highscoreManager;
     private String playerName = ""; // Variable to store player name
-    private HighscoreManager highscoreManager; /// ???????
+
+    /***
+     * This is used to tell which state the GameOverScreen is in.
+     */
+    public enum HighScoreState {
+        LOSER, WINNER
+    }
 
     public GameOverScreen(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
         screenSwitcher = JumpyBirb.getScreenSwitcher();
         scoreManager = ScoreManager.getInstance();
-        highscoreManager = new HighscoreManager(); /// ????????
+        highscoreManager = HighscoreManager.getInstance();
+        this.gameScore = scoreManager.getScore();
+        this.currentState = GameOverScreen.HighScoreState.LOSER;
+    }
+
+    public GameOverScreen.HighScoreState getCurrentState() {
+        return currentState;
     }
 
     /***
@@ -89,7 +102,6 @@ public class GameOverScreen implements Screen, GameOverListener {
 
         gameOverScoresTable = new Table();
         gameOverScoresTable.setPosition(Gdx.graphics.getWidth() / 10f, Gdx.graphics.getHeight() / 2f);
-
 
         // Create a table to hold the buttons
         Table buttonTable = new Table();
@@ -160,10 +172,9 @@ public class GameOverScreen implements Screen, GameOverListener {
 
         // If the player's score reaches a certain threshold, prompt for name input
         int currentScore = scoreManager.getScore();
-        if (currentScore >= 200) {
+        if (currentScore > highscoreManager.getLowestScore()) {
             handlePlayerNameInput();
         }
-
 
         // Draw player name on the screen
         drawPlayerInputName();
@@ -180,11 +191,11 @@ public class GameOverScreen implements Screen, GameOverListener {
 
     private void initializeButtonsAndStyles() {
         if (!buttonStylesInitialized) {
-            playAgainButtonStyle = new ImageButtonStyle();
+            ImageButtonStyle playAgainButtonStyle = new ImageButtonStyle();
             playAgainButtonStyle.up = new TextureRegionDrawable(playAgainButtonTexture);
             playAgainButtonStyle.checked = new TextureRegionDrawable(playAgainButtonSelectedTexture);
 
-            exitButtonStyle = new ImageButtonStyle();
+            ImageButtonStyle exitButtonStyle = new ImageButtonStyle();
             exitButtonStyle.up = new TextureRegionDrawable(exitButtonTexture);
             exitButtonStyle.checked = new TextureRegionDrawable(exitButtonSelectedTexture);
 
@@ -243,7 +254,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         gameOverScoresTable.clear();
 
         int currentScore = scoreManager.getScore();
-        int highScore = scoreManager.getHighScore();
+        int topHighScore = highscoreManager.getHighestScore();
 
         Table table = new Table();
         table.setPosition(Gdx.graphics.getWidth() / 10f, Gdx.graphics.getHeight() / 2f); // Adjust position as needed
@@ -253,7 +264,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         table.add(highScoreLabel).align(Align.left);
 
         // Add high score value with scoreNumbersFont to the table
-        Label highScoreValueLabel = new Label(String.valueOf(highScore), new Label.LabelStyle(scoreNumbersFont, Color.WHITE));
+        Label highScoreValueLabel = new Label(String.valueOf(topHighScore), new Label.LabelStyle(scoreNumbersFont, Color.WHITE));
         table.add(highScoreValueLabel).align(Align.left).padLeft(10).row();
 
         // Add padding between columns
