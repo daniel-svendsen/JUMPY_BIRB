@@ -50,9 +50,9 @@ public class GameOverScreen implements Screen, GameOverListener {
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont scoreFont;
     private BitmapFont scoreNumbersFont;
-    private BitmapFont playOrExitFont;
     private Texture backgroundTexture;
     private Texture gameOverHeaderImage;
+    private Table gameOverScoresTable;
     private final ScoreManager scoreManager;
     private String playerName = ""; // Variable to store player name
     private HighscoreManager highscoreManager; /// ???????
@@ -62,10 +62,6 @@ public class GameOverScreen implements Screen, GameOverListener {
         screenSwitcher = JumpyBirb.getScreenSwitcher();
         scoreManager = ScoreManager.getInstance();
         highscoreManager = new HighscoreManager(); /// ????????
-    }
-
-    public void setInputHandler(InputHandler inputHandler) {
-        this.inputHandler = inputHandler;
     }
 
     /***
@@ -90,6 +86,10 @@ public class GameOverScreen implements Screen, GameOverListener {
 
         // Create the stage for allowing buttons to be clickable with ClickListeners
         stage = new Stage(new ScreenViewport());
+
+        gameOverScoresTable = new Table();
+        gameOverScoresTable.setPosition(Gdx.graphics.getWidth() / 10f, Gdx.graphics.getHeight() / 2f);
+
 
         // Create a table to hold the buttons
         Table buttonTable = new Table();
@@ -157,11 +157,13 @@ public class GameOverScreen implements Screen, GameOverListener {
         //Draw this sessions score and the highscore
         drawGameOverScores();
 
+
         // If the player's score reaches a certain threshold, prompt for name input
         int currentScore = scoreManager.getScore();
         if (currentScore >= 200) {
             handlePlayerNameInput();
         }
+
 
         // Draw player name on the screen
         drawPlayerInputName();
@@ -238,6 +240,8 @@ public class GameOverScreen implements Screen, GameOverListener {
     }
 
     private void drawGameOverScores() {
+        gameOverScoresTable.clear();
+
         int currentScore = scoreManager.getScore();
         int highScore = scoreManager.getHighScore();
 
@@ -374,6 +378,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         exitButtonSelectedTexture.dispose();
         backgroundTexture.dispose();
         gameOverHeaderImage.dispose();
+        stage.dispose();
     }
 
 }

@@ -23,7 +23,6 @@ public final class ScreenSwitcher {
     public ScreenSwitcher(JumpyBirb gameSession) {
         this.gameSession = gameSession;
         this.currentScreen = Screens.SPLASH;
-        //playScreen = new PlayScreen(JumpyBirb.getScreenSwitcher());
         this.playScreen = new PlayScreen(this);
     }
 

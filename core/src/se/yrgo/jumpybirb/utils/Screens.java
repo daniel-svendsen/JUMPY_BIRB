@@ -41,7 +41,7 @@ public enum Screens {
     public Screen getScreenInstance() {
         try {
             Screen instance = switch (this) {
-                case SPLASH -> new SplashScreen();
+                case SPLASH -> new SplashScreen(JumpyBirb.getScreenSwitcher());
                 case MENU -> new MenuScreen(JumpyBirb.getInputHandler());
                 case PLAY -> new PlayScreen(JumpyBirb.getScreenSwitcher());
                 case GAME_OVER -> new GameOverScreen(JumpyBirb.getInputHandler());

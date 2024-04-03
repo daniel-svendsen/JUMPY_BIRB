@@ -5,11 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import se.yrgo.jumpybirb.JumpyBirb;
+import se.yrgo.jumpybirb.screens.HighScoreScreen;
 import se.yrgo.jumpybirb.screens.PlayScreen;
+import se.yrgo.jumpybirb.screens.SplashScreen;
 
 public class InputHandler extends InputAdapter {
     private static final String TAG = InputHandler.class.getSimpleName();
-
     private final ScreenSwitcher screenSwitcher;
     private final JumpyBirb gameSession;
     private MenuListener menuListener;
@@ -62,6 +63,7 @@ public class InputHandler extends InputAdapter {
 
         if (currentScreen == Screens.SPLASH) {
             screenSwitcher.switchToScreen(Screens.MENU);
+            SplashScreen.setPlayScreenDisplayed(true);
             Gdx.app.log(TAG, "Switched to MenuScreen");
         } else if (currentScreen == Screens.MENU) {
             Gdx.app.log(TAG, "Touch down event received at coordinates: (" + screenX + ", " + screenY + ")");
@@ -73,13 +75,13 @@ public class InputHandler extends InputAdapter {
                 Gdx.app.log(TAG, "Running state: Birb jumped");
             }
         }
-
         return false;
     }
 
     private void handleSplashScreen(int keycode) {
         if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER) {
             switchToMenuScreen();
+            SplashScreen.setPlayScreenDisplayed(true);
         }
     }
 
