@@ -34,17 +34,28 @@ public class HighscoreManager {
     /**
      * This method is initially called to check if the player
      * has a score that qualifies to be on the highScoreBoard.
-     * If the score is high enough, this method calls saveHighScores().
-     *
+     * The score is not considered to be qualified if the score
+     * value already exists in highScoreBoard.
      * @param score from the player's game session
      */
     public boolean isScoreQualifiedForHighScore(int score) {
         Gdx.app.log(TAG, "Checking if score is a high score. Score: " + score);
+
+        // Check if the score already exists in the highScoreBoard
+        if (highScoreBoard.containsKey(score)) {
+            // If the score already exists, it's not qualified
+            Gdx.app.log(TAG, "Score already exists in the highScoreBoard. Score: " + score);
+            return false;
+        }
+        // Check if there is space in the highScoreBoard
         if (highScoreBoard.size() < HIGHSCORE_ENTRIES) {
+            // If there is space, any positive score is considered qualified
             return score > 0;
         }
+        // If the score is higher than the lowest score in the highScoreBoard, it is qualified
         return score > getLowestScore();
     }
+
 
     /**
      * When adding a new highscore entry, it will be sorted in

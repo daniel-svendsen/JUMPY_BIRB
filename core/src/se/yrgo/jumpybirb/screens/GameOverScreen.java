@@ -251,13 +251,16 @@ public class GameOverScreen implements Screen, GameOverListener {
             @Override
             public boolean keyTyped(InputEvent event, char character) {
                 if (Character.isLetterOrDigit(character)) {
-                    // Append the character to the playerName variable
-                    Gdx.app.log(TAG, "Character typed: " + character); // Log the typed character
-                    playerName += character;
-                    return true; // Consume the event
+                    // Check if playerName has reached maximum length
+                    if (playerName.length() < playerNameInputTextField.getMaxLength()) {
+                        // Append the character to the playerName variable
+                        Gdx.app.log(TAG, "Character typed: " + character); // Log the typed character
+                        playerName += character;
+                        return true; // Consume the event
+                    }
                 } else if (character == '\b') {
                     Gdx.app.log(TAG, "Backspace key pressed"); // Log the Backspace key press event
-                    // Handle backspace (optional)
+                    // Handle backspace by removing the last character from playerName
                     if (!playerName.isEmpty()) {
                         playerName = playerName.substring(0, playerName.length() - 1);
                     }
@@ -408,7 +411,6 @@ public class GameOverScreen implements Screen, GameOverListener {
     private void drawGameOverScores() {
         gameOverScoresTable.clear();
 
-        int currentScore = scoreManager.getScore();
         int topHighScore = highscoreManager.getHighestScore();
 
         Table table = new Table();
@@ -433,7 +435,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         table.add(yourScoreLabel).align(Align.left);
 
         // Add current score value with scoreNumbersFont to the table
-        Label yourScoreValueLabel = new Label(String.valueOf(currentScore), new Label.LabelStyle(scoreNumbersFont, Color.WHITE));
+        Label yourScoreValueLabel = new Label(String.valueOf(gameScore), new Label.LabelStyle(scoreNumbersFont, Color.WHITE));
         table.add(yourScoreValueLabel).align(Align.left).padLeft(10).row();
 
         table.pack(); // Pack the table to adjust its size according to its content

@@ -168,6 +168,9 @@ public class InputHandler extends InputAdapter {
                     Input.Keys.ENTER:
                 triggerSelectedGameOverButtonAction();
                 break;
+            case Input.Keys.ESCAPE:
+                screenSwitcher.switchToScreen(Screens.MENU);
+                break;
             default:
                 navigateMenu(0);
                 break;
