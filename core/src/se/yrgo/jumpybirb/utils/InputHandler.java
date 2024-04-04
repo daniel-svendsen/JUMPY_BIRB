@@ -206,7 +206,7 @@ public class InputHandler extends InputAdapter {
     }
 
     private void handleHighScoreScreen(int keycode) {
-        if (keycode == Input.Keys.ESCAPE) {
+        if (keycode == Input.Keys.ESCAPE || keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER) {
             screenSwitcher.switchToScreen(Screens.MENU);
         }
     }
