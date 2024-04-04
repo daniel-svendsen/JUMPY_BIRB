@@ -415,7 +415,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         table.setPosition(Gdx.graphics.getWidth() / 10f, Gdx.graphics.getHeight() / 2f); // Adjust position as needed
 
         // Add "High Score" label with scoreFont to the table
-        Label highScoreLabel = new Label("High Score: ", new Label.LabelStyle(scoreFont, Color.WHITE));
+        Label highScoreLabel = new Label("Top Score: ", new Label.LabelStyle(scoreFont, Color.WHITE));
         table.add(highScoreLabel).align(Align.left);
 
         // Add high score value with scoreNumbersFont to the table
@@ -429,7 +429,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         table.row().height(scoreNumbersFont.getXHeight() * 3);
 
         // Add "Your score" label with scoreFont to the table
-        Label yourScoreLabel = new Label("Your Score: ", new Label.LabelStyle(scoreFont, Color.WHITE));
+        Label yourScoreLabel = new Label("You Scored: ", new Label.LabelStyle(scoreFont, Color.WHITE));
         table.add(yourScoreLabel).align(Align.left);
 
         // Add current score value with scoreNumbersFont to the table

@@ -164,8 +164,8 @@ public class InputHandler extends InputAdapter {
             case Input.Keys.DOWN:
                 navigateGameOverMenu(1); // Move selection down
                 break;
-            case Input.Keys.SPACE:
-                // Additional check for SPACE key for existing functionality
+            case Input.Keys.SPACE,
+                    Input.Keys.ENTER:
                 triggerSelectedGameOverButtonAction();
                 break;
             default:

@@ -158,8 +158,6 @@ public class PlayScreen implements Screen {
     }
 
     private void updateReadyState(float delta) {
-        Gdx.app.log(TAG, "GameState: READY");
-
         // Reset score from before
         scoreManager.reset();
 
@@ -223,8 +221,6 @@ public class PlayScreen implements Screen {
     }
 
     private void updateRunningState(float delta) {
-        Gdx.app.log(TAG, "GameState: RUNNING");
-
         // Update game logic while in the running state (e.g., birb movement, obstacle movement)
         // Update birb
         birb.update(delta);
@@ -271,8 +267,6 @@ public class PlayScreen implements Screen {
 
         // End batch
         batch.end();
-
-        Gdx.app.log(TAG, "Camera position: " + camera.position.x + ", " + camera.position.y);
 
         // Check for game over after drawing obstacles
         if (checkForGameOver(birb)) {
