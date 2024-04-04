@@ -51,6 +51,7 @@ public class GameOverScreen implements Screen, GameOverListener {
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont scoreFont;
     private BitmapFont scoreNumbersFont;
+    private BitmapFont newHighScoreFont;
     private BitmapFont inputPlayerNameFont;
     private Texture backgroundTexture;
     private Texture gameOverHeaderImage;
@@ -123,26 +124,32 @@ public class GameOverScreen implements Screen, GameOverListener {
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/AtlantisInternational-jen0.ttf"));
 
         FreeTypeFontParameter mediumStyle = new FreeTypeFontParameter();
-        mediumStyle.size = 42;
-        mediumStyle.color = Color.valueOf("#ffda05");
+        mediumStyle.size = 52;
+        mediumStyle.color = Color.valueOf("#ffffff");
         mediumStyle.borderColor = Color.valueOf("#522f22");
-        mediumStyle.borderWidth = 2;
+        mediumStyle.borderWidth = 2.5f;
 
         FreeTypeFontParameter scoreNumbersStyle = new FreeTypeFontParameter();
-        scoreNumbersStyle.size = 38;
+        scoreNumbersStyle.size = 43;
         scoreNumbersStyle.color = Color.valueOf("#ffda05");
         scoreNumbersStyle.borderColor = Color.valueOf("#522f22");
         scoreNumbersStyle.borderWidth = 2;
 
-        // Define the font parameters
+        FreeTypeFontParameter newHighScoreStyle = new FreeTypeFontParameter();
+        newHighScoreStyle.size = 43;
+        newHighScoreStyle.color = Color.valueOf("#ffffff");
+        newHighScoreStyle.borderColor = Color.valueOf("#522f22");
+        newHighScoreStyle.borderWidth = 2;
+
+        // playerInput name fontStyle
         FreeTypeFontParameter playerStyle = new FreeTypeFontParameter();
         playerStyle.size = 38; // Set the font size
 
-        // Generate the BitmapFont
-        inputPlayerNameFont = fontGenerator.generateFont(playerStyle);
-
+        // Generate the BitmapFonts
         scoreFont = fontGenerator.generateFont(mediumStyle);
         scoreNumbersFont = fontGenerator.generateFont(scoreNumbersStyle);
+        newHighScoreFont = fontGenerator.generateFont(newHighScoreStyle);
+        inputPlayerNameFont = fontGenerator.generateFont(playerStyle);
 
         loadCursor();
         setupTextField();
@@ -189,7 +196,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         // Set up text field
         playerNameInputTextField = new TextField("", textFieldStyle);
         playerNameInputTextField.setSize(100, 40); // Adjust size as needed
-        playerNameInputTextField.setPosition(Gdx.graphics.getWidth() / 1.5f, Gdx.graphics.getHeight() / 2.3f); // Adjust position as needed
+        playerNameInputTextField.setPosition(Gdx.graphics.getWidth() / 1.4f, Gdx.graphics.getHeight() / 2.6f); // Adjust position as needed
         playerNameInputTextField.getStyle().background.setLeftWidth(10); // Set left margin
         playerNameInputTextField.getStyle().background.setRightWidth(10); // Set right margin
         playerNameInputTextField.setAlignment(Align.center); // Center align text
@@ -269,7 +276,7 @@ public class GameOverScreen implements Screen, GameOverListener {
 
     private void setupLabelForTextField() {
         // Draw the text "Enter your name" at a specific position on the screen
-        playerNameMessageLabel = new Label("Enter your name: ", new Label.LabelStyle(scoreNumbersFont, Color.WHITE));
+        playerNameMessageLabel = new Label("Enter your name: ", new Label.LabelStyle(newHighScoreFont, Color.WHITE));
         float labelWidth = playerNameMessageLabel.getWidth();
         float labelHeight = playerNameMessageLabel.getHeight();
         float textFieldHeight = playerNameInputTextField.getHeight();
@@ -277,6 +284,9 @@ public class GameOverScreen implements Screen, GameOverListener {
         // Position the label to the left of the text field
         float labelX = playerNameInputTextField.getX() - labelWidth - 10; // Adjust 10 as needed for spacing
         float labelY = playerNameInputTextField.getY() + (textFieldHeight - labelHeight) / 2f;
+
+        Gdx.app.log(TAG, "Label Y Position: " + labelY); // Log the Y position of the label
+
         playerNameMessageLabel.setPosition(labelX, labelY);
 
         // Add the label to the stage
@@ -305,6 +315,13 @@ public class GameOverScreen implements Screen, GameOverListener {
         //Draw this sessions score and the highscore
         batch.begin();
         drawGameOverScores();
+
+        // Draw the "You got a highscore!" text if playerNameInputTextField and playerNameMessageLabel are visible
+        if (playerNameInputTextField.isVisible() && playerNameMessageLabel.isVisible()) {
+            newHighScoreFont.draw(batch, "You got a highscore! ", Gdx.graphics.getWidth() / 5.1f,
+                    Gdx.graphics.getHeight() / 2.08f, 0, Align.left, false);
+        }
+
         batch.end();
 
         // Draw the stage
@@ -382,7 +399,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         int topHighScore = highscoreManager.getHighestScore();
 
         Table table = new Table();
-        table.setPosition(Gdx.graphics.getWidth() / 10f, Gdx.graphics.getHeight() / 2f); // Adjust position as needed
+        table.setPosition(Gdx.graphics.getWidth() / 11.5f, Gdx.graphics.getHeight() / 2.1f); // Adjust position as needed
 
         // Add "High Score" label with scoreFont to the table
         Label highScoreLabel = new Label("Top Score: ", new Label.LabelStyle(scoreFont, Color.WHITE));
