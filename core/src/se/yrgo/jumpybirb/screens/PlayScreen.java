@@ -160,7 +160,7 @@ public class PlayScreen implements Screen {
     private void updateReadyState(float delta) {
         Gdx.app.log(TAG, "GameState: READY");
 
-        // Reset score
+        // Reset score from before
         scoreManager.reset();
 
         // Render the assets without updating their positions
