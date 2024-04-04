@@ -76,34 +76,6 @@ public class GameOverScreen implements Screen, GameOverListener {
         this.currentState = GameOverScreen.HighScoreState.NEUTRAL;
     }
 
-    public GameOverScreen.HighScoreState getCurrentState() {
-        return currentState;
-    }
-
-    public void setCurrentState(HighScoreState currentState) {
-        this.currentState = currentState;
-    }
-
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public ScoreManager getScoreManager() {
-        return scoreManager;
-    }
-
-    public HighscoreManager getHighscoreManager() {
-        return highscoreManager;
-    }
-
-    public TextField getPlayerNameInputTextField() {
-        return playerNameInputTextField;
-    }
-
-    public Stage getStage() {
-        return stage;
-    }
-
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
