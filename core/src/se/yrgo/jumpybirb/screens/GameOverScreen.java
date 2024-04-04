@@ -281,9 +281,8 @@ public class GameOverScreen implements Screen, GameOverListener {
             if (!playerName.isEmpty()) {
                 // Here, you can save the player name and score to the high score manager
                 highscoreManager.checkIfScoreIsHighScore(gameScore, playerName); // Pass player name here
-                setPlayerName("");
                 setCurrentState(GameOverScreen.HighScoreState.NEUTRAL);
-                Gdx.app.log(TAG, "Player Name Entered for High Score: " + playerName);
+                setPlayerName("");
             } else {
                 // Handle the case where the player name is empty
                 // This could be due to invalid input or other reasons

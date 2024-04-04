@@ -8,7 +8,7 @@ import java.util.*;
 
 @SuppressWarnings("java:S6548")
 public class HighscoreManager {
-    public static final String TAG = ScreenSwitcher.class.getSimpleName();
+    public static final String TAG = HighscoreManager.class.getSimpleName();
     private static final int HIGHSCORE_ENTRIES = 10;
     private TreeMap<Integer, String> highScoreBoard;
     private static final String PREF_FILE_NAME = "se.yrgo.jumpybirb.settings";
@@ -36,6 +36,7 @@ public class HighscoreManager {
      * This method is initially called to check if the player
      * has a score that qualifies to be on the highScoreBoard.
      * If the score is high enough, this method calls saveHighScores().
+     *
      * @param score from the player's game session
      */
     public void checkIfScoreIsHighScore(int score, String playerName) {
@@ -49,10 +50,10 @@ public class HighscoreManager {
     /**
      * When adding a new highscore entry, it will be sorted in
      * the correct position using the sortByKey() method.
+     *
      * @param score
      */
     public void addHighscore(int score, String playerName) {
-
         highScoreBoard.put(score, playerName);
 
         // Remove any excess entries beyond the HIGHSCORE_ENTRIES limit
@@ -117,10 +118,7 @@ public class HighscoreManager {
      */
     public int getLowestScore() {
         if (!highScoreBoard.isEmpty()) {
-            return highScoreBoard.keySet().stream()
-                    .skip((long) HIGHSCORE_ENTRIES - 1)
-                    .findFirst().
-                    orElse(0);
+            return highScoreBoard.lastKey(); // Return the last key for the lowest score
         }
         return 0;
     }
@@ -131,7 +129,7 @@ public class HighscoreManager {
      */
     public int getHighestScore() {
         if (!highScoreBoard.isEmpty()) {
-            return highScoreBoard.lastKey();
+            return highScoreBoard.firstKey();
         }
         return 0;
     }
