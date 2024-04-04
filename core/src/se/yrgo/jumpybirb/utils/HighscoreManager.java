@@ -1,7 +1,6 @@
 package se.yrgo.jumpybirb.utils;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 
 import java.util.*;
@@ -39,12 +38,12 @@ public class HighscoreManager {
      *
      * @param score from the player's game session
      */
-    public void checkIfScoreIsHighScore(int score, String playerName) {
-        Gdx.app.log(TAG, "Checking if score is a high score. Score: " + score + ", Player Name: " + playerName);
-        if (score > getLowestScore()) {
-            addHighscore(score, playerName);
-            saveHighScores();
+    public boolean isScoreQualifiedForHighScore(int score) {
+        Gdx.app.log(TAG, "Checking if score is a high score. Score: " + score);
+        if (highScoreBoard.size() < HIGHSCORE_ENTRIES) {
+            return score > 0;
         }
+        return score > getLowestScore();
     }
 
     /**

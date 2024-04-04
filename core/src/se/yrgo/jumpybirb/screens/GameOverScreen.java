@@ -185,14 +185,12 @@ public class GameOverScreen implements Screen, GameOverListener {
         gameOverHeaderImage = new Texture("GameOver.png");
 
         // If the player's score reaches a certain threshold, prompt for name input
-        Gdx.app.log(TAG, "Current Score: " + gameScore);
-        int lowestScore = highscoreManager.getLowestScore();
-        Gdx.app.log(TAG, "Current Score: " + lowestScore);
-        if (gameScore> highscoreManager.getLowestScore()) {
+        if (highscoreManager.isScoreQualifiedForHighScore(gameScore)) {
             currentState = HighScoreState.WINNER;
             // Update input field and label
             Gdx.app.log(TAG, "Showing input field and label");
             playerNameInputTextField.setVisible(true);
+            stage.setKeyboardFocus(playerNameInputTextField);
             playerNameMessageLabel.setVisible(true);
         } else {
             currentState = HighScoreState.NEUTRAL;
@@ -274,14 +272,16 @@ public class GameOverScreen implements Screen, GameOverListener {
         try {
             // Get the player name from the GameOverScreen or wherever it's stored
             Gdx.app.log(TAG, "Player Name Entered for High Score: " + playerName);
-            Gdx.app.log(TAG, "Score Manager: " + scoreManager);
             Gdx.app.log(TAG, "Score to be saved to highScore: " + scoreManager.getScore());
-            Gdx.app.log(TAG, "HighScoreManager: " + highscoreManager);
 
-            if (!playerName.isEmpty()) {
+            if (!playerName.isEmpty() && highscoreManager.isScoreQualifiedForHighScore(gameScore)) {
                 // Here, you can save the player name and score to the high score manager
-                highscoreManager.checkIfScoreIsHighScore(gameScore, playerName); // Pass player name here
-                setCurrentState(GameOverScreen.HighScoreState.NEUTRAL);
+                highscoreManager.addHighscore(gameScore, playerName);
+                currentState = HighScoreState.NEUTRAL;
+                Gdx.app.log(TAG, "Now hiding input field and label again");
+                playerNameInputTextField.setVisible(false);
+                playerNameMessageLabel.setVisible(false);
+                stage.setKeyboardFocus(null);
                 setPlayerName("");
             } else {
                 // Handle the case where the player name is empty
