@@ -3,6 +3,7 @@ package se.yrgo.jumpybirb.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import se.yrgo.jumpybirb.JumpyBirb;
 import se.yrgo.jumpybirb.screens.GameOverScreen;
 import se.yrgo.jumpybirb.screens.PlayScreen;
@@ -155,13 +156,6 @@ public class InputHandler extends InputAdapter {
     }
 
     private void handleGameOverScreen(int keycode) {
-        GameOverScreen gameOverScreen = (GameOverScreen) gameSession.getScreen();
-
-        if (gameOverScreen.getCurrentState() == GameOverScreen.HighScoreState.WINNER) {
-            handlePlayerNameInput();
-        } else {
-
-        }
 
         switch (keycode) {
             case Input.Keys.UP:
@@ -170,7 +164,8 @@ public class InputHandler extends InputAdapter {
             case Input.Keys.DOWN:
                 navigateGameOverMenu(1); // Move selection down
                 break;
-            case Input.Keys.SPACE, Input.Keys.ENTER:
+            case Input.Keys.SPACE:
+                // Additional check for SPACE key for existing functionality
                 triggerSelectedGameOverButtonAction();
                 break;
             default:
@@ -178,31 +173,6 @@ public class InputHandler extends InputAdapter {
                 break;
         }
     }
-
-    private void handlePlayerNameInput() {
-        GameOverScreen gameOverScreen = (GameOverScreen) gameSession.getScreen();
-        String playerName = gameOverScreen.getPlayerName();
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            if (!playerName.isEmpty()) {
-                int currentScore = gameOverScreen.getScoreManager().getScore();
-                gameOverScreen.getHighscoreManager().addHighscore(currentScore);
-                gameOverScreen.setPlayerName(""); // Reset player name for next game
-                gameOverScreen.setCurrentState(GameOverScreen.HighScoreState.NEUTRAL);
-            }
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE) && !playerName.isEmpty()) {
-            playerName = playerName.substring(0, playerName.length() - 1); // Remove last character
-        } else if (playerName.length() < 4) { // Limit player name to 4 characters
-            for (int i = 29; i >= 0; i--) {
-                if (Gdx.input.isKeyJustPressed(Input.Keys.A + i) && playerName.length() < 4) {
-                    playerName += (char) ('A' + i); // Append character based on key pressed
-                }
-            }
-        }
-        // Update the player name in the GameOverScreen
-        gameOverScreen.setPlayerName(playerName);
-    }
-
 
     private void navigateGameOverMenu(int direction) {
         selectedButtonIndexGameOver += direction;

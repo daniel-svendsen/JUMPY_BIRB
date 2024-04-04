@@ -1,18 +1,18 @@
 package se.yrgo.jumpybirb.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -31,10 +31,9 @@ import static com.badlogic.gdx.scenes.scene2d.ui.TextField.*;
  * Always return to menu screen after this screen.
  */
 public class GameOverScreen implements Screen, GameOverListener {
-    private static final String TAG = SplashScreen.class.getSimpleName();
+    private static final String TAG = GameOverScreen.class.getSimpleName();
     private GameOverScreen.HighScoreState currentState;
     private TextField playerNameInputTextField;
-    private TextFieldStyle textFieldStyle;
     private Label playerNameMessageLabel;
     private TextureRegionDrawable cursor;
     private SpriteBatch batch;
@@ -97,6 +96,14 @@ public class GameOverScreen implements Screen, GameOverListener {
         return highscoreManager;
     }
 
+    public TextField getPlayerNameInputTextField() {
+        return playerNameInputTextField;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
@@ -145,23 +152,23 @@ public class GameOverScreen implements Screen, GameOverListener {
         addClickListenersToGameOverButtons();
 
         // Set up fonts
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BRLNSDB.ttf"));
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/AtlantisInternational-jen0.ttf"));
 
         FreeTypeFontParameter mediumStyle = new FreeTypeFontParameter();
         mediumStyle.size = 42;
         mediumStyle.color = Color.valueOf("#ffda05");
         mediumStyle.borderColor = Color.valueOf("#522f22");
-        mediumStyle.borderWidth = 5;
+        mediumStyle.borderWidth = 2;
 
         FreeTypeFontParameter scoreNumbersStyle = new FreeTypeFontParameter();
-        scoreNumbersStyle.size = 25;
+        scoreNumbersStyle.size = 38;
         scoreNumbersStyle.color = Color.valueOf("#ffda05");
         scoreNumbersStyle.borderColor = Color.valueOf("#522f22");
-        scoreNumbersStyle.borderWidth = 5;
+        scoreNumbersStyle.borderWidth = 2;
 
         // Define the font parameters
         FreeTypeFontParameter playerStyle = new FreeTypeFontParameter();
-        playerStyle.size = 25; // Set the font size
+        playerStyle.size = 38; // Set the font size
 
         // Generate the BitmapFont
         inputPlayerNameFont = fontGenerator.generateFont(playerStyle);
@@ -176,6 +183,23 @@ public class GameOverScreen implements Screen, GameOverListener {
         // Set up background images
         backgroundTexture = new Texture("BackGround1.jpg");
         gameOverHeaderImage = new Texture("GameOver.png");
+
+        // If the player's score reaches a certain threshold, prompt for name input
+        Gdx.app.log(TAG, "Current Score: " + gameScore);
+        int lowestScore = highscoreManager.getLowestScore();
+        Gdx.app.log(TAG, "Current Score: " + lowestScore);
+        if (gameScore> highscoreManager.getLowestScore()) {
+            currentState = HighScoreState.WINNER;
+            // Update input field and label
+            Gdx.app.log(TAG, "Showing input field and label");
+            playerNameInputTextField.setVisible(true);
+            playerNameMessageLabel.setVisible(true);
+        } else {
+            currentState = HighScoreState.NEUTRAL;
+            Gdx.app.log(TAG, "Hiding input field and label");
+            playerNameInputTextField.setVisible(false);
+            playerNameMessageLabel.setVisible(false);
+        }
     }
 
     private void loadCursor() {
@@ -186,7 +210,7 @@ public class GameOverScreen implements Screen, GameOverListener {
 
     private void setupTextField() {
         // Create text field style
-        textFieldStyle = new TextFieldStyle();
+        TextFieldStyle textFieldStyle = new TextFieldStyle();
 
         textFieldStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("1x1-transparent.png")))); // Set white background
         textFieldStyle.font = inputPlayerNameFont;
@@ -209,7 +233,69 @@ public class GameOverScreen implements Screen, GameOverListener {
 
         // Add the text field to the stage
         stage.addActor(playerNameInputTextField);
+
+        // Add input listener to the text field
+        playerNameInputTextField.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.ENTER) {
+                    Gdx.app.log(TAG, "Enter key pressed in text field");
+                    handlePlayerNameInputForHighScore();
+                    return true;
+                } else if (keycode == Input.Keys.ESCAPE) {
+                    Gdx.app.log(TAG, "Escape key pressed in text field");
+                    screenSwitcher.switchToScreen(Screens.MENU);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean keyTyped(InputEvent event, char character) {
+                if (Character.isLetterOrDigit(character)) {
+                    // Append the character to the playerName variable
+                    Gdx.app.log(TAG, "Character typed: " + character); // Log the typed character
+                    playerName += character;
+                    return true; // Consume the event
+                } else if (character == '\b') {
+                    Gdx.app.log(TAG, "Backspace key pressed"); // Log the Backspace key press event
+                    // Handle backspace (optional)
+                    if (!playerName.isEmpty()) {
+                        playerName = playerName.substring(0, playerName.length() - 1);
+                    }
+                    return true; // Consume the event
+                }
+                return false; // Let the event propagate if not handled
+            }
+        });
     }
+
+    private void handlePlayerNameInputForHighScore() {
+        try {
+            // Get the player name from the GameOverScreen or wherever it's stored
+            Gdx.app.log(TAG, "Player Name Entered for High Score: " + playerName);
+            Gdx.app.log(TAG, "Score Manager: " + scoreManager);
+            Gdx.app.log(TAG, "Score to be saved to highScore: " + scoreManager.getScore());
+            Gdx.app.log(TAG, "HighScoreManager: " + highscoreManager);
+
+            if (!playerName.isEmpty()) {
+                // Here, you can save the player name and score to the high score manager
+                highscoreManager.checkIfScoreIsHighScore(gameScore, playerName); // Pass player name here
+                setPlayerName("");
+                setCurrentState(GameOverScreen.HighScoreState.NEUTRAL);
+                Gdx.app.log(TAG, "Player Name Entered for High Score: " + playerName);
+            } else {
+                // Handle the case where the player name is empty
+                // This could be due to invalid input or other reasons
+                Gdx.app.error(TAG, "Empty player name provided for high score submission.");
+            }
+        } catch (Exception e) {
+            // Catch any exceptions that might occur during high score submission
+            Gdx.app.error(TAG, "Exception occurred during high score submission: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 
     private void setupLabelForTextField() {
         // Draw the text "Enter your name" at a specific position on the screen
@@ -245,29 +331,18 @@ public class GameOverScreen implements Screen, GameOverListener {
         batch.draw(gameOverHeaderImage, 0, 0);
         batch.end();
 
-        // Draw the stage
-        stage.act(delta);
-        stage.draw();
 
         //Draw this sessions score and the highscore
         batch.begin();
         drawGameOverScores();
+        batch.end();
 
-        // If the player's score reaches a certain threshold, prompt for name input
-        int currentScore = scoreManager.getScore();
-        if (currentScore > highscoreManager.getLowestScore()) {
-            currentState = HighScoreState.WINNER;
-            // Update input field and label
-            playerNameInputTextField.setVisible(true);
-            playerNameMessageLabel.setVisible(true);
-        } else {
-            playerNameInputTextField.setVisible(false);
-            playerNameMessageLabel.setVisible(false);
-        }
+        // Draw the stage
+        stage.act(delta);
+        stage.draw();
 
         currentSelectedButtonIndex = inputHandler.getSelectedButtonIndexGameOver();
         updateButtonStyles();
-        batch.end();
     }
 
     private void initializeButtonsAndStyles() {

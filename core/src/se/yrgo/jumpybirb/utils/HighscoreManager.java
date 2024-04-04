@@ -38,9 +38,10 @@ public class HighscoreManager {
      * If the score is high enough, this method calls saveHighScores().
      * @param score from the player's game session
      */
-    public void checkIfScoreIsHighScore(int score) {
+    public void checkIfScoreIsHighScore(int score, String playerName) {
+        Gdx.app.log(TAG, "Checking if score is a high score. Score: " + score + ", Player Name: " + playerName);
         if (score > getLowestScore()) {
-            addHighscore(score);
+            addHighscore(score, playerName);
             saveHighScores();
         }
     }
@@ -50,10 +51,9 @@ public class HighscoreManager {
      * the correct position using the sortByKey() method.
      * @param score
      */
-    public void addHighscore(int score) {
-        String name = getPlayerName();
+    public void addHighscore(int score, String playerName) {
 
-        highScoreBoard.put(score, name);
+        highScoreBoard.put(score, playerName);
 
         // Remove any excess entries beyond the HIGHSCORE_ENTRIES limit
         if (highScoreBoard.size() > HIGHSCORE_ENTRIES) {
@@ -134,26 +134,6 @@ public class HighscoreManager {
             return highScoreBoard.lastKey();
         }
         return 0;
-    }
-
-    // Method to get player name using LibGDX input
-    public static String getPlayerName() {
-        StringBuilder name = new StringBuilder();
-        boolean enterPressed = false;
-        while (!enterPressed && name.length() < 4) {
-            for (int i = 29; i >= 0; i--) {
-                if (Gdx.input.isKeyJustPressed(Input.Keys.A + i)) {
-                    name.append((char) ('A' + i));
-                }
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE) && name.length() > 0) {
-                name.deleteCharAt(name.length() - 1);
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && name.length() > 0) {
-                enterPressed = true;
-            }
-        }
-        return name.toString();
     }
 
     // Method to get player name by index
