@@ -76,10 +76,6 @@ public class GameOverScreen implements Screen, GameOverListener {
         this.currentState = GameOverScreen.HighScoreState.NEUTRAL;
     }
 
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
-    }
-
     /***
      * This method is called when this screen becomes
      * the current screen for the game.
@@ -257,7 +253,7 @@ public class GameOverScreen implements Screen, GameOverListener {
                 playerNameInputTextField.setVisible(false);
                 playerNameMessageLabel.setVisible(false);
                 stage.setKeyboardFocus(null);
-                setPlayerName("");
+                playerName = ("");
             } else {
                 // Handle the case where the player name is empty
                 // This could be due to invalid input or other reasons
