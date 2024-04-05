@@ -196,7 +196,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         // Set up text field
         playerNameInputTextField = new TextField("", textFieldStyle);
         playerNameInputTextField.setSize(100, 40); // Adjust size as needed
-        playerNameInputTextField.setPosition(Gdx.graphics.getWidth() / 1.4f, Gdx.graphics.getHeight() / 2.6f); // Adjust position as needed
+        playerNameInputTextField.setPosition(Gdx.graphics.getWidth() / 1.45f, Gdx.graphics.getHeight() / 2.6f); // Adjust position as needed
         playerNameInputTextField.getStyle().background.setLeftWidth(10); // Set left margin
         playerNameInputTextField.getStyle().background.setRightWidth(10); // Set right margin
         playerNameInputTextField.setAlignment(Align.center); // Center align text
@@ -318,7 +318,7 @@ public class GameOverScreen implements Screen, GameOverListener {
 
         // Draw the "You got a highscore!" text if playerNameInputTextField and playerNameMessageLabel are visible
         if (playerNameInputTextField.isVisible() && playerNameMessageLabel.isVisible()) {
-            newHighScoreFont.draw(batch, "You got a highscore! ", Gdx.graphics.getWidth() / 5.1f,
+            newHighScoreFont.draw(batch, "You got a highscore! ", Gdx.graphics.getWidth() / 6f,
                     Gdx.graphics.getHeight() / 2.08f, 0, Align.left, false);
         }
 
