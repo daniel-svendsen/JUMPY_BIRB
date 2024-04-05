@@ -5,16 +5,16 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import se.yrgo.jumpybirb.JumpyBirb;
-import se.yrgo.jumpybirb.screens.HighScoreScreen;
+import se.yrgo.jumpybirb.screens.GameOverScreen;
 import se.yrgo.jumpybirb.screens.PlayScreen;
 import se.yrgo.jumpybirb.screens.SplashScreen;
+
 
 public class InputHandler extends InputAdapter {
     private static final String TAG = InputHandler.class.getSimpleName();
     private final ScreenSwitcher screenSwitcher;
     private final JumpyBirb gameSession;
     private MenuListener menuListener;
-    private Stage stage;
     private int selectedButtonIndexMainMenu = 0;
     private int selectedButtonIndexGameOver = 0;
 
@@ -28,9 +28,6 @@ public class InputHandler extends InputAdapter {
         this.menuListener = menuListener;
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
 
     @Override
     public boolean keyDown(int keycode) {
@@ -80,7 +77,7 @@ public class InputHandler extends InputAdapter {
 
     private void handleSplashScreen(int keycode) {
         if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER) {
-            switchToMenuScreen();
+            screenSwitcher.switchToScreen(Screens.MENU);
             SplashScreen.setPlayScreenDisplayed(true);
         }
     }
@@ -140,7 +137,7 @@ public class InputHandler extends InputAdapter {
         switch (currentGameState) {
             case READY:
                 if (keycode == Input.Keys.ESCAPE) {
-                    switchToMenuScreen();
+                    screenSwitcher.switchToScreen(Screens.MENU);
                     Gdx.app.log(TAG, "Ready state: Switched to Menu Screen");
                 } else if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER) {
                     playScreen.setCurrentGameState(PlayScreen.GameState.RUNNING);
@@ -159,6 +156,7 @@ public class InputHandler extends InputAdapter {
     }
 
     private void handleGameOverScreen(int keycode) {
+
         switch (keycode) {
             case Input.Keys.UP:
                 navigateGameOverMenu(-1); // Move selection up
@@ -166,10 +164,15 @@ public class InputHandler extends InputAdapter {
             case Input.Keys.DOWN:
                 navigateGameOverMenu(1); // Move selection down
                 break;
-            case Input.Keys.SPACE, Input.Keys.ENTER:
+            case Input.Keys.SPACE,
+                    Input.Keys.ENTER:
                 triggerSelectedGameOverButtonAction();
                 break;
+            case Input.Keys.ESCAPE:
+                screenSwitcher.switchToScreen(Screens.MENU);
+                break;
             default:
+                navigateMenu(0);
                 break;
         }
     }
@@ -203,19 +206,9 @@ public class InputHandler extends InputAdapter {
     }
 
     private void handleHighScoreScreen(int keycode) {
-        if (keycode == Input.Keys.ESCAPE) {
-            switchToMenuScreen();
+        if (keycode == Input.Keys.ESCAPE || keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER) {
+            screenSwitcher.switchToScreen(Screens.MENU);
         }
-    }
-
-    private void switchToMenuScreen() {
-        screenSwitcher.switchToScreen(Screens.MENU);
-        Gdx.app.log(TAG, "Switched to MenuScreen");
-    }
-
-    private void switchToPlayScreen() {
-        screenSwitcher.switchToScreen(Screens.PLAY);
-        Gdx.app.log(TAG, "Switched to PlayScreen");
     }
 
     private void makeBirbJump(PlayScreen playScreen) {

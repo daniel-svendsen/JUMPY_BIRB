@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import se.yrgo.jumpybirb.sprites.Birb;
 import se.yrgo.jumpybirb.sprites.Ground;
 import se.yrgo.jumpybirb.sprites.Obstacle;
+import se.yrgo.jumpybirb.utils.HighscoreManager;
 import se.yrgo.jumpybirb.utils.ScoreManager;
 import se.yrgo.jumpybirb.utils.ScreenSwitcher;
 import se.yrgo.jumpybirb.utils.Screens;
@@ -29,6 +30,9 @@ public class PlayScreen implements Screen {
     private static Birb birb;
     private SpriteBatch batch;
     private ScoreManager scoreManager;
+    private int currentScore;
+    private HighscoreManager highscoreManager;
+    private int topScore;
     private ScreenSwitcher screenSwitcher;
     private GameState currentGameState;
     private Texture backgroundTexture;
@@ -43,9 +47,15 @@ public class PlayScreen implements Screen {
     private Array<Obstacle> obstacles;
     private Texture groundTexture;
     private Vector2 groundPosition;
-
     private Ground ground;
     private Sound gameOverSound;
+
+    /***
+     * This is used to tell which state the playScreen is in.
+     */
+    public enum GameState {
+        MENU, READY, RUNNING, GAME_OVER
+    }
 
     /**
      * Constructor. Initialize ScoreManager.
@@ -54,17 +64,14 @@ public class PlayScreen implements Screen {
     public PlayScreen(ScreenSwitcher screenSwitcher) {
         birb = new Birb(66, 64);
         scoreManager = ScoreManager.getInstance();
+        highscoreManager = HighscoreManager.getInstance();
         this.screenSwitcher = screenSwitcher;
         currentGameState = GameState.READY;
         obstacles = Obstacle.createArray();
     }
 
-    /***
-     * This is used to tell which state the playScreen is in.
-     * Not implemented yet...
-     */
-    public enum GameState {
-        MENU, READY, RUNNING, GAME_OVER
+    public GameState getCurrentGameState() {
+        return currentGameState;
     }
 
     /***
@@ -139,9 +146,6 @@ public class PlayScreen implements Screen {
         }
     }
 
-    public GameState getCurrentGameState() {
-        return currentGameState;
-    }
 
     /**
      * This method is used in the InputHandler class
@@ -154,9 +158,7 @@ public class PlayScreen implements Screen {
     }
 
     private void updateReadyState(float delta) {
-        Gdx.app.log(TAG, "GameState: READY");
-
-        // Reset score
+        // Reset score from before
         scoreManager.reset();
 
         // Render the assets without updating their positions
@@ -219,8 +221,6 @@ public class PlayScreen implements Screen {
     }
 
     private void updateRunningState(float delta) {
-        Gdx.app.log(TAG, "GameState: RUNNING");
-
         // Update game logic while in the running state (e.g., birb movement, obstacle movement)
         // Update birb
         birb.update(delta);
@@ -268,8 +268,6 @@ public class PlayScreen implements Screen {
         // End batch
         batch.end();
 
-        Gdx.app.log(TAG, "Camera position: " + camera.position.x + ", " + camera.position.y);
-
         // Check for game over after drawing obstacles
         if (checkForGameOver(birb)) {
             gameOverSound.play();
@@ -309,18 +307,15 @@ public class PlayScreen implements Screen {
         obstacles = Obstacle.createArray();
     }
 
-    /**
-     * TODO write Javadoc here
-     */
 
     private void drawTextAndScores(float backgroundX, float backgroundY, float backgroundWidth, float backgroundHeight) {
         float textPadding = 50f;
-        int currentScore = scoreManager.getScore();
-        int highScore = scoreManager.getHighScore();
+        currentScore = scoreManager.getScore();
+        topScore = highscoreManager.getHighestScore();
 
         // Draw text and scores with respect to the background position and dimensions
-        scoreFont.draw(batch, "Score: " + currentScore, backgroundX + 370, backgroundY + backgroundHeight - 10f);
-        scoreFont.draw(batch, "High Score: " + highScore, backgroundX + 370, backgroundY + backgroundHeight - 10f - 50f);
+        scoreFont.draw(batch, "High Score: " + topScore, backgroundX + 370, backgroundY + backgroundHeight - 10f);
+        scoreFont.draw(batch, "Score: " + currentScore, backgroundX + 370, backgroundY + backgroundHeight - 10f  - 50f);
     }
 
     /***
