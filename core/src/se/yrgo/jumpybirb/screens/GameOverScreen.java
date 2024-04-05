@@ -398,34 +398,33 @@ public class GameOverScreen implements Screen, GameOverListener {
 
         int topHighScore = highscoreManager.getHighestScore();
 
-        Table table = new Table();
-        table.setPosition(Gdx.graphics.getWidth() / 11.5f, Gdx.graphics.getHeight() / 2.1f); // Adjust position as needed
+        gameOverScoresTable.setPosition(Gdx.graphics.getWidth() / 11.5f, Gdx.graphics.getHeight() / 2.1f); // Adjust position as needed
 
         // Add "High Score" label with scoreFont to the table
         Label highScoreLabel = new Label("Top Score: ", new Label.LabelStyle(scoreFont, Color.WHITE));
-        table.add(highScoreLabel).align(Align.left);
+        gameOverScoresTable.add(highScoreLabel).align(Align.left);
 
         // Add high score value with scoreNumbersFont to the table
         Label highScoreValueLabel = new Label(String.valueOf(topHighScore), new Label.LabelStyle(scoreNumbersFont, Color.WHITE));
-        table.add(highScoreValueLabel).align(Align.left).padLeft(10).row();
+        gameOverScoresTable.add(highScoreValueLabel).align(Align.left).padLeft(10).row();
 
         // Add padding between columns
-        table.pad(40);
+        gameOverScoresTable.pad(40);
 
         // Add empty row for spacing
-        table.row().height(scoreNumbersFont.getXHeight() * 3);
+        gameOverScoresTable.row().height(scoreNumbersFont.getXHeight() * 3);
 
         // Add "Your score" label with scoreFont to the table
         Label yourScoreLabel = new Label("You Scored: ", new Label.LabelStyle(scoreFont, Color.WHITE));
-        table.add(yourScoreLabel).align(Align.left);
+        gameOverScoresTable.add(yourScoreLabel).align(Align.left);
 
         // Add current score value with scoreNumbersFont to the table
         Label yourScoreValueLabel = new Label(String.valueOf(gameScore), new Label.LabelStyle(scoreNumbersFont, Color.WHITE));
-        table.add(yourScoreValueLabel).align(Align.left).padLeft(10).row();
+        gameOverScoresTable.add(yourScoreValueLabel).align(Align.left).padLeft(10).row();
 
-        table.pack(); // Pack the table to adjust its size according to its content
-        table.draw(batch, 1); // Draw the table onto the batch
-        table.row().height(scoreNumbersFont.getXHeight() * 3);
+        gameOverScoresTable.pack(); // Pack the table to adjust its size according to its content
+        gameOverScoresTable.draw(batch, 1); // Draw the table onto the batch
+        gameOverScoresTable.row().height(scoreNumbersFont.getXHeight() * 3);
     }
 
     /**
