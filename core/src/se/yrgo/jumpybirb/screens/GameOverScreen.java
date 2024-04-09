@@ -158,8 +158,8 @@ public class GameOverScreen implements Screen, GameOverListener {
         setupLabelForTextField();
 
         // Set up background images
-        backgroundTexture = new Texture("BackGround1.jpg");
-        gameOverHeaderImage = new Texture("GameOver.png");
+        backgroundTexture = new Texture(Gdx.files.internal("Background1.jpg"));
+        gameOverHeaderImage = new Texture(Gdx.files.internal("GameOver.png"));
 
         // If the player's score reaches a certain threshold, prompt for name input
         if (highscoreManager.isScoreQualifiedForHighScore(gameScore)) {

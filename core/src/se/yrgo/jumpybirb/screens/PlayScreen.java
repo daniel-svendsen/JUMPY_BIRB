@@ -87,7 +87,8 @@ public class PlayScreen implements Screen {
         SplashScreen.setPlayScreenDisplayed(true);
 
         batch = new SpriteBatch();
-        backgroundTexture = new Texture("Background1.jpg");
+        backgroundTexture = new Texture(Gdx.files.internal("Background1.jpg"));
+
         birb = new Birb(66, 64);
         gameOverSound = Gdx.audio.newSound(Gdx.files.internal("death-sound.ogg"));
 
@@ -97,9 +98,9 @@ public class PlayScreen implements Screen {
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 600, 800); // Adjust this to match your world width and height
-        groundTexture = new Texture("Ground2.png");
+        groundTexture = new Texture(Gdx.files.internal("Ground2.png"));
         groundPosition = new Vector2(-300, 0);
-        getReadyTexture = new Texture("GetReady2.png"); // placeholder get-ready image
+        getReadyTexture = new Texture(Gdx.files.internal("GetReady2.png")); // placeholder get-ready image
 
         scoreFont = new BitmapFont();
         scoreFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);

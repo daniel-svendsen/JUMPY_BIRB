@@ -32,8 +32,8 @@ public class Obstacle {
     private boolean isScored; // Variable to make sure an obstacle give 1 score.
 
     public Obstacle(float x) {
-        topObstacle = new Texture("UpperObstacle1.png");
-        bottomObstacle = new Texture("LowerObstacle1.png");
+        topObstacle = new Texture(Gdx.files.internal("UpperObstacle1.png"));
+        bottomObstacle = new Texture(Gdx.files.internal("LowerObstacle1.png"));
         rand = new Random();
         posTopObstacle = new Vector2(x, rand.nextFloat(FLUCTUATION) + OBSTACLE_GAP + LOWEST_OPENING);
         posBottomObstacle = new Vector2(x, posTopObstacle.y - OBSTACLE_GAP - bottomObstacle.getHeight());

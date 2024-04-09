@@ -37,7 +37,7 @@ public class Birb {
         this.height = height;
         position = new Vector2(INITIAL_POSITION_X, INITIAL_POSITION_Y);
         velocity = new Vector2(0, 0);
-        texture = new Texture("Birb1.png");
+        texture = new Texture(Gdx.files.internal("Birb1.png"));
         loadAnimationFrames();
         // Calculate the radius for the bounds
         float radius = Math.min(width, height / 3); // 33% of the current size
@@ -52,9 +52,9 @@ public class Birb {
 
     private void loadAnimationFrames() {
         // Load three textures for animation frames
-        TextureRegion frame1 = new TextureRegion(new Texture("Birb2.png"));
-        TextureRegion frame2 = new TextureRegion(new Texture("Birb3.png"));
-        TextureRegion frame3 = new TextureRegion(new Texture("Birb4.png"));
+        TextureRegion frame1 = new TextureRegion(new Texture(Gdx.files.internal("Birb2.png")));
+        TextureRegion frame2 = new TextureRegion(new Texture(Gdx.files.internal("Birb3.png")));
+        TextureRegion frame3 = new TextureRegion(new Texture(Gdx.files.internal("Birb4.png")));
 
         // Add frames to animation frames array
         animationFrames = new TextureRegion[]{frame1, frame2, frame3};
