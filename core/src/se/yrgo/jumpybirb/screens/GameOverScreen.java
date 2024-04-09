@@ -144,6 +144,8 @@ public class GameOverScreen implements Screen, GameOverListener {
         // playerInput name fontStyle
         FreeTypeFontParameter playerStyle = new FreeTypeFontParameter();
         playerStyle.size = 38; // Set the font size
+        playerStyle.borderColor = Color.valueOf("#522f22");
+        playerStyle.borderWidth = 2;
 
         // Generate the BitmapFonts
         scoreFont = fontGenerator.generateFont(mediumStyle);
@@ -188,7 +190,7 @@ public class GameOverScreen implements Screen, GameOverListener {
         textFieldStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("1x1-transparent.png")))); // Set white background
         textFieldStyle.font = inputPlayerNameFont;
         textFieldStyle.fontColor = Color.BLACK;
-        textFieldStyle.focusedFontColor = Color.BLUE;
+        textFieldStyle.focusedFontColor = Color.GOLD;
         textFieldStyle.messageFont = scoreFont;
         textFieldStyle.messageFontColor = Color.RED;
         textFieldStyle.cursor = cursor;

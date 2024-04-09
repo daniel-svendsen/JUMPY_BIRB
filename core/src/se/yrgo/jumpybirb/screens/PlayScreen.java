@@ -50,6 +50,9 @@ public class PlayScreen implements Screen {
     private Ground ground;
     private Sound gameOverSound;
 
+    private BitmapFont scoreTextFont;
+    private BitmapFont scoreNumbersFont;
+
     /***
      * This is used to tell which state the playScreen is in.
      */
@@ -101,6 +104,18 @@ public class PlayScreen implements Screen {
         scoreFont = new BitmapFont();
         scoreFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         scoreFont.getData().setScale(TEXT_FONT_SCALE);
+
+        // Set up fonts
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/AtlantisInternational-jen0.ttf"));
+
+        FreeTypeFontParameter scoreTextStyle = new FreeTypeFontParameter();
+        scoreTextStyle.size = 40;
+        scoreTextStyle.color = Color.valueOf("#ffffff");
+        scoreTextStyle.borderColor = Color.valueOf("#522f22");
+        scoreTextStyle.borderWidth = 2.5f;
+
+        // Generate the BitmapFonts
+        scoreTextFont = fontGenerator.generateFont(scoreTextStyle);
 
         // Set up countdown font
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/CrackerWinter-VGLPl.ttf"));
@@ -314,8 +329,8 @@ public class PlayScreen implements Screen {
         topScore = highscoreManager.getHighestScore();
 
         // Draw text and scores with respect to the background position and dimensions
-        scoreFont.draw(batch, "High Score: " + topScore, backgroundX + 370, backgroundY + backgroundHeight - 10f);
-        scoreFont.draw(batch, "Score: " + currentScore, backgroundX + 370, backgroundY + backgroundHeight - 10f  - 50f);
+        scoreTextFont.draw(batch, "High Score: " + topScore, backgroundX + 310, backgroundY + backgroundHeight - 15f);
+        scoreTextFont.draw(batch, "Score: " + currentScore, backgroundX + 310, backgroundY + backgroundHeight - 10f - 35f);
     }
 
     /***
