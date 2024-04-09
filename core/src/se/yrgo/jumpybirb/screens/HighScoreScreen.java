@@ -2,10 +2,12 @@ package se.yrgo.jumpybirb.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -26,6 +28,8 @@ public class HighScoreScreen implements Screen {
     private Texture backgroundTexture;
     private Texture highscoreTitle;
     private SpriteBatch batch;
+    private FreeTypeFontGenerator fontGenerator;
+    private BitmapFont highScoreListFont;
     private BitmapFont font;
     private HighscoreManager highscoreManager;
     private InputHandler inputHandler;
@@ -51,8 +55,17 @@ public class HighScoreScreen implements Screen {
 
         backgroundTexture = new Texture("Background1.jpg");
         highscoreTitle = new Texture("Highscores.png");
-        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        font.getData().setScale(TEXT_FONT_SCALE);
+
+        //Setup font
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/AtlantisInternational-jen0.ttf"));
+
+        FreeTypeFontGenerator.FreeTypeFontParameter highScoreStyle = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        highScoreStyle.size = 47;
+        highScoreStyle.color = Color.valueOf("#ffffff");
+        highScoreStyle.borderColor = Color.valueOf("#522f22");
+        highScoreStyle.borderWidth = 2.5f;
+
+        highScoreListFont = fontGenerator.generateFont(highScoreStyle);
 
         // Texture for selected back button
         backButtonSelectedTexture = new Texture(Gdx.files.internal("Back-checked.png"));
@@ -115,7 +128,8 @@ public class HighScoreScreen implements Screen {
     }
 
     private void printHighScores() {
-        Vector2 position = new Vector2(180, 600);
+        Vector2 position = new Vector2(150, 610);
+        int lineHeight = 18; // Adjust this value to change the spacing between lines
 
         // Ensure there are 10 spots in the high scores list
         for (int i = 0; i < 10; i++) {
@@ -129,13 +143,16 @@ public class HighScoreScreen implements Screen {
             }
 
             // Render position number (left-aligned)
-            font.draw(batch, String.format("%d.", i + 1), position.x, position.y - i * 30);
+            highScoreListFont.draw(batch, String.format("%d.", i + 1), position.x, position.y - i * lineHeight);
 
             // Render player name (limited to 4 characters)
-            font.draw(batch, playerName.substring(0, Math.min(playerName.length(), 4)), position.x + 50, position.y - i * 30);
+            highScoreListFont.draw(batch, playerName.substring(0, Math.min(playerName.length(), 4)), position.x + 60, position.y - i * lineHeight);
 
             // Render score
-            font.draw(batch, String.valueOf(score), position.x + 200, position.y - i * 30);
+            highScoreListFont.draw(batch, String.valueOf(score), position.x + 200, position.y - i * lineHeight);
+
+            // Add padding between lines
+            position.y -= lineHeight;
         }
     }
 
