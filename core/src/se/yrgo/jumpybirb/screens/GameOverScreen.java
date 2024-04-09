@@ -86,7 +86,7 @@ public class GameOverScreen implements Screen {
         scoreNumbersFont = scoreNumbersFontGenerator.generateFont(scoreNumbersStyle);
         playOrExitFont = fontGenerator.generateFont(mediumStyle);
 
-        backgroundTexture = new Texture("Bakgrund1.jpg");
+        backgroundTexture = new Texture(Gdx.files.internal("Bakgrund1.jpg"));
     }
 
     /***
