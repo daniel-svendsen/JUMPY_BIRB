@@ -8,7 +8,8 @@ Coded in Java using the libGDX framework.
 ## Building
 In order to build the project, follow these steps:
 1. Open terminal
-2. Clone the Github Repo to a directory of your choice
+2. Clone the Github Repo to a directory of your choice:
+`git clone https://github.com/daniel-svendsen/Jumpy_Birb.git`
 3. Navigate to the Jumpy_Birb directory in the terminal
 `cd Jumpy_Birb`
 4. Run this gradle command from the command line:
