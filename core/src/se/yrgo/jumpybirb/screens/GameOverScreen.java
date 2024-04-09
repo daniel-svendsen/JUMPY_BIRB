@@ -153,15 +153,12 @@ public class GameOverScreen implements Screen, GameOverListener {
         newHighScoreFont = fontGenerator.generateFont(newHighScoreStyle);
         inputPlayerNameFont = fontGenerator.generateFont(playerStyle);
 
-
-        backgroundTexture = new Texture(Gdx.files.internal("Bakgrund1.jpg"));
-
         loadCursor();
         setupTextField();
         setupLabelForTextField();
 
         // Set up background images
-        backgroundTexture = new Texture(Gdx.files.internal("BackGround1.jpg"));
+        backgroundTexture = new Texture(Gdx.files.internal("Background1.jpg"));
         gameOverHeaderImage = new Texture(Gdx.files.internal("GameOver.png"));
 
         // If the player's score reaches a certain threshold, prompt for name input
@@ -178,7 +175,6 @@ public class GameOverScreen implements Screen, GameOverListener {
             playerNameInputTextField.setVisible(false);
             playerNameMessageLabel.setVisible(false);
         }
->>>>>>> a80c8f8153c35c15039f826346e9292b800ec19a
     }
 
     private void loadCursor() {
