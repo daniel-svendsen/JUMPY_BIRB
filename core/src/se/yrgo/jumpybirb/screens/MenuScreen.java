@@ -19,6 +19,8 @@ import se.yrgo.jumpybirb.utils.MenuListener;
 import se.yrgo.jumpybirb.utils.ScreenSwitcher;
 import se.yrgo.jumpybirb.utils.Screens;
 
+import static com.badlogic.gdx.scenes.scene2d.ui.ImageButton.*;
+
 /***
  * The menu screen that always shows after the splash screen when you run the game.
  * Choose to play again, show highscore from current game session, enable/disable music.
@@ -28,20 +30,17 @@ public class MenuScreen implements Screen, MenuListener {
     public static final String TAG = MenuScreen.class.getName();
     SpriteBatch batch;
     private Texture backgroundTexture;
-    private Texture normalButtonTexture;
-    private Texture hardButtonTexture;
+    private Texture playButtonTexture;
+    private Texture highScoreButtonTexture;
     private Texture exitButtonTexture;
-    private Texture normalButtonSelectedTexture;
-    private Texture hardButtonSelectedTexture;
+    private Texture playButtonSelectedTexture;
+    private Texture highScoreButtonSelectedTexture;
     private Texture exitButtonSelectedTexture;
-    private ImageButton playNormalButton;
-    private ImageButton playHardButton;
+    private ImageButton playButton;
+    private ImageButton highScoreButton;
     private ImageButton exitButton;
-    private ImageButton.ImageButtonStyle playNormalButtonStyle;
-    private ImageButton.ImageButtonStyle playHardButtonStyle;
-    private ImageButton.ImageButtonStyle exitButtonStyle;
     private boolean buttonStylesInitialized = false;
-    int currentSelectedButtonIndex = 0;
+    private int currentSelectedButtonIndex = 0;
     private final ScreenSwitcher screenSwitcher;
     private InputHandler inputHandler;
     private Stage stage;
@@ -64,13 +63,14 @@ public class MenuScreen implements Screen, MenuListener {
         Gdx.app.log(TAG, "show() called");
 
         // Textures for normal buttons
-        normalButtonTexture = new Texture(Gdx.files.internal("NormalButton.png"));
-        hardButtonTexture = new Texture(Gdx.files.internal("HardButton.png"));
+        playButtonTexture = new Texture(Gdx.files.internal("Play.png"));
+        highScoreButtonTexture = new Texture(Gdx.files.internal("HighScore.png"));
         exitButtonTexture = new Texture(Gdx.files.internal("ExitButton.png"));
 
+
         // Texture for selected buttons
-        normalButtonSelectedTexture = new Texture(Gdx.files.internal("NormalButton-checked.png"));
-        hardButtonSelectedTexture = new Texture(Gdx.files.internal("HardButton-checked.png"));
+        playButtonSelectedTexture = new Texture(Gdx.files.internal("Play-checked.png"));
+        highScoreButtonSelectedTexture = new Texture(Gdx.files.internal("HighScore-checked.png"));
         exitButtonSelectedTexture = new Texture(Gdx.files.internal("ExitButton-checked.png"));
 
         // Initialize button styles and instances
@@ -87,8 +87,8 @@ public class MenuScreen implements Screen, MenuListener {
 
         // Add the buttons to the table with padding
         float padding = 20f; // Adjust padding between buttons
-        buttonTable.add(playNormalButton).padBottom(padding).row();
-        buttonTable.add(playHardButton).padBottom(padding).row();
+        buttonTable.add(playButton).padBottom(padding).row();
+        buttonTable.add(highScoreButton).padBottom(padding).row();
         buttonTable.add(exitButton).padBottom(padding).row();
 
         batch = new SpriteBatch();
@@ -107,20 +107,20 @@ public class MenuScreen implements Screen, MenuListener {
      */
     private void initializeButtonsAndStyles() {
         if (!buttonStylesInitialized) {
-            playNormalButtonStyle = new ImageButton.ImageButtonStyle();
-            playNormalButtonStyle.up = new TextureRegionDrawable(normalButtonTexture);
-            playNormalButtonStyle.checked = new TextureRegionDrawable(normalButtonSelectedTexture);
+            ImageButtonStyle playButtonStyle = new ImageButtonStyle();
+            playButtonStyle.up = new TextureRegionDrawable(playButtonTexture);
+            playButtonStyle.checked = new TextureRegionDrawable(playButtonSelectedTexture);
 
-            playHardButtonStyle = new ImageButton.ImageButtonStyle();
-            playHardButtonStyle.up = new TextureRegionDrawable(hardButtonTexture);
-            playHardButtonStyle.checked = new TextureRegionDrawable(hardButtonSelectedTexture);
+            ImageButtonStyle highScoreButtonStyle = new ImageButtonStyle();
+            highScoreButtonStyle.up = new TextureRegionDrawable(highScoreButtonTexture);
+            highScoreButtonStyle.checked = new TextureRegionDrawable(highScoreButtonSelectedTexture);
 
-            exitButtonStyle = new ImageButton.ImageButtonStyle();
+            ImageButtonStyle exitButtonStyle = new ImageButtonStyle();
             exitButtonStyle.up = new TextureRegionDrawable(exitButtonTexture);
             exitButtonStyle.checked = new TextureRegionDrawable(exitButtonSelectedTexture);
 
-            playNormalButton = new ImageButton(playNormalButtonStyle);
-            playHardButton = new ImageButton(playHardButtonStyle);
+            playButton = new ImageButton(playButtonStyle);
+            highScoreButton = new ImageButton(highScoreButtonStyle);
             exitButton = new ImageButton(exitButtonStyle);
 
             buttonStylesInitialized = true;
@@ -144,7 +144,7 @@ public class MenuScreen implements Screen, MenuListener {
      * Here we can set the action we want for each button in the menu.
      */
     private void addClickListenersToMenuButtons() {
-        playNormalButton.addListener(new ClickListener() {
+        playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log(TAG, "Play Normal Button clicked");
@@ -153,11 +153,11 @@ public class MenuScreen implements Screen, MenuListener {
             }
         });
 
-        playHardButton.addListener(new ClickListener() {
+        highScoreButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log(TAG, "Play Hard Button clicked");
-                hardButtonClicked();
+                Gdx.app.log(TAG, "Highscore Button clicked");
+                highScoreButtonClicked();
                 Gdx.input.setInputProcessor(inputHandler);
             }
         });
@@ -185,7 +185,7 @@ public class MenuScreen implements Screen, MenuListener {
         batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
 
-        currentSelectedButtonIndex = inputHandler.getSelectedButtonIndex();
+        currentSelectedButtonIndex = inputHandler.getSelectedButtonIndexMainMenu();
         updateButtonStyles();
 
         // Draw the stage
@@ -203,18 +203,18 @@ public class MenuScreen implements Screen, MenuListener {
         // Update button styles only when the selected button changes
         switch (currentSelectedButtonIndex) {
             case 0:
-                playNormalButton.setChecked(true);
-                playHardButton.setChecked(false);
+                playButton.setChecked(true);
+                highScoreButton.setChecked(false);
                 exitButton.setChecked(false);
                 break;
             case 1:
-                playNormalButton.setChecked(false);
-                playHardButton.setChecked(true);
+                playButton.setChecked(false);
+                highScoreButton.setChecked(true);
                 exitButton.setChecked(false);
                 break;
             case 2:
-                playNormalButton.setChecked(false);
-                playHardButton.setChecked(false);
+                playButton.setChecked(false);
+                highScoreButton.setChecked(false);
                 exitButton.setChecked(true);
                 break;
             default:
@@ -232,12 +232,12 @@ public class MenuScreen implements Screen, MenuListener {
     }
 
     /**
-     * Action to be done if the "HARD" button is clicked.
+     * Action to be done if the "Highscore" button is clicked.
      */
     @Override
-    public void hardButtonClicked() {
-        screenSwitcher.switchToScreen(Screens.PLAY);
-        Gdx.app.log(TAG, "hardButtonClicked() called");
+    public void highScoreButtonClicked() {
+        screenSwitcher.switchToScreen(Screens.HIGH_SCORE);
+        Gdx.app.log(TAG, "highScoreButtonClicked() called");
     }
 
     /***
@@ -287,6 +287,12 @@ public class MenuScreen implements Screen, MenuListener {
         Gdx.app.log(TAG, "dispose() called");
         batch.dispose();
         stage.dispose();
+        playButtonTexture.dispose();
+        playButtonSelectedTexture.dispose();
+        highScoreButtonTexture.dispose();
+        highScoreButtonSelectedTexture.dispose();
+        exitButtonTexture.dispose();
+        exitButtonSelectedTexture.dispose();
         backgroundTexture.dispose();
     }
 }
